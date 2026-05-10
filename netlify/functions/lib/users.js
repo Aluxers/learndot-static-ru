@@ -66,17 +66,52 @@ function publicUser(user) {
 async function getUsers() {
   const store = getStore(STORE_NAME);
   const raw = await store.get(USERS_KEY);
+  const demoUsers = makeDemoUsers();
 
   if (!raw) {
-    const demoUsers = makeDemoUsers();
     await saveUsers(demoUsers);
     return demoUsers;
   }
 
   try {
-    return JSON.parse(raw);
+    const users = JSON.parse(raw);
+    let changed = false;
+
+    for (let i = 0; i < users.length; i++) {
+      if (!users[i].passwordHash && users[i].password) {
+        users[i].passwordHash = hashPassword(users[i].password);
+        delete users[i].password;
+        changed = true;
+      }
+    }
+
+    for (let i = 0; i < demoUsers.length; i++) {
+      const demoUser = demoUsers[i];
+      let found = false;
+
+      for (let j = 0; j < users.length; j++) {
+        if (users[j].email.toLowerCase() === demoUser.email.toLowerCase()) {
+          users[j].passwordHash = demoUser.passwordHash;
+          users[j].role = demoUser.role;
+          users[j].status = 'active';
+          found = true;
+          changed = true;
+          break;
+        }
+      }
+
+      if (!found) {
+        users.push(demoUser);
+        changed = true;
+      }
+    }
+
+    if (changed) {
+      await saveUsers(users);
+    }
+
+    return users;
   } catch (e) {
-    const demoUsers = makeDemoUsers();
     await saveUsers(demoUsers);
     return demoUsers;
   }
