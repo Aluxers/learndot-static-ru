@@ -2013,13 +2013,28 @@ select:focus-visible {
 
 
 
+  .hero {
+    min-height: 360px;
+  }
+
+  .hero__title {
+    font-size: 1.65rem;
+  }
+
+  .hero__inner {
+    padding: 40px 16px;
+  }
+}
+
+@media (max-width: 640px) and (pointer: coarse) {
   /* На телефонах можно использовать отдельные PNG-картинки:
      images/hero-bg-mobile.png
      images/hero-bg-mobile-dark.png */
   .hero {
-    min-height: 520px;
+    min-height: 1200px;
     background-size: cover;
     background-position: center bottom;
+    align-items: flex-start;
   }
 
   [data-theme='light'] .hero {
@@ -2030,12 +2045,8 @@ select:focus-visible {
     background-image: url('../images/hero-bg-mobile-dark.png');
   }
 
-  .hero__title {
-    font-size: 1.65rem;
-  }
-
   .hero__inner {
-    padding: 40px 16px 280px;
+    padding: 16px 16px 280px;
   }
 }
 
