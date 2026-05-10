@@ -2026,30 +2026,6 @@ select:focus-visible {
   }
 }
 
-@media (max-width: 640px) and (pointer: coarse) {
-  /* На телефонах можно использовать отдельные PNG-картинки:
-     images/hero-bg-mobile.png
-     images/hero-bg-mobile-dark.png */
-  .hero {
-    min-height: 560px;
-    background-size: cover;
-    background-position: center bottom;
-    align-items: flex-start;
-  }
-
-  [data-theme='light'] .hero {
-    background-image: url('../images/hero-bg-mobile.png');
-  }
-
-  [data-theme='dark'] .hero {
-    background-image: url('../images/hero-bg-mobile-dark.png');
-  }
-
-  .hero__inner {
-    padding: 8px 16px 240px;
-  }
-}
-
 
 
 
