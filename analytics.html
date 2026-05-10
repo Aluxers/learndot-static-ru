@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аналитика — LearnDot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+    <!-- Обёртка панели администратора -->
+    <div class="dash-wrap">
+        <div id="dashTopbar"></div>
+        <div id="dashSidebar"></div>
+        <main class="dash-content">
+
+            <div class="page-header">
+                <h1>Аналитика</h1>
+                <p>Показатели и рост платформы.</p>
+            </div>
+
+            <!-- Статистика -->
+            <div class="stats-grid" id="anStats"></div>
+
+            <!-- Графики -->
+            <div class="grid grid-2 mb-28" id="anCharts"></div>
+
+            <!-- Топ курсов -->
+            <h3 class="dash-section-title mt-28">Топ курсов</h3>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead><tr><th>#</th><th>Курс</th><th>Студенты</th><th>Доход</th><th>Рейтинг</th></tr></thead>
+                    <tbody id="anTable"></tbody>
+                </table>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Проверяем роль администратора
+        if (!LearnDot.auth.requireRole(['admin'])) return;
+
+        // Рисуем шапку и боковое меню
+        renderDashTopbar('dashTopbar', 'Панель администратора');
+        renderDashSidebar('dashSidebar', 'admin', 'analytics');
+
+        
+        var d = DATA.analytics;
+
+        // Статистика с ростом
+        document.getElementById('anStats').innerHTML = [
+            { v: d.revenue.total.toLocaleString() + ' ₸', l: 'Доход', s: '↑ ' + d.revenue.growth + '%' },
+            { v: d.users.total, l: 'Пользователей', s: '+' + d.users.newThisMonth + ' в этом месяце' },
+            { v: d.courses.total, l: 'Курсов', s: 'Ср. ⭐ ' + d.courses.avgRating },
+            { v: d.enrollments.total.toLocaleString(), l: 'Записей', s: '↑ ' + d.enrollments.growth + '%' }
+        ].map(function (s) {
+            return '' +
+                '<div class="stat-card">' +
+                    '<div class="stat-value">' + s.v + '</div>' +
+                    '<div class="stat-label">' + s.l + '</div>' +
+                    '<span class="stat-growth">' + s.s + '</span>' +
+                '</div>';
+        }).join('');
+
+        // Графики — столбчатые диаграммы
+        var revMax = (function(){var _mx=0;for(var _i=0;_i<d.monthlyRevenue.length;_i++){if(d.monthlyRevenue[_i].amount>_mx)_mx=d.monthlyRevenue[_i].amount;}return _mx;})();
+        var usrMax = (function(){var _mx=0;for(var _i=0;_i<d.monthlyUsers.length;_i++){if(d.monthlyUsers[_i].count>_mx)_mx=d.monthlyUsers[_i].count;}return _mx;})();
+
+        // Доход по месяцам
+        var revBarsHtml = d.monthlyRevenue.map(function (m) {
+            var pct = Math.round(m.amount / revMax * 100);
+            return '' +
+                '<div class="bar-group">' +
+                    '<div class="bar-track">' +
+                        '<div class="bar-fill" style="height:' + pct + '%;background:var(--primary)"></div>' +
+                    '</div>' +
+                    '<span class="bar-value">$' + m.amount + '</span>' +
+                    '<span class="bar-label">' + m.month + '</span>' +
+                '</div>';
+        }).join('');
+
+        // Пользователи по месяцам
+        var usrBarsHtml = d.monthlyUsers.map(function (m) {
+            var pct = Math.round(m.count / usrMax * 100);
+            return '' +
+                '<div class="bar-group">' +
+                    '<div class="bar-track">' +
+                        '<div class="bar-fill" style="height:' + pct + '%;background:var(--success)"></div>' +
+                    '</div>' +
+                    '<span class="bar-value">' + m.count + '</span>' +
+                    '<span class="bar-label">' + m.month + '</span>' +
+                '</div>';
+        }).join('');
+
+        document.getElementById('anCharts').innerHTML =
+            '<div class="card"><h3 class="chart-title">Доход по месяцам</h3><div class="bar-chart">' + revBarsHtml + '</div></div>' +
+            '<div class="card"><h3 class="chart-title">Рост пользователей</h3><div class="bar-chart">' + usrBarsHtml + '</div></div>';
+
+        // Топ курсов
+        document.getElementById('anTable').innerHTML = d.topCourses.map(function (c, i) {
+            return '' +
+                '<tr>' +
+                    '<td class="td-rank">' + (i + 1) + '</td>' +
+                    '<td class="td-name">' + c.title + '</td>' +
+                    '<td>' + c.students.toLocaleString() + '</td>' +
+                    '<td>' + (c.revenue === 0 ? 'Бесплатно' : c.revenue.toLocaleString() + ' ₸') + '</td>' +
+                    '<td>⭐ ' + c.rating + '</td>' +
+                '</tr>';
+        }).join('');
+
+    });
+    </script>
+</body>
+</html>

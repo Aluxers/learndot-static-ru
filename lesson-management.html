@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление уроками — LearnDot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+    <!-- Обёртка кабинета -->
+    <div class="dash-wrap">
+        <div id="dashTopbar"></div>
+        <div id="dashSidebar"></div>
+        <main class="dash-content">
+
+            <div class="page-header">
+                <h1>Управление уроками</h1>
+                <p>Организация и редактирование уроков.</p>
+            </div>
+
+            <!-- Выбор курса -->
+            <div class="flex gap-12 items-center flex-wrap mb-24">
+                <label class="course-select-label">Курс:</label>
+                <select class="input course-select" id="courseSelect"></select>
+            </div>
+
+            <!-- Список модулей и уроков -->
+            <div id="lessonList"></div>
+
+        </main>
+    </div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Проверяем роль
+        if (!LearnDot.auth.requireRole(['teacher'])) return;
+
+        // Рисуем шапку и меню
+        renderDashTopbar('dashTopbar', 'Кабинет преподавателя');
+        renderDashSidebar('dashSidebar', 'teacher', 'lessons');
+
+        
+        // Заполняем выпадающий список курсов
+        document.getElementById('courseSelect').innerHTML = getTeacherCourses().map(function (c) {
+            return '<option value="' + c.courseId + '">' + c.title + '</option>';
+        }).join('');
+
+        // Данные уроков по курсам
+        var lessons = {
+            'html-css': [
+                { mod: 'Основы HTML', items: ['Что такое HTML?|video|10 мин', 'Структура документа|video|12 мин', 'Заголовки и абзацы|video|8 мин', 'Ссылки и изображения|video|11 мин'] },
+                { mod: 'Основы CSS', items: ['Введение в CSS|video|10 мин', 'Селекторы|video|14 мин', 'Цвета и фоны|video|11 мин', 'Типографика|text|8 мин'] },
+                { mod: 'Flexbox и Grid', items: ['Основы Flexbox|video|14 мин', 'Выравнивание|video|12 мин', 'CSS Grid|video|15 мин', 'Задание|assignment|45 мин'] }
+            ],
+            'javascript-beginners': [
+                { mod: 'Основы JS', items: ['Что такое JavaScript?|video|10 мин', 'Переменные|video|12 мин', 'Типы данных|video|11 мин', 'Операторы|text|8 мин', 'Условия|video|13 мин'] },
+                { mod: 'Функции', items: ['Объявление функций|video|12 мин', 'Стрелочные функции|video|10 мин', 'Замыкания|video|16 мин'] }
+            ],
+            'git-collaboration': [
+                { mod: 'Основы Git', items: ['Зачем контроль версий?|video|8 мин', 'Установка Git|text|5 мин', 'Первый репозиторий|video|12 мин'] },
+                { mod: 'Ветвление', items: ['Создание веток|video|10 мин', 'Мёрдж|video|14 мин', 'Конфликты|video|12 мин'] }
+            ]
+        };
+
+        // Иконки типов
+        var typeIcons = { video: '▶️', text: '📄', quiz: '✅', assignment: '📝' };
+
+        // Отрисовка модулей и уроков
+        function renderLessons() {
+            var cid = document.getElementById('courseSelect').value;
+            var mods = lessons[cid] || [];
+
+            document.getElementById('lessonList').innerHTML = mods.map(function (m, mi) {
+                // Заголовок модуля
+                var headerHtml =
+                    '<div class="mgmt-module-header">' +
+                        '<h4 class="mgmt-module-title">Модуль ' + (mi + 1) + ': ' + m.mod + '</h4>' +
+                        '<span class="module-count">' + m.items.length + ' уроков</span>' +
+                    '</div>';
+
+                // Строки уроков
+                var rowsHtml = m.items.map(function (item) {
+                    var parts = item.split('|');
+                    var icon = typeIcons[parts[1]] || '📌';
+
+                    return '' +
+                        '<div class="mgmt-lesson-row">' +
+                            '<span class="mgmt-type-icon">' + icon + '</span>' +
+                            '<div class="mgmt-lesson-info">' +
+                                '<span class="mgmt-lesson-title">' + parts[0] + '</span>' +
+                                '<span class="mgmt-lesson-meta">' + parts[1] + ' · ' + parts[2] + '</span>' +
+                            '</div>' +
+                            '<span class="badge badge-success badge-sm">Активен</span>' +
+                            '<button class="btn btn-secondary btn-sm">Ред.</button>' +
+                        '</div>';
+                }).join('');
+
+                return '<div class="mgmt-module">' + headerHtml + rowsHtml + '</div>';
+            }).join('') +
+            '<button class="btn btn-outline btn-block mt-20">+ Добавить модуль</button>';
+        }
+
+        document.getElementById('courseSelect').addEventListener('change', renderLessons);
+        renderLessons();
+
+    });
+    </script>
+</body>
+</html>

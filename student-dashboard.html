@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель студента — LearnDot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+    <!-- Обёртка кабинета -->
+    <div class="dash-wrap">
+        <div id="dashTopbar"></div>
+        <div id="dashSidebar"></div>
+        <main class="dash-content">
+
+            <!-- Приветствие -->
+            <div class="page-header" id="greeting"></div>
+
+            <!-- Статистика -->
+            <div class="stats-grid" id="stats"></div>
+
+            <!-- Активные курсы -->
+            <h3 class="dash-section-title" data-lang="activeCourses">Активные курсы</h3>
+            <div class="grid grid-3 mb-32" id="activeCourses"></div>
+
+            <!-- Ближайшие задания -->
+            <h3 class="dash-section-title" data-lang="nearestAssignments">Ближайшие задания</h3>
+            <div class="flex flex-col gap-8 mb-32" id="tasks"></div>
+
+            <!-- Уведомления -->
+            <h3 class="dash-section-title" data-lang="notifications">Уведомления</h3>
+            <div class="flex flex-col gap-8 mb-32" id="notifs"></div>
+
+            <!-- Рекомендации -->
+            <h3 class="dash-section-title" data-lang="recommendedCourses">Рекомендуемые курсы</h3>
+            <div class="grid grid-3" id="recommended"></div>
+
+        </main>
+    </div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+        if (!LearnDot.auth.requireRole(['student'])) return;
+
+        renderDashTopbar('dashTopbar', t('studentDashboard'));
+        renderDashSidebar('dashSidebar', 'student', 'dashboard');
+
+        // ===== Приветствие =====
+        var u = LearnDot.auth.getCurrentUser();
+        var firstName = u ? u.name.split(' ')[0] : t('student');
+        document.getElementById('greeting').innerHTML =
+            '<h1>' + t('hello') + ', ' + firstName + '! 👋</h1>' +
+            '<p>' + t('learningOverview') + '</p>';
+
+        // ===== Статистика =====
+        var enrollments = getUserEnrollments();
+
+        // Считаем завершённые курсы
+        var completedCount = 0;
+        for (var i = 0; i < enrollments.length; i++) {
+            if (enrollments[i].status === 'completed') {
+                completedCount++;
+            }
+        }
+
+        // Считаем ожидающие задания
+        var pendingCount = 0;
+        for (var i = 0; i < getUserAssignments().length; i++) {
+            if (getUserAssignments()[i].status === 'pending') {
+                pendingCount++;
+            }
+        }
+
+        // Считаем средний прогресс
+        var totalProgress = 0;
+        for (var i = 0; i < enrollments.length; i++) {
+            totalProgress += enrollments[i].progress;
+        }
+        var avgProgress = Math.round(totalProgress / enrollments.length);
+
+        // Рисуем карточки статистики
+        document.getElementById('stats').innerHTML = renderStatCards([
+            { v: enrollments.length, l: t('enrolledCourses') },
+            { v: completedCount, l: t('completed') },
+            { v: avgProgress + '%', l: t('totalProgress') },
+            { v: pendingCount, l: t('assignments') }
+        ]);
+
+
+        // ===== Активные курсы =====
+        var activeHtml = '';
+        for (var i = 0; i < enrollments.length; i++) {
+            var en = enrollments[i];
+            if (en.status !== 'in-progress') continue;
+
+            // Ищем курс по ID
+            var course = null;
+            for (var j = 0; j < DATA.courses.length; j++) {
+                if (DATA.courses[j].id === en.courseId) {
+                    course = DATA.courses[j];
+                    break;
+                }
+            }
+            if (!course) continue;
+
+            var icon = course.category === 'Дизайн' ? '🎨' : '💻';
+
+            activeHtml +=
+                '<div class="card card-flush">' +
+                    (course.cover
+                        ? '<div class="dash-course-cover has-image" style="background-image:url(\'' + course.cover + '\')"><span>' + icon + '</span></div>'
+                        : '<div class="dash-course-cover"><span>' + icon + ' ' + course.category + '</span></div>') +
+                    '<div class="dash-course-body">' +
+                        '<h4 class="card-title-sm">' + getCourseText(course).title + '</h4>' +
+                        renderProgressBar(en.progress) +
+                        '<a href="lesson.html?course=' + course.id + '" class="btn btn-primary btn-sm btn-block mt-12">' + t('continueLearning') + '</a>' +
+                    '</div>' +
+                '</div>';
+        }
+        // Если нет активных курсов — показываем пустое состояние
+        if (!activeHtml) {
+            activeHtml =
+                '<div class="empty-state">' +
+                    '<span class="empty-icon">📚</span>' +
+                    '<h3>' + t('noActiveCourses') + '</h3>' +
+                    '<p>' + t('enrollToStart') + '</p>' +
+                    '<a href="courses.html" class="btn btn-primary btn-sm mt-12">' + t('ctaBtn2') + '</a>' +
+                '</div>';
+        }
+        document.getElementById('activeCourses').innerHTML = activeHtml;
+
+
+        // ===== Ближайшие задания =====
+        var tasksHtml = '';
+        var taskCount = 0;
+        for (var i = 0; i < getUserAssignments().length; i++) {
+            var a = getUserAssignments()[i];
+            if (a.status !== 'pending') continue;
+            if (taskCount >= 3) break;
+            taskCount++;
+
+            // Ищем название курса
+            var courseName = '';
+            for (var j = 0; j < DATA.courses.length; j++) {
+                if (DATA.courses[j].id === a.courseId) {
+                    courseName = getCourseText(DATA.courses[j]).title;
+                    break;
+                }
+            }
+
+            tasksHtml +=
+                '<div class="card flex justify-between items-center flex-wrap gap-12 card-compact">' +
+                    '<div>' +
+                        '<h4 class="card-title-sm-tight">' + a.title + '</h4>' +
+                        '<p class="meta-text">' + courseName + ' · ' + t('date') + ': ' + formatDate(a.dueDate) + '</p>' +
+                    '</div>' +
+                    '<span class="badge badge-warning">' + t('pending') + '</span>' +
+                '</div>';
+        }
+        tasksHtml += '<a href="assignments.html" class="link-more">' + t('allAssignments') + '</a>';
+        document.getElementById('tasks').innerHTML = tasksHtml;
+
+
+        // ===== Уведомления (3 последних) =====
+        var notifsHtml = '';
+        var notifIcons = { course: '📚', assignment: '📝', payment: '💳', system: '🔔' };
+        var showCount = Math.min(3, getUserNotifications().length);
+        for (var i = 0; i < showCount; i++) {
+            var n = getUserNotifications()[i];
+            var icon = notifIcons[n.type] || '🔔';
+            var unreadClass = n.read ? '' : ' notif-item unread';
+
+            notifsHtml +=
+                '<div class="card flex gap-12 items-center card-compact' + unreadClass + '">' +
+                    '<span class="notif-icon">' + icon + '</span>' +
+                    '<div class="notif-body">' +
+                        '<h4 class="notif-title">' + n.title + '</h4>' +
+                        '<p class="notif-msg">' + n.message + '</p>' +
+                    '</div>' +
+                    (n.read ? '' : '<span class="badge badge-primary">' + t('newLabel') + '</span>') +
+                '</div>';
+        }
+        notifsHtml += '<a href="notifications.html" class="link-more">' + t('allNotifications') + '</a>';
+        document.getElementById('notifs').innerHTML = notifsHtml;
+
+
+        // ===== Рекомендуемые курсы =====
+        var recIds = ['web-design-basics', 'frontend-development', 'motion-design'];
+        var recHtml = '';
+        for (var i = 0; i < DATA.courses.length; i++) {
+            if (recIds.indexOf(DATA.courses[i].id) !== -1) {
+                recHtml += renderCourseCard(DATA.courses[i]);
+            }
+        }
+        document.getElementById('recommended').innerHTML = recHtml;
+
+    });
+    </script>
+</body>
+</html>

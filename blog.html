@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Блог — LearnDot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Шапка -->
+    <div id="header-root"></div>
+
+    <main class="page-content">
+        <div class="container">
+            <section class="section">
+                <div class="section-title">
+                    <h2 data-lang="blogPageTitle">Идеи, знания, практика</h2>
+                    <p data-lang="blogPageText">Актуальные статьи, практические рекомендации и вдохновение для тех, кто развивается в дизайне и IT.</p>
+                </div>
+
+                <!-- Фильтры по категории -->
+                <div class="filter-chips mb-28">
+                    <span class="filter-label" data-lang="categoryLabel">Категория:</span>
+                    <button class="chip active" onclick="filterBlog('all', this)" data-lang="all">Все</button>
+                    <button class="chip" onclick="filterBlog('Дизайн', this)" data-lang="design">Дизайн</button>
+                    <button class="chip" onclick="filterBlog('IT', this)">IT</button>
+                </div>
+
+                <!-- Сетка статей -->
+                <div class="grid grid-3" id="blogGrid"></div>
+            </section>
+        </div>
+
+        <!-- Призыв к действию -->
+        <div id="cta"></div>
+    </main>
+
+    <!-- Подвал -->
+    <div id="footer-root"></div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // ===== Фильтрация блога по категории =====
+        // Вызывается при клике на чипсы «Все» / «Дизайн» / «IT»
+        window.filterBlog = function (cat, btn) {
+
+            // Переключаем активный чип
+            if (btn) {
+                var chips = document.querySelectorAll('.filter-chips .chip');
+                for (var i = 0; i < chips.length; i++) {
+                    chips[i].classList.remove('active');
+                }
+                btn.classList.add('active');
+            }
+
+            // Фильтруем статьи по категории
+            var posts = [];
+            if (cat === 'all') {
+                posts = DATA.blog;
+            } else {
+                for (var i = 0; i < DATA.blog.length; i++) {
+                    if (DATA.blog[i].category === cat) {
+                        posts.push(DATA.blog[i]);
+                    }
+                }
+            }
+
+
+            // ===== Рисуем карточки блога =====
+            // Каждая карточка: обложка, категория, время чтения, заголовок, превью
+            var html = '';
+            for (var i = 0; i < posts.length; i++) {
+                var p = posts[i];
+
+                // Определяем иконку и цвет бейджа
+                var icon = '💻';
+                var badgeClass = 'badge-success';
+                if (p.category === 'Дизайн') {
+                    icon = '🎨';
+                    badgeClass = 'badge-primary';
+                }
+
+                // Обложка статьи — если есть cover, показываем иконку
+                // Поле cover хранится в DATA.blog (файл data.js)
+
+                // Обложка статьи — картинка из поля cover или заглушка
+                var coverHtml = '';
+                if (p.cover) {
+                    coverHtml = '<div class="blog-cover has-image" style="background-image:url(\'' + p.cover + '\')">' + '<span>' + icon + '</span></div>';
+                } else {
+                    coverHtml = '<div class="blog-cover"><span>' + icon + '</span></div>';
+                }
+
+                html +=
+                    '<a href="blog-article.html?id=' + p.id + '" class="card card-hover blog-card">' +
+                        coverHtml +
+                        '<div class="blog-body">' +
+                            '<div class="flex items-center gap-12 mb-12">' +
+                                '<span class="badge ' + badgeClass + '">' + p.category + '</span>' +
+                                '<span class="blog-read-time">' + p.readTime + '</span>' +
+                            '</div>' +
+                            '<h4 class="blog-title">' + p.title + '</h4>' +
+                            '<p class="blog-excerpt">' + p.excerpt + '</p>' +
+                            '<div class="blog-footer">' +
+                                '<span class="blog-author">' + p.author + '</span>' +
+                                '<span class="blog-date">' + formatDate(p.date) + '</span>' +
+                            '</div>' +
+                        '</div>' +
+                    '</a>';
+            }
+            document.getElementById('blogGrid').innerHTML = html;
+        };
+
+
+        // ===== Загружаем все статьи при старте =====
+        var activeChip = document.querySelector('.filter-chips .chip.active');
+        filterBlog('all', activeChip);
+
+        // ===== Блок CTA =====
+        document.getElementById('cta').innerHTML = renderCTA(
+            t('blogCtaTitle'),
+            t('blogCtaText')
+        );
+    });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог курсов — LearnDot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Шапка -->
+    <div id="header-root"></div>
+
+    <main class="page-content">
+        <div class="container">
+            <section class="section">
+                <div class="section-title">
+                    <h2 data-lang="coursesPageTitle">Каталог курсов</h2>
+                    <p data-lang="coursesPageText">Все курсы по дизайну и IT в одном месте.</p>
+                </div>
+
+                <!-- Поиск и сортировка -->
+                <div class="flex justify-between items-center flex-wrap gap-16 mb-20">
+                    <div class="search-wrap">
+                        <span class="search-icon" aria-hidden="true">
+                            <img src="images/icons/search.svg" alt="">
+                        </span>
+                        <input class="input" id="searchInput" placeholder="Поиск курсов..." data-i18n-placeholder="searchCourses">
+                    </div>
+                    <select class="input sort-select" id="sortSelect">
+                        <option value="popular" data-lang="sortPopular">По популярности</option>
+                        <option value="rating" data-lang="sortRating">По рейтингу</option>
+                        <option value="price-asc" data-lang="sortPriceAsc">Цена: по возрастанию</option>
+                        <option value="price-desc" data-lang="sortPriceDesc">Цена: по убыванию</option>
+                    </select>
+                </div>
+
+                <!-- Фильтры -->
+                <div class="flex gap-24 flex-wrap mb-24">
+                    <div class="filter-chips">
+                        <span class="filter-label" data-lang="categoryLabel">Категория:</span>
+                        <button class="chip active" data-filter="category" data-value="all" data-lang="all">Все</button>
+                        <button class="chip" data-filter="category" data-value="Дизайн" data-lang="design">Дизайн</button>
+                        <button class="chip" data-filter="category" data-value="IT">IT</button>
+                    </div>
+                    <div class="filter-chips">
+                        <span class="filter-label" data-lang="levelLabel">Уровень:</span>
+                        <button class="chip active" data-filter="level" data-value="all" data-lang="all">Все</button>
+                        <button class="chip" data-filter="level" data-value="Начальный" data-lang="beginner">Начальный</button>
+                        <button class="chip" data-filter="level" data-value="Средний" data-lang="middle">Средний</button>
+                    </div>
+                </div>
+
+                <!-- Счётчик результатов -->
+                <p id="resultCount" class="result-count mb-20"></p>
+
+                <!-- Сетка курсов -->
+                <div class="grid grid-3" id="courseGrid"></div>
+            </section>
+        </div>
+
+        <!-- Призыв к действию -->
+        <div id="cta"></div>
+    </main>
+
+    <!-- Подвал -->
+    <div id="footer-root"></div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // ===== Состояние фильтров =====
+        // Эти переменные хранят текущие выбранные фильтры
+        var category = 'all';   // Категория: 'all', 'Дизайн', 'IT'
+        var level = 'all';      // Уровень: 'all', 'Начальный', 'Средний'
+        var sort = 'popular';   // Сортировка: 'popular', 'rating', 'price-asc', 'price-desc'
+        var search = '';        // Текст поиска
+
+
+        // ===== Главная функция отрисовки =====
+        // Вызывается каждый раз когда меняется фильтр, поиск или сортировка
+        function render() {
+
+            // Начинаем с полного списка курсов
+            var list = DATA.courses.slice();
+
+
+            // --- Фильтр по поиску ---
+            if (search) {
+                var filtered = [];
+                for (var i = 0; i < list.length; i++) {
+                    var title = list[i].title.toLowerCase();
+                    var desc = list[i].shortDesc.toLowerCase();
+                    if (title.indexOf(search) !== -1 || desc.indexOf(search) !== -1) {
+                        filtered.push(list[i]);
+                    }
+                }
+                list = filtered;
+            }
+
+            // --- Фильтр по категории ---
+            if (category !== 'all') {
+                var filtered = [];
+                for (var i = 0; i < list.length; i++) {
+                    if (list[i].category === category) {
+                        filtered.push(list[i]);
+                    }
+                }
+                list = filtered;
+            }
+
+            // --- Фильтр по уровню ---
+            if (level !== 'all') {
+                var filtered = [];
+                for (var i = 0; i < list.length; i++) {
+                    if (list[i].level === level) {
+                        filtered.push(list[i]);
+                    }
+                }
+                list = filtered;
+            }
+
+            // --- Сортировка ---
+            if (sort === 'popular') {
+                list.sort(function (a, b) { return b.students - a.students; });
+            } else if (sort === 'rating') {
+                list.sort(function (a, b) { return b.rating - a.rating; });
+            } else if (sort === 'price-asc') {
+                list.sort(function (a, b) { return a.price - b.price; });
+            } else if (sort === 'price-desc') {
+                list.sort(function (a, b) { return b.price - a.price; });
+            }
+
+
+            // --- Обновляем счётчик результатов ---
+            document.getElementById('resultCount').textContent = t('found') + ' ' + list.length;
+
+
+            // --- Рисуем карточки курсов ---
+            if (list.length > 0) {
+                var html = '';
+                for (var i = 0; i < list.length; i++) {
+                    html += renderCourseCard(list[i]);
+                }
+                document.getElementById('courseGrid').innerHTML = html;
+            } else {
+                // Пустое состояние — ничего не найдено
+                document.getElementById('courseGrid').innerHTML =
+                    '<div class="empty-state empty-state-full">' +
+                        '<span class="empty-icon">📭</span>' +
+                        '<h3>' + t('nothingFound') + '</h3>' +
+                        '<p>' + t('changeFilters') + '</p>' +
+                    '</div>';
+            }
+        }
+
+
+        // ===== Обработчики фильтров (чипсы) =====
+        // При клике на чип — обновляем фильтр и перерисовываем
+
+        var allChips = document.querySelectorAll('.chip');
+        for (var i = 0; i < allChips.length; i++) {
+            allChips[i].addEventListener('click', function () {
+                var btn = this;
+                var group = btn.dataset.filter;
+
+                // Переключаем активный чип в этой группе
+                setActiveChip(btn.closest('.filter-chips'), btn);
+
+                // Обновляем соответствующий фильтр
+                if (group === 'category') {
+                    category = btn.dataset.value;
+                }
+                if (group === 'level') {
+                    level = btn.dataset.value;
+                }
+
+                render();
+            });
+        }
+
+
+        // ===== Обработчик поиска =====
+        document.getElementById('searchInput').addEventListener('input', function () {
+            search = this.value.toLowerCase();
+            render();
+        });
+
+
+        // ===== Обработчик сортировки =====
+        document.getElementById('sortSelect').addEventListener('change', function () {
+            sort = this.value;
+            render();
+        });
+
+
+        // ===== Первая отрисовка при загрузке =====
+        render();
+
+        // ===== Блок CTA =====
+        document.getElementById('cta').innerHTML = renderCTA();
+    });
+
+    </script>
+</body>
+</html>

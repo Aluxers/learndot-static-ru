@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация — LearnDot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Шапка сайта -->
+    <div id="header-root"></div>
+
+    <!-- Форма регистрации -->
+    <main class="page-content">
+        <div class="container">
+            <section class="section">
+                <div class="auth-wrap">
+                    <div class="card auth-card">
+
+                        <!-- Заголовок -->
+                        <div class="auth-header">
+                            <h2>Создайте аккаунт</h2>
+                            <p>Начните изучать дизайн и IT уже сегодня.</p>
+                        </div>
+
+                        <!-- Ошибка (скрыта по умолчанию) -->
+                        <div id="regError" class="auth-error mb-12 auth-error-hidden"></div>
+
+                        <!-- Поля формы -->
+                        <div class="auth-form">
+                            <div class="form-group">
+                                <label class="form-label">Полное имя</label>
+                                <input class="input" id="regName" placeholder="Иван Иванов">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input class="input" id="regEmail" placeholder="you@example.com" type="email">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Пароль</label>
+                                    <input class="input" id="regPassword" placeholder="Мин. 6 символов" type="password">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Повторите</label>
+                                    <input class="input" id="regConfirm" placeholder="Ещё раз" type="password">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Роль (демо)</label>
+                                <select class="input" id="regRole">
+                                    <option value="student">Студент</option>
+                                    <option value="teacher">Преподаватель</option>
+                                    <option value="admin">Администратор</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary btn-block" id="regBtn">Создать аккаунт</button>
+                        </div>
+
+                        <!-- Ссылка на вход -->
+                        <p class="auth-switch">
+                            Уже есть аккаунт? <a href="login.html">Войти</a>
+                        </p>
+
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Подвал -->
+    <div id="footer-root"></div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // ===== Находим элементы =====
+        var errorBox = document.getElementById('regError');
+
+        // Функция показа ошибки
+        function showError(message) {
+            errorBox.textContent = message;
+            errorBox.classList.remove('auth-error-hidden');
+        }
+
+        // ===== Обработка кнопки «Создать аккаунт» =====
+        document.getElementById('regBtn').addEventListener('click', function () {
+
+            // Читаем значения из полей
+            var name = document.getElementById('regName').value;
+            var email = document.getElementById('regEmail').value;
+            var password = document.getElementById('regPassword').value;
+            var confirm = document.getElementById('regConfirm').value;
+            var role = document.getElementById('regRole').value;
+
+            // Проверка: все поля заполнены
+            if (!name || !email || !password) {
+                showError('Заполните все поля.');
+                return;
+            }
+
+            // Проверка: пароль минимум 6 символов
+            if (password.length < 6) {
+                showError('Пароль — минимум 6 символов.');
+                return;
+            }
+
+            // Проверка: пароли совпадают
+            if (password !== confirm) {
+                showError('Пароли не совпадают.');
+                return;
+            }
+
+            // Регистрируем через auth.js
+            LearnDot.auth.register(name, email, password, role).then(function (result) {
+
+            if (!result.success) {
+                showError(result.error);
+                return;
+            }
+
+            // Успех — в кабинет
+            window.location.href = LearnDot.auth.getDashboardUrl(role);
+            });
+        });
+    });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление категориями — LearnDot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+    <!-- Обёртка панели администратора -->
+    <div class="dash-wrap">
+        <div id="dashTopbar"></div>
+        <div id="dashSidebar"></div>
+        <main class="dash-content">
+
+            <!-- Заголовок -->
+            <div class="page-header-row mb-28">
+                <div class="page-header page-header-no-mb">
+                    <h1>Управление категориями</h1>
+                    <p>Организация курсов по категориям.</p>
+                </div>
+                <button class="btn btn-primary" onclick="alert('Новая категория')">+ Добавить</button>
+            </div>
+
+            <!-- Карточки категорий -->
+            <div class="grid grid-2" id="catGrid"></div>
+
+        </main>
+    </div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Проверяем роль администратора
+        if (!LearnDot.auth.requireRole(['admin'])) return;
+
+        // Рисуем шапку и боковое меню
+        renderDashTopbar('dashTopbar', 'Панель администратора');
+        renderDashSidebar('dashSidebar', 'admin', 'categories');
+
+        
+        var cats = [
+            { name: 'Дизайн', slug: 'design', count: 5, desc: 'UX/UI, веб-дизайн, графический дизайн, моушн' },
+            { name: 'IT', slug: 'it', count: 6, desc: 'Веб-разработка, программирование, DevOps, Git' }
+        ];
+
+        document.getElementById('catGrid').innerHTML = cats.map(function (c) {
+            return '' +
+                '<div class="card">' +
+                    '<div class="flex justify-between items-center mb-8">' +
+                        '<div>' +
+                            '<h3 class="cat-card-title">' + c.name + '</h3>' +
+                            '<p class="cat-card-slug">Slug: /' + c.slug + '</p>' +
+                        '</div>' +
+                        '<span class="badge badge-primary">' + c.count + ' курсов</span>' +
+                    '</div>' +
+                    '<p class="cat-card-desc">' + c.desc + '</p>' +
+                    '<div class="flex gap-8">' +
+                        '<button class="btn btn-secondary btn-sm">Ред.</button>' +
+                        '<button class="btn btn-danger-outline btn-sm">Удалить</button>' +
+                    '</div>' +
+                '</div>';
+        }).join('');
+
+    });
+    </script>
+</body>
+</html>

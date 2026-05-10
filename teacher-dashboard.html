@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель преподавателя — LearnDot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+    <!-- Обёртка кабинета -->
+    <div class="dash-wrap">
+        <div id="dashTopbar"></div>
+        <div id="dashSidebar"></div>
+        <main class="dash-content">
+
+            <!-- Приветствие -->
+            <div class="page-header" id="tGreet"></div>
+
+            <!-- Статистика -->
+            <div class="stats-grid" id="tStats"></div>
+
+            <!-- Курсы преподавателя -->
+            <h3 class="dash-section-title" data-lang="yourCourses">Ваши курсы</h3>
+            <div class="grid grid-3 mb-32" id="tCourses"></div>
+
+            <!-- Ожидающие проверки -->
+            <h3 class="dash-section-title" data-lang="pendingChecks">Ожидающие проверки</h3>
+            <div class="flex flex-col gap-8 mb-32" id="tPending"></div>
+
+        </main>
+    </div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // ===== Проверяем роль пользователя =====
+        if (!LearnDot.auth.requireRole(['teacher'])) return;
+
+        // ===== Рисуем мобильную шапку и боковое меню =====
+        renderDashTopbar('dashTopbar', t('teacherDashboard'));
+        renderDashSidebar('dashSidebar', 'teacher', 'dashboard');
+
+// ===== Приветствие =====
+        var u = LearnDot.auth.getCurrentUser();
+        var name = u ? u.name.split(' ')[0] : t('teacher');
+        document.getElementById('tGreet').innerHTML =
+            '<h1>' + t('welcome') + ', ' + name + '! 👋</h1>' +
+            '<p>' + t('teacherOverview') + '</p>';
+
+        // ===== Статистика =====
+        var tc = getTeacherCourses();
+        var totalStudents = 0;
+        var totalRating = 0;
+        for (var i = 0; i < tc.length; i++) {
+            totalStudents += tc[i].students;
+            totalRating += tc[i].rating;
+        }
+        var avgRating = (totalRating / tc.length).toFixed(1);
+
+        var pendingSubmissions = 0;
+        for (var i = 0; i < getTeacherSubmissions().length; i++) {
+            if (getTeacherSubmissions()[i].status === 'pending') pendingSubmissions++;
+        }
+
+        document.getElementById('tStats').innerHTML = renderStatCards([
+            { v: tc.length, l: t('courses') },
+            { v: totalStudents.toLocaleString(), l: t('students') },
+            { v: pendingSubmissions, l: t('pendingChecks') },
+            { v: avgRating, l: t('avgRating') }
+        ]);
+
+        // ===== Карточки курсов =====
+        var coursesHtml = '';
+        for (var i = 0; i < tc.length; i++) {
+            var c = tc[i];
+            coursesHtml +=
+                '<div class="card">' +
+                    '<div class="flex justify-between items-center flex-wrap gap-8 mb-12">' +
+                        '<h4 class="card-title-sm-tight">' + c.title + '</h4>' +
+                        '<span class="badge badge-success">' + t('published') + '</span>' +
+                    '</div>' +
+                    '<div class="flex gap-16 flex-wrap mb-12 teacher-course-meta">' +
+                        '<span>' + c.students.toLocaleString() + ' ' + t('students') + '</span>' +
+                        '<span>' + c.lessonsCount + ' ' + t('lessons') + '</span>' +
+                        '<span>⭐ ' + c.rating + '</span>' +
+                    '</div>' +
+                    renderProgressBar(c.avgProgress) +
+                '</div>';
+        }
+        document.getElementById('tCourses').innerHTML = coursesHtml;
+
+        // ===== Ожидающие проверки =====
+        var pendingHtml = '';
+        for (var i = 0; i < getTeacherSubmissions().length; i++) {
+            var s = getTeacherSubmissions()[i];
+            if (s.status !== 'pending') continue;
+            pendingHtml +=
+                '<div class="card flex justify-between items-center flex-wrap gap-12 card-compact">' +
+                    '<div>' +
+                        '<h4 class="card-title-sm-tight">' + s.studentName + '</h4>' +
+                        '<p class="meta-text">' + s.assignmentTitle + ' · ' + s.courseName + '</p>' +
+                    '</div>' +
+                    '<span class="badge badge-warning">' + t('pending') + '</span>' +
+                '</div>';
+        }
+        pendingHtml += '<a href="assignment-review.html" class="link-more">' + t('allWorks') + '</a>';
+        document.getElementById('tPending').innerHTML = pendingHtml;
+
+    });
+    </script>
+</body>
+</html>

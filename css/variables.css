@@ -1,0 +1,88 @@
+/* ==============================================
+   Переменные темы оформления
+   Светлая тема — по умолчанию.
+   Тёмная тема — включается через data-theme.
+   ============================================== */
+
+
+/* --- Светлая тема --- */
+
+:root,
+[data-theme='light'] {
+
+  /* Фон */
+  --bg: #f4f6fb;
+  --surface: #ffffff;
+  --surface-2: #f0f2f7;
+  --surface-3: #e8ebf2;
+
+  /* Текст */
+  --text: #161929;
+  --text-secondary: #3d4260;
+  --text-muted: #6e7490;
+
+  /* Основной цвет */
+  --primary: #3b63f7;
+  --primary-hover: #2d50e0;
+  --primary-light: rgba(59, 99, 247, 0.08);
+  --primary-subtle: rgba(59, 99, 247, 0.04);
+
+  /* Границы и тени */
+  --border: #e2e5ef;
+  --border-light: #edf0f7;
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+
+  /* Статусы */
+  --success: #1ea85a;
+  --success-light: rgba(30, 168, 90, 0.08);
+  --warning: #d99a1e;
+  --warning-light: rgba(217, 154, 30, 0.08);
+  --danger: #dc3d3d;
+  --danger-light: rgba(220, 61, 61, 0.08);
+
+  /* Скругления */
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+
+  /* Шапка */
+  --header-height: 64px;
+}
+
+
+/* --- Тёмная тема --- */
+
+[data-theme='dark'] {
+
+  --bg: #0f1117;
+  --surface: #181b27;
+  --surface-2: #1f2333;
+  --surface-3: #272c40;
+
+  --text: #e8eaf2;
+  --text-secondary: #b8bdd0;
+  --text-muted: #7e85a0;
+
+  --primary: #6b8df8;
+  --primary-hover: #8ba5fa;
+  --primary-light: rgba(107, 141, 248, 0.1);
+  --primary-subtle: rgba(107, 141, 248, 0.05);
+
+  --border: #282d42;
+  --border-light: #1f2335;
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.16);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.28), 0 1px 4px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.36), 0 2px 8px rgba(0, 0, 0, 0.24);
+
+  --success: #3dd97e;
+  --success-light: rgba(61, 217, 126, 0.1);
+  --warning: #f0c040;
+  --warning-light: rgba(240, 192, 64, 0.1);
+  --danger: #f25555;
+  --danger-light: rgba(242, 85, 85, 0.1);
+}

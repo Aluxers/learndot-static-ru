@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Курсы IT — LearnDot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Шапка -->
+    <div id="header-root"></div>
+
+    <main class="page-content">
+        <div class="container">
+            <section class="section category-page-section">
+                <!-- Иконка категории -->
+                <div class="text-center category-page-image">
+                    <img src="images/icons/it1.png" alt="IT" class="category-page-icon">
+                </div>
+
+                <!-- Курсы IT -->
+                <div class="grid grid-3" id="courseGrid"></div>
+            </section>
+        </div>
+
+        <!-- Призыв к действию -->
+        <div id="cta"></div>
+    </main>
+
+    <!-- Подвал -->
+    <div id="footer-root"></div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // ===== Курсы категории «IT» =====
+        var itCourses = [];
+        for (var i = 0; i < DATA.courses.length; i++) {
+            if (DATA.courses[i].category === 'IT') {
+                itCourses.push(DATA.courses[i]);
+            }
+        }
+
+        // Рисуем карточки
+        var html = '';
+        for (var i = 0; i < itCourses.length; i++) {
+            html += renderCourseCard(itCourses[i]);
+        }
+        document.getElementById('courseGrid').innerHTML = html;
+
+        // Блок CTA
+        document.getElementById('cta').innerHTML = renderCTA();
+    });
+
+    </script>
+</body>
+</html>

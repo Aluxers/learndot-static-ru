@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Статья — LearnDot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Шапка -->
+    <div id="header-root"></div>
+
+    <main class="page-content">
+        <div class="container">
+            <section class="section" id="articleContent"></section>
+        </div>
+        <div id="cta"></div>
+    </main>
+
+    <!-- Подвал -->
+    <div id="footer-root"></div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // ===== Получаем ID статьи из URL =====
+        var params = new URLSearchParams(window.location.search);
+        var id = params.get('id');
+
+        // ===== Ищем статью по ID =====
+        var article = null;
+        for (var i = 0; i < DATA.blog.length; i++) {
+            if (DATA.blog[i].id === id) {
+                article = DATA.blog[i];
+                break;
+            }
+        }
+
+        // Если не найдена — ошибка
+        if (!article) {
+            document.getElementById('articleContent').innerHTML =
+                '<div class="text-center">' +
+                    '<h2>Статья не найдена</h2>' +
+                    '<p class="mb-24">Такой статьи не существует.</p>' +
+                    '<a href="blog.html" class="btn btn-primary">К блогу</a>' +
+                '</div>';
+            return;
+        }
+
+        // Обновляем заголовок страницы
+        document.title = article.title + ' — LearnDot';
+
+        // Категория
+        var catIcon = '💻';
+        var badgeClass = 'badge-success';
+        if (article.category === 'Дизайн') {
+            catIcon = '🎨';
+            badgeClass = 'badge-primary';
+        }
+
+        // ==========================================================
+        //   ОБЛОЖКА СТАТЬИ
+        //   Берётся из поля cover в DATA.blog (файл data.js).
+        //   Замените cover в data.js → images/blog/ваш-файл.jpg
+        //   Рекомендуемый размер: 900 × 400 пикселей
+        // ==========================================================
+        var coverHtml = '';
+        if (article.cover) {
+            coverHtml = '<div class="article-cover has-image" style="background-image:url(\'' + article.cover + '\')"><span>' + catIcon + '</span></div>';
+        } else {
+            coverHtml = '<div class="article-cover"><span>' + catIcon + '</span></div>';
+        }
+
+        // Полный текст (или excerpt если fullText нет)
+        var bodyHtml = article.fullText || ('<p>' + article.excerpt + '</p>');
+
+        // Навигация ← →
+        var idx = 0;
+        for (var i = 0; i < DATA.blog.length; i++) {
+            if (DATA.blog[i].id === id) { idx = i; break; }
+        }
+
+        var navHtml = '<div class="article-nav flex justify-between flex-wrap gap-12">';
+        if (idx > 0) {
+            navHtml += '<a href="blog-article.html?id=' + DATA.blog[idx - 1].id + '" class="btn btn-outline btn-sm">← ' + DATA.blog[idx - 1].title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        if (idx < DATA.blog.length - 1) {
+            navHtml += '<a href="blog-article.html?id=' + DATA.blog[idx + 1].id + '" class="btn btn-primary btn-sm">' + DATA.blog[idx + 1].title + ' →</a>';
+        }
+        navHtml += '</div>';
+
+        // Собираем страницу
+        document.getElementById('articleContent').innerHTML =
+            '<a href="blog.html" class="article-back">← Назад в блог</a>' +
+            coverHtml +
+            '<div class="article-header">' +
+                '<h1 class="article-title">' + article.title + '</h1>' +
+                '<div class="article-meta">' +
+                    '<span class="article-meta-author">' + article.author + '</span>' +
+                    '<span class="article-meta-dot"></span>' +
+                    '<span>' + formatDate(article.date, 'long') + '</span>' +
+                    '<span class="article-meta-dot"></span>' +
+                    '<span>' + article.readTime + '</span>' +
+                    '<span class="article-meta-dot"></span>' +
+                    '<span class="badge ' + badgeClass + '">' + article.category + '</span>' +
+                '</div>' +
+            '</div>' +
+            '<div class="article-body">' + bodyHtml + '</div>' +
+            navHtml;
+
+        // CTA
+        document.getElementById('cta').innerHTML = renderCTA(
+            t('articleCtaTitle'),
+            t('articleCtaText')
+        );
+    });
+    </script>
+</body>
+</html>

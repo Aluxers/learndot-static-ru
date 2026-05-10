@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление пользователями — LearnDot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+    <!-- Обёртка панели администратора -->
+    <div class="dash-wrap">
+        <div id="dashTopbar"></div>
+        <div id="dashSidebar"></div>
+        <main class="dash-content">
+
+            <div class="page-header">
+                <h1>Управление пользователями</h1>
+                <p id="userCount"></p>
+            </div>
+
+            <!-- Статистика -->
+            <div class="stats-grid mb-24" id="umStats"></div>
+
+            <!-- Поиск и фильтры -->
+            <div class="flex gap-12 flex-wrap mb-20">
+                <input class="input admin-search" id="umSearch" placeholder="Поиск по имени или email...">
+                <div class="flex gap-8" id="umFilters"></div>
+            </div>
+
+            <!-- Таблица -->
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead>
+                        <tr><th>Имя</th><th>Email</th><th>Роль</th><th>Статус</th><th>Дата</th><th>Курсы</th></tr>
+                    </thead>
+                    <tbody id="umTable"></tbody>
+                </table>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Проверяем роль администратора
+        if (!LearnDot.auth.requireRole(['admin'])) return;
+
+        // Рисуем шапку и боковое меню
+        renderDashTopbar('dashTopbar', 'Панель администратора');
+        renderDashSidebar('dashSidebar', 'admin', 'users');
+
+        
+        var roleFilter = 'all';
+        var roleLabels = { all: 'Все', student: 'Студенты', teacher: 'Препод.', admin: 'Админы' };
+        var statusLabels = { active: 'Активен', inactive: 'Неактивен' };
+        var roleBadge = { admin: 'badge-danger', teacher: 'badge-warning', student: 'badge-primary' };
+
+        function renderUM() {
+            var q = document.getElementById('umSearch').value.toLowerCase();
+            var list = DATA.allUsers.filter(function (u) {
+                var matchQ = !q || u.name.toLowerCase().indexOf(q) !== -1 || u.email.toLowerCase().indexOf(q) !== -1;
+                var matchR = roleFilter === 'all' || u.role === roleFilter;
+                return matchQ && matchR;
+            });
+
+            // Счётчик
+            document.getElementById('userCount').textContent = DATA.allUsers.length + ' пользователей';
+
+            // Подсчёт по ролям
+            var rc = {
+                all: DATA.allUsers.length,
+                student: (function(){var _c=0;for(var _i=0;_i<DATA.allUsers.length;_i++){if(DATA.allUsers[_i].role==='student'){_c++;}}return _c;})(),
+                teacher: (function(){var _c=0;for(var _i=0;_i<DATA.allUsers.length;_i++){if(DATA.allUsers[_i].role==='teacher'){_c++;}}return _c;})(),
+                admin: (function(){var _c=0;for(var _i=0;_i<DATA.allUsers.length;_i++){if(DATA.allUsers[_i].role==='admin'){_c++;}}return _c;})()
+            };
+
+            // Статистика
+            var activeCount = (function(){var _c=0;for(var _i=0;_i<DATA.allUsers.length;_i++){if(DATA.allUsers[_i].status==='active'){_c++;}}return _c;})();
+            document.getElementById('umStats').innerHTML = [
+                { v: rc.all, l: 'Всего' },
+                { v: rc.student, l: 'Студентов' },
+                { v: rc.teacher, l: 'Препод.' },
+                { v: activeCount, l: 'Активных' }
+            ].map(function (s) {
+                return '<div class="stat-card"><div class="stat-value">' + s.v + '</div><div class="stat-label">' + s.l + '</div></div>';
+            }).join('');
+
+            // Фильтры
+            document.getElementById('umFilters').innerHTML = ['all', 'student', 'teacher', 'admin'].map(function (r) {
+                var cls = roleFilter === r ? 'btn-primary' : 'btn-secondary';
+                return '<button class="btn ' + cls + ' btn-sm" onclick="setRoleFilter(\'' + r + '\')">' +
+                    roleLabels[r] + ' (' + rc[r] + ')</button>';
+            }).join('');
+
+            // Таблица
+            document.getElementById('umTable').innerHTML = list.map(function (u) {
+                return '' +
+                    '<tr>' +
+                        '<td class="td-name">' + u.name + '</td>' +
+                        '<td class="td-muted">' + u.email + '</td>' +
+                        '<td><span class="badge ' + (roleBadge[u.role] || 'badge-primary') + '">' + u.role + '</span></td>' +
+                        '<td><span class="badge ' + (u.status === 'active' ? 'badge-success' : 'badge-danger') + '">' +
+                            (statusLabels[u.status] || u.status) + '</span></td>' +
+                        '<td class="td-date-sm">' + formatDate(u.joinDate) + '</td>' +
+                        '<td>' + u.courses + '</td>' +
+                    '</tr>';
+            }).join('');
+        }
+
+        function loadUsersFromDb() {
+            fetch('/api/users')
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (result) {
+                    if (result.success) {
+                        DATA.allUsers = result.users;
+                    }
+
+                    renderUM();
+                })
+                .catch(function () {
+                    renderUM();
+                });
+        }
+
+        window.setRoleFilter = function (r) { roleFilter = r; renderUM(); };
+        document.getElementById('umSearch').addEventListener('input', renderUM);
+        loadUsersFromDb();
+
+    });
+    </script>
+</body>
+</html>

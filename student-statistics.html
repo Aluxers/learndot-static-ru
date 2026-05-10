@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Статистика студентов — LearnDot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+    <!-- Обёртка кабинета -->
+    <div class="dash-wrap">
+        <div id="dashTopbar"></div>
+        <div id="dashSidebar"></div>
+        <main class="dash-content">
+
+            <div class="page-header">
+                <h1>Статистика студентов</h1>
+                <p>Анализ успеваемости по вашим курсам.</p>
+            </div>
+
+            <!-- Статистика -->
+            <div class="stats-grid" id="ssStats"></div>
+
+            <!-- Графики -->
+            <div class="grid grid-2 mb-28" id="ssCharts"></div>
+
+            <!-- Таблица лучших студентов -->
+            <h3 class="dash-section-title mt-28">Лучшие студенты</h3>
+            <div class="table-wrap" id="ssTable"></div>
+
+        </main>
+    </div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Проверяем роль
+        if (!LearnDot.auth.requireRole(['teacher'])) return;
+
+        // Рисуем шапку и меню
+        renderDashTopbar('dashTopbar', 'Кабинет преподавателя');
+        renderDashSidebar('dashSidebar', 'teacher', 'stats');
+
+        
+        // Данные статистики
+        var s = {
+            title: 'HTML/CSS',
+            total: 3200,
+            active: 420,
+            completion: 62,
+            quiz: 78,
+            assign: 82,
+            top: [
+                ['Никита Волков', 94, 91],
+                ['Том Бейкер', 88, 87],
+                ['София Мартинес', 82, 85]
+            ]
+        };
+
+        // Карточки статистики
+        document.getElementById('ssStats').innerHTML = [
+            { v: s.total.toLocaleString(), l: 'Всего студентов' },
+            { v: s.active, l: 'Активных в этом месяце' },
+            { v: s.completion + '%', l: 'Завершение' },
+            { v: s.quiz + '%', l: 'Средний балл тестов' }
+        ].map(function (x) {
+            return '<div class="stat-card"><div class="stat-value">' + x.v + '</div><div class="stat-label">' + x.l + '</div></div>';
+        }).join('');
+
+        // Графики — полосы успеваемости + метрики
+        var barsData = [
+            { label: 'Завершение', value: s.completion, color: 'var(--primary)' },
+            { label: 'Тесты', value: s.quiz, color: 'var(--success)' },
+            { label: 'Задания', value: s.assign, color: 'var(--warning)' }
+        ];
+
+        var barsHtml = barsData.map(function (b) {
+            return '' +
+                '<div class="stat-bar">' +
+                    '<div class="stat-bar__header">' +
+                        '<span class="stat-bar__label">' + b.label + '</span>' +
+                        '<span class="stat-bar__value" style="color:' + b.color + '">' + b.value + '%</span>' +
+                    '</div>' +
+                    '<div class="stat-bar__track">' +
+                        '<div class="stat-bar__fill" style="width:' + b.value + '%;background:' + b.color + '"></div>' +
+                    '</div>' +
+                '</div>';
+        }).join('');
+
+        var metricsHtml = '' +
+            '<div class="metric-row"><span class="metric-label">Активных</span><strong>' + s.active + '</strong></div>' +
+            '<div class="metric-row"><span class="metric-label">Всего</span><strong>' + s.total.toLocaleString() + '</strong></div>' +
+            '<div class="metric-row"><span class="metric-label">Завершение</span><strong>' + s.completion + '%</strong></div>';
+
+        document.getElementById('ssCharts').innerHTML =
+            '<div class="card"><h3 class="chart-title">Успеваемость</h3>' + barsHtml + '</div>' +
+            '<div class="card"><h3 class="chart-title">Метрики</h3>' + metricsHtml + '</div>';
+
+        // Таблица лучших студентов
+        var rowsHtml = s.top.map(function (t, i) {
+            var scoreClass = t[2] >= 85 ? 'td-score-good' : 'td-score-normal';
+            return '' +
+                '<tr>' +
+                    '<td class="td-rank">' + (i + 1) + '</td>' +
+                    '<td class="td-name">' + t[0] + '</td>' +
+                    '<td>' + renderProgressBar(t[1]) + '</td>' +
+                    '<td class="' + scoreClass + '">' + t[2] + '</td>' +
+                '</tr>';
+        }).join('');
+
+        document.getElementById('ssTable').innerHTML =
+            '<table class="data-table">' +
+                '<thead><tr><th>#</th><th>Студент</th><th>Прогресс</th><th>Балл</th></tr></thead>' +
+                '<tbody>' + rowsHtml + '</tbody>' +
+            '</table>';
+
+    });
+    </script>
+</body>
+</html>

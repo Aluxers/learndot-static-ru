@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>История оплат — LearnDot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+    <!-- Обёртка кабинета -->
+    <div class="dash-wrap">
+        <div id="dashTopbar"></div>
+        <div id="dashSidebar"></div>
+        <main class="dash-content">
+
+            <div class="page-header">
+                <h1>История оплат</h1>
+                <p>Все ваши транзакции.</p>
+            </div>
+            <div class="stats-grid stats-grid-3 mb-28" id="payStats"></div>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Курс</th>
+                            <th>Дата</th>
+                            <th>Способ</th>
+                            <th>Сумма</th>
+                            <th>Статус</th>
+                        </tr>
+                    </thead>
+                    <tbody id="payTable"></tbody>
+                </table>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // ===== Проверяем роль пользователя =====
+        if (!LearnDot.auth.requireRole(['student'])) return;
+
+        // ===== Рисуем мобильную шапку и боковое меню =====
+        renderDashTopbar('dashTopbar', 'Кабинет студента');
+        renderDashSidebar('dashSidebar', 'student', 'payments');
+        // ===== Статистика оплат =====
+        var totalSpent = 0;
+        var freeCount = 0;
+        for (var i = 0; i < getUserPayments().length; i++) {
+            totalSpent += getUserPayments()[i].amount;
+            if (getUserPayments()[i].amount === 0) {
+                freeCount++;
+            }
+        }
+
+        document.getElementById('payStats').innerHTML = renderStatCards([
+            { v: getUserPayments().length, l: 'Транзакций' },
+            { v: totalSpent.toLocaleString() + ' ₸', l: 'Всего потрачено' },
+            { v: freeCount, l: 'Бесплатных' }
+        ]);
+
+        // ===== Таблица платежей =====
+        var html = '';
+        for (var i = 0; i < getUserPayments().length; i++) {
+            var p = getUserPayments()[i];
+
+            // Определяем класс и текст суммы
+            var amountClass = 'td-amount';
+            var amountText = p.amount.toLocaleString() + ' ₸';
+            if (p.amount === 0) {
+                amountClass = 'td-amount-free';
+                amountText = 'Бесплатно';
+            }
+
+            html +=
+                '<tr>' +
+                    '<td class="td-name">' + p.courseName + '</td>' +
+                    '<td class="td-muted">' + formatDate(p.date) + '</td>' +
+                    '<td class="td-muted">' + p.method + '</td>' +
+                    '<td class="' + amountClass + '">' + amountText + '</td>' +
+                    '<td><span class="badge badge-success">Оплачено</span></td>' +
+                '</tr>';
+        }
+        document.getElementById('payTable').innerHTML = html;
+
+    });
+    </script>
+</body>
+</html>

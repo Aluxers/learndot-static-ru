@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход — LearnDot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Шапка сайта -->
+    <div id="header-root"></div>
+
+    <!-- Форма входа -->
+    <main class="page-content">
+        <div class="container">
+            <section class="section">
+                <div class="auth-wrap">
+                    <div class="card auth-card">
+
+                        <!-- Заголовок -->
+                        <div class="auth-header">
+                            <h2>С возвращением</h2>
+                            <p>Войдите, чтобы продолжить обучение.</p>
+                        </div>
+
+                        <!-- Ошибка (скрыта по умолчанию) -->
+                        <div id="loginError" class="auth-error mb-12 auth-error-hidden"></div>
+
+                        <!-- Поля формы -->
+                        <div class="auth-form">
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input class="input" id="loginEmail" placeholder="you@example.com" type="email">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Пароль</label>
+                                <input class="input" id="loginPassword" placeholder="••••••••" type="password">
+                            </div>
+                            <div class="forgot-link">
+                                <a href="forgot-password.html">Забыли пароль?</a>
+                            </div>
+                            <button class="btn btn-primary btn-block" id="loginBtn">Войти</button>
+                        </div>
+
+                        <!-- Ссылка на регистрацию -->
+                        <p class="auth-switch">
+                            Нет аккаунта? <a href="register.html">Зарегистрироваться</a>
+                        </p>
+
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Подвал -->
+    <div id="footer-root"></div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // ===== Проверяем, авторизован ли пользователь =====
+        // Если да — сразу перенаправляем в его кабинет
+        if (LearnDot.auth.isAuthenticated()) {
+            var user = LearnDot.auth.getCurrentUser();
+            window.location.href = LearnDot.auth.getDashboardUrl(user.role);
+            return;
+        }
+
+        // ===== Находим элементы формы =====
+        var emailInput = document.getElementById('loginEmail');
+        var passwordInput = document.getElementById('loginPassword');
+        var errorBox = document.getElementById('loginError');
+
+        // ===== Функция показа ошибки =====
+        function showError(message) {
+            errorBox.textContent = message;
+            errorBox.classList.remove('auth-error-hidden');
+        }
+
+        // ===== Обработка кнопки «Войти» =====
+        document.getElementById('loginBtn').addEventListener('click', function () {
+            var email = emailInput.value;
+            var password = passwordInput.value;
+
+            // Проверяем заполненность полей
+            if (!email || !password) {
+                showError('Заполните все поля.');
+                return;
+            }
+
+            // Пытаемся войти через auth.js
+            LearnDot.auth.login(email, password).then(function (result) {
+
+            // Если ошибка — показываем
+            if (!result.success) {
+                showError(result.error);
+                return;
+            }
+
+            // Успешный вход — переходим в кабинет
+            window.location.href = LearnDot.auth.getDashboardUrl(result.user.role);
+            });
+        });
+    });
+
+    </script>
+</body>
+</html>

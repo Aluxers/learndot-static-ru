@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление контентом — LearnDot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+    <!-- Обёртка панели администратора -->
+    <div class="dash-wrap">
+        <div id="dashTopbar"></div>
+        <div id="dashSidebar"></div>
+        <main class="dash-content">
+
+            <div class="page-header">
+                <h1>Управление контентом</h1>
+                <p>Секции сайта, FAQ, блог.</p>
+            </div>
+
+            <!-- Табы -->
+            <div class="flex gap-8 flex-wrap mb-24">
+                <button class="btn btn-primary btn-sm" onclick="showTab('sections')">Секции</button>
+                <button class="btn btn-secondary btn-sm" onclick="showTab('faq')">FAQ</button>
+                <button class="btn btn-secondary btn-sm" onclick="showTab('blog')">Блог</button>
+            </div>
+
+            <!-- Область контента -->
+            <div id="contentArea"></div>
+
+        </main>
+    </div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Проверяем роль администратора
+        if (!LearnDot.auth.requireRole(['admin'])) return;
+
+        // Рисуем шапку и боковое меню
+        renderDashTopbar('dashTopbar', 'Панель администратора');
+        renderDashSidebar('dashSidebar', 'admin', 'content');
+
+        
+        // Переключение табов
+        window.showTab = function (tab) {
+            var area = document.getElementById('contentArea');
+
+            // ─── Вкладка «Секции сайта» ───
+            if (tab === 'sections') {
+                var sections = [
+                    ['Баннер главной', 'Главная', 'активен', '2026-03-20'],
+                    ['Популярные курсы', 'Главная', 'активен', '2026-03-18'],
+                    ['Преимущества', 'Главная', 'активен', '2026-02-10'],
+                    ['Преподаватели', 'Главная', 'активен', '2026-03-01']
+                ];
+
+                area.innerHTML = sections.map(function (s) {
+                    return '' +
+                        '<div class="card flex justify-between items-center flex-wrap gap-12 mb-12 content-section-card">' +
+                            '<div>' +
+                                '<h4 class="content-section-title">' + s[0] + '</h4>' +
+                                '<p class="content-section-meta">Страница: ' + s[1] + ' · Обновлено: ' + s[3] + '</p>' +
+                            '</div>' +
+                            '<div class="flex items-center gap-8">' +
+                                '<span class="badge badge-success">' + s[2] + '</span>' +
+                                '<button class="btn btn-secondary btn-sm">Ред.</button>' +
+                            '</div>' +
+                        '</div>';
+                }).join('');
+
+            // ─── Вкладка «FAQ» ───
+            } else if (tab === 'faq') {
+                area.innerHTML =
+                    '<div class="flex justify-end mb-16"><button class="btn btn-primary btn-sm">+ Добавить</button></div>' +
+                    DATA.faq.map(function (f) {
+                        return '' +
+                            '<div class="card mb-8 content-faq-card">' +
+                                '<div class="flex justify-between items-center gap-12 flex-wrap">' +
+                                    '<div class="content-faq-body">' +
+                                        '<div class="flex items-center gap-8 mb-4">' +
+                                            '<span class="badge badge-primary badge-sm">' + f.category + '</span>' +
+                                            '<h4 class="content-faq-question">' + f.question + '</h4>' +
+                                        '</div>' +
+                                        '<p class="content-faq-answer">' + f.answer.substring(0, 100) + '...</p>' +
+                                    '</div>' +
+                                    '<div class="flex gap-8 content-faq-actions">' +
+                                        '<button class="btn btn-secondary btn-sm">Ред.</button>' +
+                                        '<button class="btn btn-danger-outline btn-sm">Удалить</button>' +
+                                    '</div>' +
+                                '</div>' +
+                            '</div>';
+                    }).join('');
+
+            // ─── Вкладка «Блог» ───
+            // Здесь показано поле обложки (cover) для каждой статьи блога.
+            // Обложка хранится в поле cover каждого поста в DATA.blog (файл data.js).
+            // Чтобы изменить обложку статьи, нужно обновить поле cover в data.js.
+            } else {
+                area.innerHTML =
+                    '<div class="flex justify-end mb-16"><button class="btn btn-primary btn-sm">+ Новая статья</button></div>' +
+                    '<div class="table-wrap">' +
+                        '<table class="data-table">' +
+                            '<thead><tr><th>Обложка</th><th>Заголовок</th><th>Категория</th><th>Автор</th><th>Дата</th><th>Действия</th></tr></thead>' +
+                            '<tbody>' +
+                            DATA.blog.map(function (b) {
+                                var badgeClass = b.category === 'Дизайн' ? 'badge-primary' : 'badge-success';
+
+                                // Обложка статьи блога — путь к файлу изображения
+                                var coverHtml = '<div class="cover-preview">' +
+                                    (b.cover ? '🖼️ ' + b.cover.split('/').pop() : '—') +
+                                    '</div>';
+
+                                return '' +
+                                    '<tr>' +
+                                        '<td>' + coverHtml + '</td>' +
+                                        '<td class="td-title-truncate">' + b.title + '</td>' +
+                                        '<td><span class="badge ' + badgeClass + '">' + b.category + '</span></td>' +
+                                        '<td class="td-muted">' + b.author + '</td>' +
+                                        '<td class="td-date-sm">' + formatDate(b.date) + '</td>' +
+                                        '<td>' +
+                                            '<div class="flex gap-8">' +
+                                                '<button class="btn btn-secondary btn-sm">Ред.</button>' +
+                                                '<button class="btn btn-danger-outline btn-sm">Удалить</button>' +
+                                            '</div>' +
+                                        '</td>' +
+                                    '</tr>';
+                            }).join('') +
+                            '</tbody>' +
+                        '</table>' +
+                    '</div>';
+            }
+        };
+
+        // Показываем первую вкладку при загрузке
+        showTab('sections');
+
+    });
+    </script>
+</body>
+</html>

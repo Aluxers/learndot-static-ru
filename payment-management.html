@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление платежами — LearnDot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+    <!-- Обёртка панели администратора -->
+    <div class="dash-wrap">
+        <div id="dashTopbar"></div>
+        <div id="dashSidebar"></div>
+        <main class="dash-content">
+
+            <div class="page-header">
+                <h1>Управление платежами</h1>
+                <p>Все транзакции платформы.</p>
+            </div>
+
+            <!-- Статистика -->
+            <div class="stats-grid stats-grid-3 mb-24" id="pmStats"></div>
+
+            <!-- Поиск -->
+            <div class="flex gap-12 flex-wrap mb-20">
+                <input class="input admin-search" id="pmSearch" placeholder="Поиск по имени или курсу...">
+            </div>
+
+            <!-- Таблица -->
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead>
+                        <tr><th>Пользователь</th><th>Курс</th><th>Сумма</th><th>Способ</th><th>Дата</th><th>Статус</th></tr>
+                    </thead>
+                    <tbody id="pmTable"></tbody>
+                </table>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Проверяем роль администратора
+        if (!LearnDot.auth.requireRole(['admin'])) return;
+
+        // Рисуем шапку и боковое меню
+        renderDashTopbar('dashTopbar', 'Панель администратора');
+        renderDashSidebar('dashSidebar', 'admin', 'payments');
+
+        
+        // Статистика платежей
+        var totalC = DATA.allPayments
+            .filter(function (p) { return p.status === 'completed'; })
+            .reduce(function (s, p) { return s + p.amount; }, 0);
+        var completedCount = (function(){var _c=0;for(var _i=0;_i<DATA.allPayments.length;_i++){if(DATA.allPayments[_i].status==='completed'){_c++;}}return _c;})();
+        var avgOrder = Math.round(totalC / completedCount);
+
+        document.getElementById('pmStats').innerHTML = [
+            { v: DATA.allPayments.length, l: 'Транзакций' },
+            { v: totalC.toLocaleString() + ' ₸', l: 'Доход' },
+            { v: avgOrder + ' ₸', l: 'Средний чек' }
+        ].map(function (s) {
+            return '<div class="stat-card"><div class="stat-value">' + s.v + '</div><div class="stat-label">' + s.l + '</div></div>';
+        }).join('');
+
+        // Таблица
+        function renderPM() {
+            var q = document.getElementById('pmSearch').value.toLowerCase();
+            var list = DATA.allPayments.filter(function (p) {
+                return !q || p.user.toLowerCase().indexOf(q) !== -1 || p.course.toLowerCase().indexOf(q) !== -1;
+            });
+
+            document.getElementById('pmTable').innerHTML = list.map(function (p) {
+                var statusBadge = p.status === 'completed' ? 'badge-success' : 'badge-danger';
+                var statusText = p.status === 'completed' ? 'Оплачено' : 'Возврат';
+                return '' +
+                    '<tr>' +
+                        '<td class="td-name">' + p.user + '</td>' +
+                        '<td class="td-muted">' + p.course + '</td>' +
+                        '<td class="td-amount">$' + p.amount + '</td>' +
+                        '<td class="td-muted">' + p.method + '</td>' +
+                        '<td class="td-date-sm">' + formatDate(p.date) + '</td>' +
+                        '<td><span class="badge ' + statusBadge + '">' + statusText + '</span></td>' +
+                    '</tr>';
+            }).join('');
+        }
+
+        document.getElementById('pmSearch').addEventListener('input', renderPM);
+        renderPM();
+
+    });
+    </script>
+</body>
+</html>

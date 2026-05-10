@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Настройки — LearnDot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+    <!-- Обёртка кабинета -->
+    <div class="dash-wrap">
+        <div id="dashTopbar"></div>
+        <div id="dashSidebar"></div>
+        <main class="dash-content">
+
+            <div class="page-header">
+                <h1>Настройки</h1>
+                <p>Управление аккаунтом.</p>
+            </div>
+            <div class="flex flex-col gap-24 settings-wrap">
+
+                <!-- Внешний вид -->
+                <div class="card">
+                    <h3 class="mb-16">Внешний вид</h3>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="setting-title">Тёмная тема</p>
+                            <p class="setting-desc" id="themeStatus">Сейчас: Светлая</p>
+                        </div>
+                        <button class="btn btn-secondary btn-sm" id="themeBtn">Переключить</button>
+                    </div>
+                </div>
+
+                <!-- Профиль -->
+                <div class="card">
+                    <h3 class="mb-16">Профиль</h3>
+                    <div class="auth-form">
+                        <div class="form-group">
+                            <label class="form-label">Имя</label>
+                            <input class="input" id="sName">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input class="input" id="sEmail" type="email">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">О себе</label>
+                            <textarea class="input" rows="3" placeholder="Расскажите о себе..."></textarea>
+                        </div>
+                        <button class="btn btn-primary btn-sm" onclick="alert('Профиль сохранён!')">Сохранить</button>
+                    </div>
+                </div>
+
+                <!-- Смена пароля -->
+                <div class="card">
+                    <h3 class="mb-16">Смена пароля</h3>
+                    <div class="auth-form">
+                        <div class="form-group">
+                            <label class="form-label">Текущий пароль</label>
+                            <input class="input" type="password" placeholder="••••••••">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Новый пароль</label>
+                            <input class="input" type="password" placeholder="Мин. 6 символов">
+                        </div>
+                        <button class="btn btn-primary btn-sm" onclick="alert('Пароль обновлён!')">Обновить пароль</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // ===== Проверяем роль пользователя =====
+        if (!LearnDot.auth.requireRole(['student'])) return;
+
+        // ===== Рисуем мобильную шапку и боковое меню =====
+        renderDashTopbar('dashTopbar', 'Кабинет студента');
+        renderDashSidebar('dashSidebar', 'student', 'settings');
+        // ===== Заполняем поля текущими данными =====
+        var u = LearnDot.auth.getCurrentUser();
+        if (u) {
+            document.getElementById('sName').value = u.name;
+            document.getElementById('sEmail').value = u.email;
+        }
+
+        // ===== Показываем текущую тему =====
+        var currentTheme = document.documentElement.getAttribute('data-theme');
+        if (currentTheme === 'dark') {
+            document.getElementById('themeStatus').textContent = 'Сейчас: Тёмная';
+        } else {
+            document.getElementById('themeStatus').textContent = 'Сейчас: Светлая';
+        }
+
+        // ===== Переключение темы =====
+        document.getElementById('themeBtn').addEventListener('click', function () {
+            LearnDot.toggleTheme();
+            var newTheme = document.documentElement.getAttribute('data-theme');
+            if (newTheme === 'dark') {
+                document.getElementById('themeStatus').textContent = 'Сейчас: Тёмная';
+            } else {
+                document.getElementById('themeStatus').textContent = 'Сейчас: Светлая';
+            }
+    });
+
+    });
+    </script>
+</body>
+</html>

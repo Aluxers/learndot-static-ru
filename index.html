@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LearnDot — Твой путь в IT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div id="header-root"></div>
+
+    <main class="page-content">
+
+
+
+
+        <section class="hero">
+            <div class="container">
+                <div class="hero__inner">
+                    <h1 class="hero__title" data-i18n-html="homeHeroTitle">
+                        Освойте <span class="text-primary">Дизайн</span> и <span class="text-primary">IT</span> в своём темпе
+                    </h1>
+                    <p class="hero__subtitle" data-i18n="homeHeroText">
+                        Структурированные курсы, опытные преподаватели, практические проекты и поддержка сообщества.
+                    </p>
+                    <div class="flex justify-center gap-12 flex-wrap hero__actions">
+                        <a href="courses.html" class="btn btn-primary btn-lg" data-i18n="homeHeroCourses">Смотреть курсы</a>
+                        <a href="register.html" class="btn btn-outline btn-lg" data-i18n="homeHeroRegister">Регистрация</a>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+
+
+
+
+
+        <section class="section">
+            <div class="container">
+                <div class="section-title">
+                    <h2 data-lang="homeCategoriesTitle">Направления, с которых начинается рост</h2>
+                    <p data-lang="homeCategoriesText">Выберите сферу, которая вам ближе, и начните обучение в удобном формате с понятной подачей и практикой.</p>
+                </div>
+                <div class="grid grid-2">
+                    <a href="category-design.html" class="card card-hover category-card">
+                        <div class="category-card__icon">
+                            <img src="images/icons/design.png" alt="Дизайн">
+                        </div>
+                        <h3 data-lang="homeDesignTitle">Дизайн</h3>
+                        <p class="category-card__desc" data-lang="homeDesignText">Курсы по UX/UI, веб-дизайну, графике и визуальным инструментам для тех, кто хочет мыслить креативно и создавать эстетичные решения.</p>
+                        <span class="category-card__link" data-lang="chooseCategory">Выбрать направление →</span>
+                    </a>
+                    <a href="category-it.html" class="card card-hover category-card">
+                        <div class="category-card__icon">
+                            <img src="images/icons/it.png" alt="IT">
+                        </div>
+                        <h3 data-lang="homeItTitle">IT и разработка</h3>
+                        <p class="category-card__desc" data-lang="homeItText">Курсы по основам программирования и веб-разработки для тех, кто хочет уверенно войти в цифровую профессию.</p>
+                        <span class="category-card__link" data-lang="chooseCategory">Выбрать направление →</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+
+
+
+
+
+       
+        <section class="section section-alt">
+            <div class="container">
+                <div class="section-title">
+                    <h2 data-lang="popularCoursesTitle">Популярные курсы</h2>
+                    <p data-lang="popularCoursesText">Самые востребованные курсы, которым доверяют тысячи студентов.</p>
+                </div>
+                <div class="grid grid-3" id="popularCourses"></div>
+                <div class="text-center mt-32">
+                    <a href="courses.html" class="btn btn-secondary" data-lang="allCourses">Все курсы</a>
+                </div>
+            </div>
+        </section>
+
+
+
+
+
+
+
+        <section class="section">
+            <div class="container">
+                <div class="section-title">
+                    <h2 data-lang="benefitsTitle">Почему выбирают Learn?</h2>
+                    <p data-lang="benefitsText">Мы продумали каждую деталь, чтобы вы добились успеха.</p>
+                </div>
+                <div class="grid grid-3" id="benefits">
+                    <div class="card benefit-card">
+                        <div class="benefit-card__icon">
+                            <img src="images/icons/structured.png" alt="">
+                        </div>
+                        <h4 class="mb-8" data-lang="benefitStructuredTitle">Структурированная программа</h4>
+                        <p class="benefit-card__desc" data-lang="benefitStructuredText">Курс выстроен по понятной логике, чтобы вам было легче осваивать материал.</p>
+                    </div>
+
+                    <div class="card benefit-card">
+                        <div class="benefit-card__icon">
+                            <img src="images/icons/teachers.png" alt="">
+                        </div>
+                        <h4 class="mb-8" data-lang="benefitTeachersTitle">Опытные преподаватели</h4>
+                        <p class="benefit-card__desc" data-lang="benefitTeachersText">Занимайтесь со специалистами, которые объясняют сложные темы простым языком.</p>
+                    </div>
+
+                    <div class="card benefit-card">
+                        <div class="benefit-card__icon">
+                            <img src="images/icons/pace.png" alt="">
+                        </div>
+                        <h4 class="mb-8" data-lang="benefitPaceTitle">Учитесь в своём темпе</h4>
+                        <p class="benefit-card__desc" data-lang="benefitPaceText">Выбирайте комфортный ритм и проходите материалы в удобное время.</p>
+                    </div>
+
+                    <div class="card benefit-card">
+                        <div class="benefit-card__icon">
+                            <img src="images/icons/projects.png" alt="">
+                        </div>
+                        <h4 class="mb-8" data-lang="benefitProjectsTitle">Практические проекты</h4>
+                        <p class="benefit-card__desc" data-lang="benefitProjectsText">Выполняйте задания, которые помогают закреплять знания и получать опыт.</p>
+                    </div>
+
+                    <div class="card benefit-card">
+                        <div class="benefit-card__icon">
+                            <img src="images/icons/mobile.png" alt="">
+                        </div>
+                        <h4 class="mb-8" data-lang="benefitMobileTitle">Мобильная версия</h4>
+                        <p class="benefit-card__desc" data-lang="benefitMobileText">Пользуйтесь платформой на компьютере, планшете или телефоне.</p>
+                    </div>
+
+                    <div class="card benefit-card">
+                        <div class="benefit-card__icon">
+                            <img src="images/icons/certificates.png" alt="">
+                        </div>
+                        <h4 class="mb-8" data-lang="benefitCertificatesTitle">Сертификаты</h4>
+                        <p class="benefit-card__desc" data-lang="benefitCertificatesText">После прохождения курса вы получаете сертификат для портфолио или резюме.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+
+
+
+        <section class="section section-alt">
+            <div class="container">
+                <div class="section-title">
+                    <h2 data-lang="teachersTitle">Наши преподаватели</h2>
+                    <p data-lang="teachersText">Профессионалы индустрии, увлечённые обучением.</p>
+                </div>
+                <div class="grid grid-4" id="teachersPreview"></div>
+                <div class="text-center mt-32">
+                    <a href="teachers.html" class="btn btn-secondary" data-lang="allTeachers">Все преподаватели</a>
+                </div>
+            </div>
+        </section>
+
+
+
+
+
+        
+        <section class="section">
+            <div class="container">
+                <div class="section-title">
+                    <h2 data-lang="reviewsTitle">Что говорят наши студенты</h2>
+                    <p data-lang="reviewsText">Отзывы тех, кто уже прошёл обучение и применяет знания на практике.</p>
+                </div>
+                <div class="grid grid-3" id="reviewsPreview"></div>
+                <div class="text-center mt-32">
+                    <a href="reviews.html" class="btn btn-secondary" data-lang="allReviews">Все отзывы</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Призыв к действию -->
+        <div id="cta"></div>
+
+    </main>
+
+    <div id="footer-root"></div>
+
+
+
+
+
+
+
+
+
+
+    <!-- Скрипты -->
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // ===== Популярные курсы =====
+        // Показываем курсы с наибольшим числом студентов (от 1500)
+
+        var allCourses = DATA.courses;
+        var popular = [];
+
+        // Отбираем популярные курсы
+        for (var i = 0; i < allCourses.length; i++) {
+            if (allCourses[i].students >= 1500) {
+                popular.push(allCourses[i]);
+            }
+        }
+
+        // Берём только первые 6
+        if (popular.length > 6) {
+            popular = popular.slice(0, 6);
+        }
+
+        // Рисуем карточки курсов
+        var coursesHtml = '';
+        for (var i = 0; i < popular.length; i++) {
+            coursesHtml += renderCourseCard(popular[i]);
+        }
+        document.getElementById('popularCourses').innerHTML = coursesHtml;
+
+
+
+
+
+
+
+
+        // ===== Преподаватели =====
+        // Карточки с аватаром, тегами и статистикой
+
+        var teachersHtml = '';
+        for (var i = 0; i < DATA.teachers.length; i++) {
+            var t = DATA.teachers[i];
+
+            // Рисуем теги специализации
+            var specializations = t.specialization.split(', ');
+            var tagsHtml = '';
+            for (var j = 0; j < specializations.length; j++) {
+                tagsHtml += '<span class="badge badge-primary">' + specializations[j] + '</span>';
+            }
+
+            teachersHtml +=
+                '<div class="card card-hover teacher-card">' +
+                    '<div class="teacher-avatar"><img src="' + (t.avatar || 'images/avatars/default.jpg') + '" alt=""></div>' +
+                    '<h4 class="mb-4">' + t.name + '</h4>' +
+                    '<p class="teacher-card__role">' + t.role + '</p>' +
+                    '<div class="tags">' + tagsHtml + '</div>' +
+                    '<p class="bio">' + t.bio + '</p>' +
+                    '<div class="teacher-stats">' +
+                        '<div class="teacher-stat">' + renderStars(t.rating, 'stars-sm') + '</div>' +
+                        '<div class="teacher-stat">' +
+                            '<span class="teacher-stat-value">' + t.students.toLocaleString() + '</span>' +
+                            '<span class="teacher-stat-label">' + window.t('students') + '</span>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
+        }
+        document.getElementById('teachersPreview').innerHTML = teachersHtml;
+
+
+
+
+
+
+
+        // ===== Отзывы студентов (первые 3) =====
+
+        var reviewsHtml = '';
+        var firstReviews = DATA.reviews.slice(0, 3);
+        for (var i = 0; i < firstReviews.length; i++) {
+            var r = firstReviews[i];
+            reviewsHtml +=
+                '<div class="card review-card">' +
+                    '<div class="review-header">' +
+                        '<div class="review-avatar"><img src="' + (r.avatar || 'images/avatars/default.jpg') + '" alt=""></div>' +
+                        '<div>' +
+                            '<div class="review-name">' + r.name + '</div>' +
+                            '<div class="review-course">' + r.course + '</div>' +
+                        '</div>' +
+                    '</div>' +
+                    renderStars(r.rating, 'stars-md') +
+                    '<p class="review-text">' + r.text + '</p>' +
+                    '<p class="review-date">' + formatDate(r.date, 'long') + '</p>' +
+                '</div>';
+        }
+        document.getElementById('reviewsPreview').innerHTML = reviewsHtml;
+
+
+
+
+
+
+
+        // ===== Блок CTA =====
+        document.getElementById('cta').innerHTML = renderCTA();
+    });
+
+    </script>
+
+</body>
+</html>

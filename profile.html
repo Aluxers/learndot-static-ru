@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль — LearnDot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+    <!-- Обёртка кабинета -->
+    <div class="dash-wrap">
+        <div id="dashTopbar"></div>
+        <div id="dashSidebar"></div>
+        <main class="dash-content">
+
+            <div class="page-header">
+                <h1>Профиль</h1>
+                <p>Ваша информация и статистика обучения.</p>
+            </div>
+            <div class="profile-layout" id="profileContent"></div>
+
+        </main>
+    </div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // ===== Проверяем роль пользователя =====
+        if (!LearnDot.auth.requireRole(['student'])) return;
+
+        // ===== Рисуем мобильную шапку и боковое меню =====
+        renderDashTopbar('dashTopbar', 'Кабинет студента');
+        renderDashSidebar('dashSidebar', 'student', 'profile');
+        // ===== Данные пользователя =====
+        var u = LearnDot.auth.getCurrentUser();
+        var enrollments = getUserEnrollments();
+
+        // Считаем завершённые
+        var completedCount = 0;
+        for (var i = 0; i < enrollments.length; i++) {
+            if (enrollments[i].status === 'completed') completedCount++;
+        }
+
+        // Средний прогресс
+        var totalProg = 0;
+        for (var i = 0; i < enrollments.length; i++) {
+            totalProg += enrollments[i].progress;
+        }
+        var avgProg = Math.round(totalProg / enrollments.length);
+
+        // ===== Левая колонка — аватар =====
+        var leftHtml =
+            '<div class="card profile-card text-center">' +
+                '<div class="profile-avatar-lg"><img src="' + (u && u.avatar ? u.avatar : 'images/avatars/default.jpg') + '" alt=""></div>' +
+                '<h3 class="mb-4">' + (u ? u.name : 'Студент') + '</h3>' +
+                '<p class="profile-email">' + (u ? u.email : '') + '</p>' +
+                '<span class="badge badge-primary mb-16">Студент</span>' +
+                '<p class="profile-since">Участник с октября 2025</p>' +
+            '</div>';
+
+        // ===== Правая колонка — статистика + информация =====
+        var statsHtml = renderStatCards([
+            { v: enrollments.length, l: 'Записан' },
+            { v: completedCount, l: 'Пройдено' },
+            { v: getUserCertificates().length, l: 'Сертификаты' },
+            { v: avgProg + '%', l: 'Прогресс' }
+        ]);
+
+        // Поля информации
+        var fields = [
+            ['Полное имя', u ? u.name : '—'],
+            ['Email', u ? u.email : '—'],
+            ['Роль', 'Студент'],
+            ['Город', 'Не указан']
+        ];
+        var fieldsHtml = '';
+        for (var i = 0; i < fields.length; i++) {
+            fieldsHtml +=
+                '<div>' +
+                    '<p class="profile-field-label">' + fields[i][0] + '</p>' +
+                    '<p class="profile-field-value">' + fields[i][1] + '</p>' +
+                '</div>';
+        }
+
+        var rightHtml =
+            '<div class="flex flex-col gap-16">' +
+                '<div class="stats-grid stats-grid-no-mb">' + statsHtml + '</div>' +
+                '<div class="card">' +
+                    '<h4 class="mb-16">Личная информация</h4>' +
+                    '<div class="profile-info-grid">' + fieldsHtml + '</div>' +
+                '</div>' +
+            '</div>';
+
+        document.getElementById('profileContent').innerHTML = leftHtml + rightHtml;
+
+    });
+    </script>
+</body>
+</html>

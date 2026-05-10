@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление курсами — LearnDot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+    <!-- Обёртка панели администратора -->
+    <div class="dash-wrap">
+        <div id="dashTopbar"></div>
+        <div id="dashSidebar"></div>
+        <main class="dash-content">
+
+            <!-- Заголовок с кнопкой -->
+            <div class="page-header-row mb-28">
+                <div class="page-header page-header-no-mb">
+                    <h1>Управление курсами</h1>
+                    <p id="courseCount"></p>
+                </div>
+                <button class="btn btn-primary" onclick="alert('Форма создания курса')">+ Добавить курс</button>
+            </div>
+
+            <!-- Поиск -->
+            <div class="mb-20">
+                <input class="input admin-search" id="cmSearch" placeholder="Поиск курсов...">
+            </div>
+
+            <!-- Таблица курсов -->
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Обложка</th>
+                            <th>Название</th>
+                            <th>Категория</th>
+                            <th>Уровень</th>
+                            <th>Уроки</th>
+                            <th>Цена</th>
+                            <th>Студенты</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cmTable"></tbody>
+                </table>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Проверяем роль администратора
+        if (!LearnDot.auth.requireRole(['admin'])) return;
+
+        // Рисуем шапку и боковое меню
+        renderDashTopbar('dashTopbar', 'Панель администратора');
+        renderDashSidebar('dashSidebar', 'admin', 'courses');
+
+        
+        // Отрисовка таблицы курсов
+        function renderCM() {
+            var q = document.getElementById('cmSearch').value.toLowerCase();
+            var list = DATA.courses.filter(function (c) {
+                return !q || c.title.toLowerCase().indexOf(q) !== -1;
+            });
+
+            document.getElementById('courseCount').textContent = list.length + ' курсов';
+
+            document.getElementById('cmTable').innerHTML = list.map(function (c) {
+                var badgeClass = c.category === 'Дизайн' ? 'badge-primary' : 'badge-success';
+                var priceText = c.price === 0 ? 'Бесплатно' : c.price.toLocaleString() + ' ₸';
+
+                // Обложка курса — здесь отображается путь к изображению
+                // Поле cover хранится в данных курса (DATA.courses)
+                // Чтобы изменить обложку, нужно изменить поле cover у курса в data.js
+                var coverHtml = '<div class="cover-preview">' +
+                    (c.cover ? '🖼️ ' + c.cover.split('/').pop() : '—') +
+                    '</div>';
+
+                return '' +
+                    '<tr>' +
+                        '<td>' + coverHtml + '</td>' +
+                        '<td class="td-name">' + c.title + '</td>' +
+                        '<td><span class="badge ' + badgeClass + '">' + c.category + '</span></td>' +
+                        '<td class="td-muted">' + c.level + '</td>' +
+                        '<td>' + c.lessons + '</td>' +
+                        '<td class="td-amount">' + priceText + '</td>' +
+                        '<td>' + c.students.toLocaleString() + '</td>' +
+                        '<td>' +
+                            '<div class="flex gap-8">' +
+                                '<button class="btn btn-secondary btn-sm">Ред.</button>' +
+                                '<button class="btn btn-danger-outline btn-sm">Удалить</button>' +
+                            '</div>' +
+                        '</td>' +
+                    '</tr>';
+            }).join('');
+        }
+
+        document.getElementById('cmSearch').addEventListener('input', renderCM);
+        renderCM();
+
+    });
+    </script>
+</body>
+</html>

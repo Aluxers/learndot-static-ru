@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Доступ запрещён — LearnDot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Шапка сайта -->
+    <div id="header-root"></div>
+
+    <!-- Страница «Доступ запрещён» -->
+    <main class="page-content">
+        <div class="container">
+            <div class="system-page">
+                <span class="system-icon">🔒</span>
+                <h1>Доступ запрещён</h1>
+                <p class="system-msg" id="adMsg">У вас нет доступа к этой странице.</p>
+                <div class="system-actions">
+                    <a href="javascript:history.back()" class="btn btn-secondary">← Назад</a>
+                    <a href="index.html" class="btn btn-outline">Главная</a>
+                    <a href="#" class="btn btn-primary ad-dash-hidden" id="adDash">Мой кабинет</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Подвал -->
+    <div id="footer-root"></div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // Проверяем, авторизован ли пользователь
+        var user = LearnDot.auth.getCurrentUser();
+
+        if (user) {
+            // Показываем роль пользователя в сообщении
+            var msg = document.getElementById('adMsg');
+            msg.innerHTML += ' Ваша роль: <strong class="role-highlight">' + user.role + '</strong>.';
+
+            // Показываем кнопку «Мой кабинет»
+            var dashBtn = document.getElementById('adDash');
+            dashBtn.href = LearnDot.auth.getDashboardUrl(user.role);
+            dashBtn.classList.remove('ad-dash-hidden');
+        }
+    });
+    </script>
+</body>
+</html>

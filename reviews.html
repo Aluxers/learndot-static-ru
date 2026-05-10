@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отзывы — LearnDot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Шапка -->
+    <div id="header-root"></div>
+
+    <main class="page-content">
+        <div class="container">
+            <section class="section">
+                <div class="section-title">
+                    <h2 data-lang="reviewsPageTitle">Отзывы студентов</h2>
+                    <p data-lang="reviewsPageText">Реальные отзывы от тех, кто учился с нами.</p>
+                </div>
+
+                <!-- Сводка рейтинга -->
+                <div class="card review-summary mb-32" id="reviewSummary"></div>
+
+                <!-- Список отзывов -->
+                <div class="grid grid-2" id="reviewGrid"></div>
+            </section>
+        </div>
+
+        <!-- Призыв к действию -->
+        <div id="cta"></div>
+    </main>
+
+    <!-- Подвал -->
+    <div id="footer-root"></div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        var reviews = DATA.reviews;
+
+
+        // ===== Считаем средний рейтинг =====
+        var totalRating = 0;
+        for (var i = 0; i < reviews.length; i++) {
+            totalRating += reviews[i].rating;
+        }
+        var avg = (totalRating / reviews.length).toFixed(1);
+
+
+        // ===== Считаем количество по каждой звезде (1-5) =====
+        var counts = [0, 0, 0, 0, 0];
+        for (var i = 0; i < reviews.length; i++) {
+            counts[reviews[i].rating - 1]++;
+        }
+
+
+        // ===== Рисуем полоски рейтинга (5 → 1) =====
+        var barsHtml = '';
+        for (var star = 5; star >= 1; star--) {
+            var count = counts[star - 1];
+            var pct = Math.round(count / reviews.length * 100);
+
+            barsHtml +=
+                '<div class="rating-bar">' +
+                    '<span class="rating-bar__label">' + star + ' ★</span>' +
+                    '<div class="rating-bar__track">' +
+                        '<div class="rating-bar__fill" style="width:' + pct + '%"></div>' +
+                    '</div>' +
+                    '<span class="rating-bar__count">' + count + '</span>' +
+                '</div>';
+        }
+
+
+        // ===== Рисуем сводку рейтинга =====
+        document.getElementById('reviewSummary').innerHTML =
+            '<div class="review-summary__score">' +
+                '<div class="review-summary__score-value">' + avg + '</div>' +
+                renderStars(parseFloat(avg), 'stars-lg') +
+                '<p class="review-summary__count">' + reviews.length + ' ' + t('reviewsCount') + '</p>' +
+            '</div>' +
+            '<div class="review-summary__bars">' + barsHtml + '</div>';
+
+
+        // ===== Рисуем список всех отзывов =====
+        var reviewsHtml = '';
+        for (var i = 0; i < reviews.length; i++) {
+            var r = reviews[i];
+            reviewsHtml +=
+                '<div class="card review-card">' +
+                    '<div class="review-header">' +
+                        '<div class="review-avatar"><img src="' + (r.avatar || 'images/avatars/default.jpg') + '" alt=""></div>' +
+                        '<div>' +
+                            '<div class="review-name">' + r.name + '</div>' +
+                            '<div class="review-course">' + r.course + '</div>' +
+                        '</div>' +
+                    '</div>' +
+                    renderStars(r.rating, 'stars-md') +
+                    '<p class="review-text">' + r.text + '</p>' +
+                    '<p class="review-date">' + formatDate(r.date, 'long') + '</p>' +
+                '</div>';
+        }
+        document.getElementById('reviewGrid').innerHTML = reviewsHtml;
+
+
+        // ===== Блок CTA =====
+        document.getElementById('cta').innerHTML = renderCTA(
+            t('joinTitle'),
+            t('joinText')
+        );
+    });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Детали курса — LearnDot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Шапка -->
+    <div id="header-root"></div>
+
+    <main class="page-content">
+        <div class="container">
+            <section class="section" id="courseContent"></section>
+        </div>
+
+        <!-- Призыв к действию -->
+        <div id="cta"></div>
+    </main>
+
+    <!-- Подвал -->
+    <div id="footer-root"></div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // ===== Получаем ID курса из URL =====
+        var params = new URLSearchParams(window.location.search);
+        var id = params.get('id') || 'ux-ui-design';
+
+        // ===== Ищем курс по ID =====
+        var course = null;
+        for (var i = 0; i < DATA.courses.length; i++) {
+            if (DATA.courses[i].id === id) {
+                course = DATA.courses[i];
+                break;
+            }
+        }
+
+        if (!course) {
+            document.getElementById('courseContent').innerHTML =
+                '<div class="text-center"><h2>' + t('courseNotFound') + '</h2>' +
+                '<a href="courses.html" class="btn btn-primary mt-16">' + t('toCatalog') + '</a></div>';
+            return;
+        }
+
+        var courseText = getCourseText(course);
+
+        // ===== Преподаватель =====
+        var teacher = null;
+        for (var i = 0; i < DATA.teachers.length; i++) {
+            if (DATA.teachers[i].id === course.teacherId) {
+                teacher = DATA.teachers[i];
+                break;
+            }
+        }
+
+        // ===== Отзывы =====
+        var reviews = [];
+        for (var i = 0; i < DATA.reviews.length; i++) {
+            if (DATA.reviews[i].courseId === id) {
+                reviews.push(DATA.reviews[i]);
+            }
+        }
+
+        // ===== Категория =====
+        var catSlug = course.category === 'Дизайн' ? 'category-design.html' : 'category-it.html';
+        var catIcon = course.category === 'Дизайн' ? '🎨' : '💻';
+        var priceText = course.price === 0 ? 'Бесплатно' : course.price.toLocaleString() + ' ₸';
+
+
+        // ==========================================================
+        //   ПРОВЕРКА ЗАПИСИ НА КУРС
+        //
+        //   getUserEnrollments() возвращает:
+        //   - для демо-аккаунта (u1) → DATA.enrollments + localStorage
+        //   - для нового аккаунта → только localStorage
+        //   Так новый пользователь не видит чужие записи.
+        // ==========================================================
+
+        var userEnrollments = getUserEnrollments();
+        var isEnrolled = false;
+
+        for (var i = 0; i < userEnrollments.length; i++) {
+            if (userEnrollments[i].courseId === id) {
+                isEnrolled = true;
+                break;
+            }
+        }
+
+        // ===== Кнопка записи =====
+        var enrollBtnHtml = '';
+        if (isEnrolled) {
+            enrollBtnHtml =
+                '<button class="btn btn-lg btn-block mb-12 btn-enrolled" disabled>✓ ' + t('enrolled') + '</button>' +
+                '<a href="my-courses.html" class="btn btn-outline btn-block mb-20">' + t('goLearning') + '</a>';
+        } else {
+            enrollBtnHtml =
+                '<button class="btn btn-primary btn-lg btn-block mb-20" id="enrollBtn">' + t('enroll') + '</button>';
+        }
+
+        // ===== Обложка курса =====
+        var coverHtml = '';
+        if (course.cover) {
+            coverHtml = '<div class="course-cover has-image" style="background-image:url(\'' + course.cover + '\')"><span>' + catIcon + '</span></div>';
+        } else {
+            coverHtml = '<div class="course-cover"><span>' + catIcon + ' ' + courseText.title + '</span></div>';
+        }
+
+        // ===== Модули =====
+        var modulesHtml = '';
+        for (var i = 0; i < courseText.modules.length; i++) {
+            var m = courseText.modules[i];
+            modulesHtml +=
+                '<div class="card course-module">' +
+                    '<div class="flex items-center gap-12">' +
+                        '<span class="badge badge-primary">' + t('module') + ' ' + (i + 1) + '</span>' +
+                        '<h4 class="course-module__title">' + m.title + '</h4>' +
+                    '</div>' +
+                    '<span class="course-module__count">' + m.lessons + ' ' + t('lessons') + '</span>' +
+                '</div>';
+        }
+
+        // ===== Результаты =====
+        var outcomesHtml = '';
+        for (var i = 0; i < courseText.outcomes.length; i++) {
+            outcomesHtml += '<li class="flex gap-12 course-outcome"><span class="course-outcome__check">✓</span>' + courseText.outcomes[i] + '</li>';
+        }
+
+        // ===== Отзывы =====
+        var reviewsHtml = '';
+        for (var i = 0; i < reviews.length; i++) {
+            var r = reviews[i];
+            reviewsHtml +=
+                '<div class="card review-card">' +
+                    '<div class="review-header">' +
+                        '<div class="review-avatar"><img src="' + (r.avatar || 'images/avatars/default.png') + '" alt=""></div>' +
+                        '<div><div class="review-name">' + r.name + '</div></div>' +
+                    '</div>' +
+                    renderStars(r.rating, 'stars-md') +
+                    '<p class="review-text">' + r.text + '</p>' +
+                '</div>';
+        }
+
+        // ===== Детали сайдбара =====
+        var details = [[t('levelLabel'),courseText.level],[t('durationLabel'),courseText.duration],[t('lessons'),course.lessons],[t('categoryLabel'),courseText.category],[t('format'),t('online')],[t('certificate'),t('yes')]];
+        var detailsHtml = '';
+        for (var i = 0; i < details.length; i++) {
+            detailsHtml += '<div class="course-sidebar__row"><span class="course-sidebar__row-label">' + details[i][0] + '</span><strong>' + details[i][1] + '</strong></div>';
+        }
+
+        // ===== Преподаватель =====
+        var teacherHtml = '';
+        if (teacher) {
+            teacherHtml =
+                '<div class="course-section"><h3 class="mb-16">' + t('teacher') + '</h3>' +
+                '<div class="card flex items-center gap-16 course-teacher-card">' +
+                    '<div class="course-teacher-avatar"><img src="' + (teacher.avatar || 'images/avatars/default.png') + '" alt=""></div>' +
+                    '<div><h4>' + teacher.name + '</h4><p class="course-teacher-role">' + teacher.role + '</p><p class="course-teacher-bio">' + teacher.bio + '</p></div>' +
+                '</div></div>';
+        }
+
+        var reviewsSectionHtml = '';
+        if (reviewsHtml) {
+            reviewsSectionHtml = '<div class="course-section"><h3 class="mb-16">' + t('reviewsTitle') + '</h3><div class="flex flex-col gap-16">' + reviewsHtml + '</div></div>';
+        }
+
+        // ===== Собираем страницу =====
+        document.getElementById('courseContent').innerHTML =
+            '<div class="breadcrumbs">' +
+                '<a href="courses.html">' + t('courses') + '</a><span class="sep">/</span>' +
+                '<a href="' + catSlug + '">' + courseText.category + '</a><span class="sep">/</span>' +
+                '<span class="current">' + courseText.title + '</span>' +
+            '</div>' +
+            '<div class="course-layout"><div>' +
+                coverHtml +
+                '<h1 class="course-page-title">' + courseText.title + '</h1>' +
+                '<p class="course-intro">' + courseText.shortDesc + '</p>' +
+                '<div class="flex items-center gap-8 flex-wrap mb-8 course-meta">' +
+                    renderStars(course.rating, 'stars-course') + ' · ' +
+                    course.students.toLocaleString() + ' ' + t('students') + ' · ' +
+                    course.lessons + ' ' + t('lessons') + ' · ' + courseText.duration +
+                '</div>' +
+                '<div class="course-section"><h3 class="mb-16">' + t('aboutCourse') + '</h3><p class="course-section__text">' + courseText.description + '</p></div>' +
+                '<div class="course-section"><h3 class="mb-16">' + t('whatLearn') + '</h3><ul>' + outcomesHtml + '</ul></div>' +
+                '<div class="course-section"><h3 class="mb-16">' + t('courseProgram') + '</h3><div class="flex flex-col gap-8">' + modulesHtml + '</div></div>' +
+                teacherHtml + reviewsSectionHtml +
+            '</div>' +
+            '<aside><div class="card course-sidebar-card">' +
+                '<p class="course-sidebar__price">' + priceText + '</p>' +
+                enrollBtnHtml +
+                '<div class="course-sidebar__details">' + detailsHtml + '</div>' +
+                '<p class="course-sidebar__guarantee">' + t('refund') + '</p>' +
+            '</div></aside></div>';
+
+
+        // ==========================================================
+        //   ОБРАБОТЧИК КНОПКИ «ЗАПИСАТЬСЯ»
+        //   1. Проверяем авторизацию
+        //   2. Сохраняем запись в localStorage
+        //   3. Меняем кнопку на «✓ Вы записаны»
+        //   4. Через 1 секунду → переходим в «Мои курсы»
+        // ==========================================================
+
+        var enrollBtn = document.getElementById('enrollBtn');
+        if (enrollBtn && !isEnrolled) {
+            enrollBtn.addEventListener('click', function () {
+
+                // Проверяем авторизацию
+                var user = LearnDot.auth.getCurrentUser();
+                if (!user) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                // Создаём запись
+                var newEnrollment = {
+                    courseId: id,
+                    enrolledDate: new Date().toISOString().split('T')[0],
+                    progress: 0,
+                    status: 'in-progress'
+                };
+
+                // Читаем + сохраняем
+                var enrollments = [];
+                try {
+                    var saved = localStorage.getItem('learndot-enrollments');
+                    if (saved) enrollments = JSON.parse(saved);
+                } catch (e) {}
+
+                var alreadySaved = false;
+                for (var i = 0; i < enrollments.length; i++) {
+                    if (enrollments[i].courseId === id) { alreadySaved = true; break; }
+                }
+                if (!alreadySaved) {
+                    enrollments.push(newEnrollment);
+                    try { localStorage.setItem('learndot-enrollments', JSON.stringify(enrollments)); } catch (e) {}
+                }
+
+                // Обновляем кнопку
+                enrollBtn.textContent = '✓ Вы записаны';
+                enrollBtn.className = 'btn btn-lg btn-block mb-12 btn-enrolled';
+                enrollBtn.disabled = true;
+
+                // Через 1 сек → Мои курсы
+                setTimeout(function () {
+                    window.location.href = 'my-courses.html';
+                }, 1000);
+            });
+        }
+
+        // CTA
+        document.getElementById('cta').innerHTML = renderCTA(t('courseCtaTitle'), t('courseCtaText'));
+    });
+    </script>
+</body>
+</html>

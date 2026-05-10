@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тесты — LearnDot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+    <!-- Обёртка кабинета -->
+    <div class="dash-wrap">
+        <div id="dashTopbar"></div>
+        <div id="dashSidebar"></div>
+        <main class="dash-content">
+
+            <div class="page-header">
+                <h1>Тесты</h1>
+                <p>Проверьте свои знания по курсам.</p>
+            </div>
+            <div class="grid grid-3" id="quizList"></div>
+            <div id="quizArea" class="hidden"></div>
+
+        </main>
+    </div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Проверяем роль
+        if (!LearnDot.auth.requireRole(['student'])) return;
+
+        // Рисуем мобильную шапку и боковое меню
+        renderDashTopbar('dashTopbar', 'Кабинет студента');
+        renderDashSidebar('dashSidebar', 'student', 'quizzes');
+
+        
+        // Список тестов
+        function renderQuizList() {
+            document.getElementById('quizList').classList.remove('hidden');
+            document.getElementById('quizArea').classList.add('hidden');
+
+            document.getElementById('quizList').innerHTML = DATA.quizzes.map(function (q) {
+                var statusBadge = q.status === 'passed' ? 'badge-success' : 'badge-warning';
+                var statusText = q.status === 'passed' ? 'Пройден' : 'Не начат';
+                var btnText = q.status === 'not-started' ? 'Начать тест' : 'Пересдать';
+                var scoreHtml = q.score !== null
+                    ? '<p class="quiz-score-text">Результат: ' + q.score + '%</p>'
+                    : '';
+
+                return '' +
+                    '<div class="card">' +
+                        '<div class="flex justify-between items-center flex-wrap gap-8 mb-12">' +
+                            '<h4 class="card-title-sm-tight" >' + q.title + '</h4>' +
+                            '<span class="badge ' + statusBadge + '">' + statusText + '</span>' +
+                        '</div>' +
+                        '<p class="quiz-info">' + q.totalQuestions + ' вопросов · Проходной: ' + q.passingScore + '%</p>' +
+                        scoreHtml +
+                        '<button class="btn btn-primary btn-sm btn-block" onclick="startQuiz(\'' + q.id + '\')">' + btnText + '</button>' +
+                    '</div>';
+            }).join('');
+        }
+
+        // Начать тест
+        window.startQuiz = function (qid) {
+            var quiz = (function(){for(var _i=0;_i<DATA.quizzes.length;_i++){if(DATA.quizzes[_i].id===qid){return DATA.quizzes[_i];}}return null;})();
+            if (!quiz) return;
+
+            document.getElementById('quizList').classList.add('hidden');
+            var area = document.getElementById('quizArea');
+            area.classList.remove('hidden');
+
+            var answers = {};
+            var submitted = false;
+
+            // Рисуем заголовок и вопросы
+            area.innerHTML =
+                '<button class="btn btn-secondary btn-sm mb-20" onclick="renderQuizList()">← Назад</button>' +
+                '<h2 class="mb-4">' + quiz.title + '</h2>' +
+                '<p class="quiz-info mb-24">' + quiz.questions.length + ' вопросов · Проходной: ' + quiz.passingScore + '%</p>' +
+                '<div id="questions" class="flex flex-col gap-16"></div>' +
+                '<button class="btn btn-primary btn-lg mt-20" id="submitQuiz">Отправить ответы</button>';
+
+            // Рисуем вопросы
+            document.getElementById('questions').innerHTML = quiz.questions.map(function (q, qi) {
+                var optionsHtml = q.options.map(function (o, oi) {
+                    return '<button class="quiz-option" data-qid="' + q.id + '" data-oi="' + oi + '">' +
+                        '<span class="quiz-radio"></span>' + o + '</button>';
+                }).join('');
+
+                return '' +
+                    '<div class="card">' +
+                        '<p class="quiz-question">' + (qi + 1) + '. ' + q.text + '</p>' +
+                        '<div class="flex flex-col gap-8">' + optionsHtml + '</div>' +
+                    '</div>';
+            }).join('');
+
+            // Выбор ответа
+            area.querySelectorAll('.quiz-option').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    if (submitted) return;
+                    answers[btn.dataset.qid] = parseInt(btn.dataset.oi);
+                    btn.closest('.card').querySelectorAll('.quiz-option').forEach(function (b) {
+                        b.classList.remove('selected');
+                    });
+                    btn.classList.add('selected');
+                });
+            });
+
+            // Отправка ответов
+            document.getElementById('submitQuiz').addEventListener('click', function () {
+                if (Object.keys(answers).length < quiz.questions.length) {
+                    alert('Ответьте на все вопросы');
+                    return;
+                }
+                submitted = true;
+
+                // Считаем результат
+                var correct = quiz.questions.filter(function (q) {
+                    return answers[q.id] === q.correct;
+                }).length;
+                var score = Math.round(correct / quiz.questions.length * 100);
+                var passed = score >= quiz.passingScore;
+
+                // Подсвечиваем правильные/неправильные
+                area.querySelectorAll('.quiz-option').forEach(function (btn) {
+                    var qid = btn.dataset.qid;
+                    var oi = parseInt(btn.dataset.oi);
+                    var q = (function(){for(var _i=0;_i<quiz.questions.length;_i++){if(quiz.questions[_i].id===qid){return quiz.questions[_i];}}return null;})();
+                    if (oi === q.correct) btn.classList.add('correct');
+                    else if (answers[qid] === oi) btn.classList.add('wrong');
+                });
+
+                // Показываем результат
+                var resultClass = passed ? 'quiz-result-pass' : 'quiz-result-fail';
+                var titleClass = passed ? 'quiz-result-title-pass' : 'quiz-result-title-fail';
+                var result =
+                    '<div class="card quiz-result ' + resultClass + ' mb-24">' +
+                        '<span class="quiz-result-icon">' + (passed ? '🎉' : '😔') + '</span>' +
+                        '<h3 class="quiz-result-title ' + titleClass + '">' + (passed ? 'Тест пройден!' : 'Не сдано') + '</h3>' +
+                        '<p class="quiz-result-score">' + score + '%</p>' +
+                        '<p class="quiz-result-detail">' + correct + ' из ' + quiz.questions.length + ' правильно</p>' +
+                    '</div>';
+                document.getElementById('submitQuiz').outerHTML = result;
+            });
+        };
+
+        renderQuizList();
+
+    });
+    </script>
+</body>
+</html>

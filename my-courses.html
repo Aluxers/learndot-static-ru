@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мои курсы — LearnDot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+    <!-- Обёртка кабинета -->
+    <div class="dash-wrap">
+        <div id="dashTopbar"></div>
+        <div id="dashSidebar"></div>
+        <main class="dash-content">
+
+            <div class="page-header">
+                <h1>Мои курсы</h1>
+                <p>Все курсы, на которые вы записаны.</p>
+            </div>
+            <div class="grid grid-3" id="courseGrid"></div>
+
+        </main>
+    </div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // ===== Проверяем роль пользователя =====
+        if (!LearnDot.auth.requireRole(['student'])) return;
+
+        // ===== Рисуем мобильную шапку и боковое меню =====
+        renderDashTopbar('dashTopbar', 'Кабинет студента');
+        renderDashSidebar('dashSidebar', 'student', 'courses');
+        // ===== Мои курсы =====
+        var html = '';
+
+        for (var i = 0; i < getUserEnrollments().length; i++) {
+            var en = getUserEnrollments()[i];
+
+            // Ищем данные курса
+            var course = null;
+            for (var j = 0; j < DATA.courses.length; j++) {
+                if (DATA.courses[j].id === en.courseId) {
+                    course = DATA.courses[j];
+                    break;
+                }
+            }
+            if (!course) continue;
+
+            var done = en.status === 'completed';
+            var icon = course.category === 'Дизайн' ? '🎨' : '💻';
+
+            // Бейдж «Пройден»
+            var doneBadge = done ? '<span class="course-done-badge">Пройден</span>' : '';
+
+            // Кнопка зависит от статуса
+            var btnHtml = '';
+            if (done) {
+                btnHtml = '<a href="certificates.html" class="btn btn-secondary btn-sm btn-flex">Сертификат</a>';
+            } else {
+                btnHtml = '<a href="lesson.html?course=' + course.id + '" class="btn btn-primary btn-sm btn-flex">Продолжить</a>';
+            }
+
+            // Цвет прогресс-бара
+            var progressColor = done ? 'success' : '';
+
+            html +=
+                '<div class="card card-flush">' +
+                    (course.cover
+                        ? '<div class="dash-course-cover-lg has-image" style="background-image:url(\'' + course.cover + '\')">' + doneBadge + '<span>' + icon + '</span></div>'
+                        : '<div class="dash-course-cover-lg"><span>' + icon + ' ' + course.category + '</span>' + doneBadge + '</div>') +
+                    '<div class="dash-course-body-lg">' +
+                        '<h4 class="card-title-sm-tight">' + course.title + '</h4>' +
+                        '<p class="meta-text mb-12">' + course.lessons + ' уроков · ' + course.duration + '</p>' +
+                        renderProgressBar(en.progress, progressColor) +
+                        '<div class="flex gap-8 mt-12">' + btnHtml + '</div>' +
+                        '<p class="meta-text-sm mt-12">Записан ' + formatDate(en.enrolledDate) + '</p>' +
+                    '</div>' +
+                '</div>';
+        }
+        // Если нет курсов — показываем пустое состояние
+        if (!html) {
+            html =
+                '<div class="empty-state">' +
+                    '<span class="empty-icon">📚</span>' +
+                    '<h3>Пока нет курсов</h3>' +
+                    '<p>Запишитесь на курс, чтобы начать обучение.</p>' +
+                    '<a href="courses.html" class="btn btn-primary btn-sm mt-12">Смотреть курсы</a>' +
+                '</div>';
+        }
+        document.getElementById('courseGrid').innerHTML = html;
+
+    });
+    </script>
+</body>
+</html>

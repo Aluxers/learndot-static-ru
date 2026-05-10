@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Курсы преподавателя — LearnDot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+    <!-- Обёртка кабинета -->
+    <div class="dash-wrap">
+        <div id="dashTopbar"></div>
+        <div id="dashSidebar"></div>
+        <main class="dash-content">
+
+            <!-- Заголовок с кнопкой -->
+            <div class="page-header-row mb-28">
+                <div class="page-header page-header-no-mb">
+                    <h1>Мои курсы</h1>
+                    <p>Управление вашими курсами.</p>
+                </div>
+                <button class="btn btn-primary">+ Новый курс</button>
+            </div>
+
+            <!-- Список курсов -->
+            <div class="flex flex-col gap-16" id="tcList"></div>
+
+        </main>
+    </div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Проверяем роль
+        if (!LearnDot.auth.requireRole(['teacher'])) return;
+
+        // Рисуем шапку и меню
+        renderDashTopbar('dashTopbar', 'Кабинет преподавателя');
+        renderDashSidebar('dashSidebar', 'teacher', 'courses');
+
+        
+        // Рисуем карточки курсов
+        document.getElementById('tcList').innerHTML = getTeacherCourses().map(function (c) {
+            return '' +
+                '<div class="card teacher-course-card">' +
+                    '<div class="teacher-course-card__cover">💻 IT</div>' +
+                    '<div class="teacher-course-card__body">' +
+                        '<div class="flex justify-between items-center mb-8 flex-wrap gap-8">' +
+                            '<div>' +
+                                '<h3 class="teacher-course-card__title">' + c.title + '</h3>' +
+                                '<p class="meta-text">Обновлено: ' + formatDate(c.lastUpdated) + '</p>' +
+                            '</div>' +
+                            '<span class="badge badge-success">Опубликован</span>' +
+                        '</div>' +
+                        '<div class="flex gap-24 flex-wrap mb-16 teacher-course-meta">' +
+                            '<span><strong>' + c.students.toLocaleString() + '</strong> студ.</span>' +
+                            '<span><strong>' + c.lessonsCount + '</strong> уроков</span>' +
+                            '<span>⭐ ' + c.rating + '</span>' +
+                        '</div>' +
+                        renderProgressBar(c.avgProgress) +
+                        '<div class="flex gap-8 mt-12 flex-wrap">' +
+                            '<a href="lesson-management.html" class="btn btn-primary btn-sm">Управление уроками</a>' +
+                            '<a href="student-statistics.html" class="btn btn-secondary btn-sm">Статистика</a>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
+        }).join('');
+
+    });
+    </script>
+</body>
+</html>
