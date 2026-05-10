@@ -50,6 +50,20 @@ function makeDemoUsers() {
   ];
 }
 
+function getDemoUser(email, password) {
+  const users = makeDemoUsers();
+  const cleanEmail = String(email || '').trim().toLowerCase();
+  const cleanHash = hashPassword(String(password || ''));
+
+  for (let i = 0; i < users.length; i++) {
+    if (users[i].email.toLowerCase() === cleanEmail && users[i].passwordHash === cleanHash) {
+      return users[i];
+    }
+  }
+
+  return null;
+}
+
 function publicUser(user) {
   return {
     id: user.id,
@@ -136,6 +150,7 @@ module.exports = {
   connectBlobs,
   getUsers,
   saveUsers,
+  getDemoUser,
   publicUser,
   hashPassword,
   json

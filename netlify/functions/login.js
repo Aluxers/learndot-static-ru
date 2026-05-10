@@ -1,4 +1,4 @@
-const { connectBlobs, getUsers, publicUser, hashPassword, json } = require('./lib/users');
+const { connectBlobs, getUsers, getDemoUser, publicUser, hashPassword, json } = require('./lib/users');
 
 exports.handler = async function (event) {
   connectBlobs(event);
@@ -10,6 +10,15 @@ exports.handler = async function (event) {
   const data = JSON.parse(event.body || '{}');
   const email = String(data.email || '').trim().toLowerCase();
   const password = String(data.password || '');
+  const demoUser = getDemoUser(email, password);
+
+  if (demoUser) {
+    return json({
+      success: true,
+      user: publicUser(demoUser)
+    });
+  }
+
   const users = await getUsers();
 
   let found = null;
