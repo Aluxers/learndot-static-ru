@@ -79,6 +79,7 @@
         var emailInput = document.getElementById('loginEmail');
         var passwordInput = document.getElementById('loginPassword');
         var errorBox = document.getElementById('loginError');
+        var loginBtn = document.getElementById('loginBtn');
 
         // ===== Функция показа ошибки =====
         function showError(message) {
@@ -86,10 +87,16 @@
             errorBox.classList.remove('auth-error-hidden');
         }
 
+        function hideError() {
+            errorBox.textContent = '';
+            errorBox.classList.add('auth-error-hidden');
+        }
+
         // ===== Обработка кнопки «Войти» =====
-        document.getElementById('loginBtn').addEventListener('click', function () {
+        loginBtn.addEventListener('click', function () {
             var email = emailInput.value;
             var password = passwordInput.value;
+            hideError();
 
             // Проверяем заполненность полей
             if (!email || !password) {
@@ -98,7 +105,9 @@
             }
 
             // Пытаемся войти через auth.js
+            loginBtn.disabled = true;
             LearnDot.auth.login(email, password).then(function (result) {
+            loginBtn.disabled = false;
 
             // Если ошибка — показываем
             if (!result.success) {

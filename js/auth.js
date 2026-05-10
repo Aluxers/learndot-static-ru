@@ -239,9 +239,23 @@
   }
 
   function login(email, password) {
-    return apiRequest('/api/login', {
-      email: email,
-      password: password
+    function tryLogin() {
+      return apiRequest('/api/login', {
+        email: email,
+        password: password
+      });
+    }
+
+    return tryLogin().then(function (result) {
+      if (!result.success) {
+        return new Promise(function (resolve) {
+          setTimeout(function () {
+            resolve(tryLogin());
+          }, 500);
+        });
+      }
+
+      return result;
     }).then(function (result) {
       if (result.success) {
         writeJSON(AUTH_KEY, result.user);
