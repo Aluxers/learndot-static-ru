@@ -2013,9 +2013,21 @@ select:focus-visible {
 
 
 
-  /* Hero адаптируется пропорционально на телефонах */
+  /* На телефонах можно использовать отдельные PNG-картинки:
+     images/hero-bg-mobile.png
+     images/hero-bg-mobile-dark.png */
   .hero {
-    min-height: 360px;
+    min-height: 520px;
+    background-size: cover;
+    background-position: center bottom;
+  }
+
+  [data-theme='light'] .hero {
+    background-image: url('../images/hero-bg-mobile.png');
+  }
+
+  [data-theme='dark'] .hero {
+    background-image: url('../images/hero-bg-mobile-dark.png');
   }
 
   .hero__title {
@@ -2023,7 +2035,7 @@ select:focus-visible {
   }
 
   .hero__inner {
-    padding: 40px 16px;
+    padding: 40px 16px 280px;
   }
 }
 
