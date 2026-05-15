@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/tasks.css">
 </head>
 <body>
 
@@ -26,6 +27,7 @@
     <script src="js/auth.js"></script>
     <script src="js/data.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/tasks.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function () {
 
@@ -384,6 +386,11 @@
                     var sb = document.getElementById('lSidebar');
                     if (sb) sb.classList.toggle('open');
                 });
+            }
+
+            // Инициализируем интерактивные задания
+            if (typeof initTasks === 'function') {
+                initTasks();
             }
         }
 

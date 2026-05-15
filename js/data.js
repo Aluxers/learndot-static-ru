@@ -778,52 +778,270 @@ DATA.analytics = {
 // ==========================================================
 
 DATA.lessonsByModule = {
+
+  // ─── UX/UI Дизайн с нуля ───────────────────────────────────────
   'ux-ui-design': [
     { mod: 'Введение в UX/UI', lessons: [
       { id: 'l1', title: 'Что такое UX?', type: 'video', dur: '12 мин', videoUrl: 'https://www.youtube.com/watch?v=L9CLXSm2v7M',
         content: '<p>UX (User Experience) — это то, как пользователь воспринимает взаимодействие с продуктом. Хороший UX делает продукт интуитивным и приятным.</p><p>В этом уроке вы узнаете основные принципы UX-дизайна и почему он важен для любого цифрового продукта.</p>',
-        practice: '<p><strong>Задание:</strong> Откройте любое приложение на телефоне и запишите 3 момента, которые вам понравились в интерфейсе, и 3 момента, которые вас раздражают.</p>' },
+        practice: '<p class="mb-12"><strong>Проверьте знания:</strong></p><div data-task="ux-quiz"></div>' },
       { id: 'l2', title: 'Что такое UI?', type: 'video', dur: '10 мин', videoUrl: 'https://www.youtube.com/watch?v=fHevFA0makQ',
         content: '<p>UI (User Interface) — это визуальная часть продукта: кнопки, цвета, шрифты, иконки. UI-дизайнер создаёт то, что пользователь видит и с чем взаимодействует.</p>',
-        practice: '<p><strong>Задание:</strong> Сравните интерфейсы двух похожих приложений (например, два мессенджера). Какие визуальные решения вам кажутся лучше и почему?</p>' },
+        practice: '<p class="mb-12"><strong>Поиграйте с цветами UI:</strong></p><div data-task="color-harmony"></div>' },
       { id: 'l3', title: 'UX vs UI — в чём разница', type: 'video', dur: '8 мин', videoUrl: 'https://www.youtube.com/watch?v=fHevFA0makQ',
         content: '<p>UX и UI часто путают, но это разные дисциплины.</p><p><strong>UX</strong> отвечает за логику и удобство: как расположить элементы, какой путь пользователя, как решить задачу.</p><p><strong>UI</strong> отвечает за визуал: какие цвета, шрифты, отступы, анимации.</p><p>Аналогия: UX — это архитектор здания (планировка, удобство). UI — это дизайнер интерьера (красота, стиль).</p>',
-        practice: '<p><strong>Задание:</strong> Нарисуйте на бумаге схему экрана приложения для заказа еды. Не думайте о цветах — только о расположении элементов. Это UX-мышление.</p>' },
+        practice: '<p class="mb-12"><strong>Проверьте контраст вашего дизайна:</strong></p><div data-task="contrast-checker"></div>' },
       { id: 'l4', title: 'Дизайн-мышление', type: 'video', dur: '15 мин', videoUrl: 'https://www.youtube.com/watch?v=arRHYaMxnrk',
         content: '<p>Дизайн-мышление — это подход к решению проблем через эмпатию к пользователю. 5 этапов: Эмпатия → Определение → Идеация → Прототип → Тестирование.</p>',
-        practice: '<p><strong>Задание:</strong> Выберите проблему из повседневной жизни (например, очередь в столовой) и пройдите 5 этапов дизайн-мышления для её решения.</p>' }
+        practice: '<p class="mb-12"><strong>Проверьте знания:</strong></p><div data-task="design-thinking-quiz"></div>' }
     ]},
     { mod: 'Исследования и персоны', lessons: [
       { id: 'l5', title: 'Зачем нужны исследования', type: 'video', dur: '11 мин', videoUrl: 'https://www.youtube.com/watch?v=arRHYaMxnrk',
         content: '<p>UX-исследования помогают понять реальных пользователей: их потребности, боли и поведение. Без исследований дизайнер проектирует «вслепую».</p>',
-        practice: '<p><strong>Задание:</strong> Проведите 5-минутное интервью с другом о его опыте использования любого приложения. Запишите ключевые моменты.</p>' },
+        practice: '<p class="mb-12"><strong>Квиз по UX-концепциям:</strong></p><div data-task="ux-quiz"></div>' },
       { id: 'l6', title: 'Интервью с пользователями', type: 'video', dur: '14 мин', videoUrl: 'https://www.youtube.com/watch?v=arRHYaMxnrk',
         content: '<p>Интервью — главный метод качественных исследований. Задавайте открытые вопросы: «Расскажите о...», «Как вы обычно...», «Что было сложнее всего?»</p>',
-        practice: '' },
+        practice: '<p class="mb-12"><strong>Подберите типографику для вашего интерфейса:</strong></p><div data-task="typography-preview"></div>' },
       { id: 'l7', title: 'Создание персон', type: 'video', dur: '13 мин', videoUrl: 'https://www.youtube.com/watch?v=arRHYaMxnrk',
         content: '<p>Персона — это собирательный образ целевого пользователя. Включает: имя, возраст, цели, боли, контекст использования продукта.</p>',
-        practice: '<p><strong>Задание:</strong> Создайте персону для приложения по изучению языков. Имя, возраст, цели, проблемы, мотивация.</p>' }
+        practice: '<p class="mb-12"><strong>Проверьте знания дизайн-мышления:</strong></p><div data-task="design-thinking-quiz"></div>' }
     ]},
     { mod: 'Прототипирование', lessons: [
       { id: 'l8', title: 'Вайрфреймы', type: 'video', dur: '14 мин', videoUrl: 'https://www.youtube.com/watch?v=HsH4K3IsZNw',
         content: '<p>Вайрфрейм — это черно-белая схема экрана без визуального дизайна. Показывает расположение элементов и логику.</p>',
-        practice: '<p><strong>Задание:</strong> Создайте вайрфрейм главного экрана мобильного приложения для фитнеса (на бумаге или в Figma).</p>' },
+        practice: '<p class="mb-12"><strong>Проверьте контраст вашего вайрфрейма:</strong></p><div data-task="contrast-checker"></div>' },
       { id: 'l9', title: 'Прототипы в Figma', type: 'video', dur: '18 мин', videoUrl: 'https://www.youtube.com/watch?v=IF3cOKX3YKI',
         content: '<p>Прототип — интерактивная модель продукта. В Figma вы можете связать экраны кликабельными ссылками и протестировать пользовательский путь.</p>',
-        practice: '<p><strong>Задание:</strong> Создайте в Figma прототип из 3 экранов: главная → каталог → карточка товара. Добавьте переходы по клику.</p>' },
+        practice: '<p class="mb-12"><strong>Подберите цветовую палитру для прототипа:</strong></p><div data-task="color-harmony"></div>' },
       { id: 'l10', title: 'Юзабилити-тестирование', type: 'video', dur: '11 мин', videoUrl: 'https://www.youtube.com/watch?v=arRHYaMxnrk',
         content: '<p>Тестирование показывает, где пользователи сталкиваются с трудностями. Попросите 3-5 людей выполнить задачу в вашем прототипе и наблюдайте.</p>',
-        practice: '' }
+        practice: '<p class="mb-12"><strong>Итоговый квиз по UX/UI:</strong></p><div data-task="ux-quiz"></div>' }
     ]}
   ],
+
+  // ─── Figma для начинающих ───────────────────────────────────────
+  'figma-beginners': [
+    { mod: 'Основы Figma', lessons: [
+      { id: 'fig1', title: 'Интерфейс Figma', type: 'video', dur: '12 мин', videoUrl: 'https://www.youtube.com/watch?v=FTFaQWZBqQ8',
+        content: '<p>Figma — браузерный инструмент для дизайна интерфейсов. Главные панели: холст, слои, свойства и инструменты.</p>',
+        practice: '<p class="mb-12"><strong>Проверьте знания Figma:</strong></p><div data-task="figma-quiz"></div>' },
+      { id: 'fig2', title: 'Фреймы и слои', type: 'video', dur: '10 мин', videoUrl: 'https://www.youtube.com/watch?v=FTFaQWZBqQ8',
+        content: '<p>Фрейм — основной контейнер в Figma. Каждый экран приложения — это фрейм. Слои отображают иерархию элементов.</p>',
+        practice: '<p class="mb-12"><strong>Подберите цветовую палитру для интерфейса:</strong></p><div data-task="color-harmony"></div>' },
+      { id: 'fig3', title: 'Стили и цвета', type: 'video', dur: '11 мин', videoUrl: 'https://www.youtube.com/watch?v=FTFaQWZBqQ8',
+        content: '<p>Стили в Figma позволяют сохранять цвета, шрифты и эффекты как переиспользуемые токены. Это основа дизайн-системы.</p>',
+        practice: '<p class="mb-12"><strong>Проверьте контраст ваших цветов:</strong></p><div data-task="contrast-checker"></div>' },
+      { id: 'fig4', title: 'Компоненты', type: 'video', dur: '15 мин', videoUrl: 'https://www.youtube.com/watch?v=k74IrUNaJVk',
+        content: '<p>Компонент — многоразовый элемент. Создайте кнопку один раз — используйте везде. При изменении мастер-компонента все экземпляры обновятся автоматически.</p>',
+        practice: '<p class="mb-12"><strong>Квиз по компонентам и инструментам:</strong></p><div data-task="figma-quiz"></div>' },
+      { id: 'fig5', title: 'Auto Layout', type: 'video', dur: '14 мин', videoUrl: 'https://www.youtube.com/watch?v=NrKX46DzkGQ',
+        content: '<p>Auto Layout — это Flexbox для Figma. Элементы внутри фрейма с Auto Layout автоматически меняют расположение при изменении контента.</p>',
+        practice: '<p class="mb-12"><strong>Подберите шрифтовую пару для вашего UI:</strong></p><div data-task="typography-preview"></div>' }
+    ]},
+    { mod: 'Прототипы и экспорт', lessons: [
+      { id: 'fig6', title: 'Интерактивные прототипы', type: 'video', dur: '16 мин', videoUrl: 'https://www.youtube.com/watch?v=IF3cOKX3YKI',
+        content: '<p>Соедините фреймы стрелками-переходами, чтобы создать кликабельный прототип. Выберите тип анимации и триггер.</p>',
+        practice: '<p class="mb-12"><strong>Квиз по Figma:</strong></p><div data-task="figma-quiz"></div>' },
+      { id: 'fig7', title: 'Экспорт и передача разработчику', type: 'video', dur: '9 мин', videoUrl: 'https://www.youtube.com/watch?v=FTFaQWZBqQ8',
+        content: '<p>Figma генерирует CSS-свойства для каждого элемента. Разработчик может посмотреть размеры, шрифты и цвета прямо из Figma-файла.</p>',
+        practice: '<p class="mb-12"><strong>Итоговый квиз по Figma:</strong></p><div data-task="figma-quiz"></div>' }
+    ]}
+  ],
+
+  // ─── Основы веб-дизайна ─────────────────────────────────────────
+  'web-design-basics': [
+    { mod: 'Принципы дизайна', lessons: [
+      { id: 'wd1', title: 'Визуальная иерархия', type: 'video', dur: '13 мин', videoUrl: 'https://www.youtube.com/watch?v=CCDn9GIBOgA',
+        content: '<p>Визуальная иерархия — это расстановка элементов по важности с помощью размера, цвета, контраста и положения. Взгляд пользователя следует по иерархии.</p>',
+        practice: '<p class="mb-12"><strong>Квиз по графическому дизайну:</strong></p><div data-task="graphic-design-quiz"></div>' },
+      { id: 'wd2', title: 'Сетка и отступы', type: 'video', dur: '11 мин', videoUrl: 'https://www.youtube.com/watch?v=CCDn9GIBOgA',
+        content: '<p>Сетка 8px — основа современного веб-дизайна. Все отступы, размеры и компоненты кратны 8: 8, 16, 24, 32, 48, 64...</p>',
+        practice: '<p class="mb-12"><strong>Правило 60-30-10 на практике:</strong></p><div data-task="color-proportion"></div>' }
+    ]},
+    { mod: 'Типографика и цвет', lessons: [
+      { id: 'wd3', title: 'Выбор шрифтов', type: 'video', dur: '14 мин', videoUrl: 'https://www.youtube.com/watch?v=CCDn9GIBOgA',
+        content: '<p>Типографика — основа читаемости. Правила: не более 2-3 шрифтов на странице, контраст между заголовком и текстом, достаточный line-height.</p>',
+        practice: '<p class="mb-12"><strong>Подберите шрифтовую пару:</strong></p><div data-task="typography-preview"></div>' },
+      { id: 'wd4', title: 'Теория цвета для веба', type: 'video', dur: '16 мин', videoUrl: 'https://www.youtube.com/watch?v=CCDn9GIBOgA',
+        content: '<p>Цвет в веб-дизайне решает задачи: привлекает внимание, создаёт настроение, обозначает состояния. Используйте цветовые гармонии и проверяйте контраст.</p>',
+        practice: '<p class="mb-12"><strong>Создайте цветовую палитру:</strong></p><div data-task="color-harmony"></div>' },
+      { id: 'wd5', title: 'Доступность и контраст', type: 'video', dur: '10 мин', videoUrl: 'https://www.youtube.com/watch?v=CCDn9GIBOgA',
+        content: '<p>Доступный дизайн работает для всех пользователей, включая людей с нарушениями зрения. Минимальный контраст по WCAG AA — 4.5:1 для текста.</p>',
+        practice: '<p class="mb-12"><strong>Проверьте доступность ваших цветов:</strong></p><div data-task="contrast-checker"></div>' }
+    ]},
+    { mod: 'Квиз по курсу', lessons: [
+      { id: 'wd6', title: 'Итоговая проверка знаний', type: 'text', dur: '10 мин',
+        content: '<p>Пройдите квиз, чтобы проверить все знания по типографике и визуальному дизайну.</p>',
+        practice: '<p class="mb-12"><strong>Квиз по типографике:</strong></p><div data-task="font-quiz"></div>' }
+    ]}
+  ],
+
+  // ─── Основы графического дизайна ───────────────────────────────
+  'graphic-design': [
+    { mod: 'Основы визуального дизайна', lessons: [
+      { id: 'gd1', title: 'Элементы дизайна', type: 'video', dur: '14 мин', videoUrl: 'https://www.youtube.com/watch?v=YqQx75OPRa0',
+        content: '<p>Основные элементы: точка, линия, форма, цвет, текстура, пространство. Из них строится любой дизайн.</p>',
+        practice: '<p class="mb-12"><strong>Квиз по основам дизайна:</strong></p><div data-task="graphic-design-quiz"></div>' },
+      { id: 'gd2', title: 'Принципы композиции', type: 'video', dur: '16 мин', videoUrl: 'https://www.youtube.com/watch?v=YqQx75OPRa0',
+        content: '<p>Принципы C.R.A.P.: Contrast, Repetition, Alignment, Proximity. Правило третей. Золотое сечение.</p>',
+        practice: '<p class="mb-12"><strong>Правило 60-30-10 в действии:</strong></p><div data-task="color-proportion"></div>' }
+    ]},
+    { mod: 'Цвет в дизайне', lessons: [
+      { id: 'gd3', title: 'Цветовой круг и гармонии', type: 'video', dur: '18 мин', videoUrl: 'https://www.youtube.com/watch?v=YqQx75OPRa0',
+        content: '<p>Цветовой круг Иттена — инструмент для поиска гармоничных сочетаний. Дополнительные, аналогичные, триадные — каждый тип создаёт своё настроение.</p>',
+        practice: '<p class="mb-12"><strong>Генератор цветовой гармонии:</strong></p><div data-task="color-harmony"></div>' },
+      { id: 'gd4', title: 'Психология цвета', type: 'video', dur: '12 мин', videoUrl: 'https://www.youtube.com/watch?v=YqQx75OPRa0',
+        content: '<p>Цвет влияет на эмоции: синий — доверие, красный — энергия, зелёный — рост. Культурный контекст тоже важен.</p>',
+        practice: '<p class="mb-12"><strong>Квиз по теории цвета:</strong></p><div data-task="color-quiz"></div>' }
+    ]},
+    { mod: 'Типографика', lessons: [
+      { id: 'gd5', title: 'Классификация шрифтов', type: 'video', dur: '13 мин', videoUrl: 'https://www.youtube.com/watch?v=sByzHoiYFX0',
+        content: '<p>Антиква (serif), гротеск (sans-serif), брусковые (slab), рукописные (script), моноширинные (monospace). Каждый класс несёт своё настроение.</p>',
+        practice: '<p class="mb-12"><strong>Подберите шрифтовую пару:</strong></p><div data-task="typography-preview"></div>' },
+      { id: 'gd6', title: 'Типографические принципы', type: 'video', dur: '11 мин', videoUrl: 'https://www.youtube.com/watch?v=sByzHoiYFX0',
+        content: '<p>Кегль, интерлиньяж, трекинг, кернинг — основные параметры типографики. Правильные настройки делают текст читабельным.</p>',
+        practice: '<p class="mb-12"><strong>Квиз по типографике:</strong></p><div data-task="font-quiz"></div>' }
+    ]}
+  ],
+
+  // ─── Основы моушн-дизайна ───────────────────────────────────────
+  'motion-design': [
+    { mod: 'Принципы анимации', lessons: [
+      { id: 'md1', title: '12 принципов анимации', type: 'video', dur: '16 мин', videoUrl: 'https://www.youtube.com/watch?v=uDqjIdI4bF4',
+        content: '<p>12 принципов Диснея: Squash & Stretch, Anticipation, Staging, Straight Ahead, Follow Through, Overlapping, Ease In & Out, Arc, Secondary Action, Timing, Exaggeration, Solid Drawing.</p>',
+        practice: '<p class="mb-12"><strong>Почувствуйте разницу между типами плавности:</strong></p><div data-task="easing-preview"></div>' },
+      { id: 'md2', title: 'Тайминг и Easing', type: 'video', dur: '14 мин', videoUrl: 'https://www.youtube.com/watch?v=uDqjIdI4bF4',
+        content: '<p>Easing (плавность) — это то, как анимация ускоряется и замедляется. ease-out делает анимацию «живой», linear выглядит механически.</p>',
+        practice: '<p class="mb-12"><strong>Интерактивный предпросмотр easing:</strong></p><div data-task="easing-preview"></div>' }
+    ]},
+    { mod: 'UI анимация', lessons: [
+      { id: 'md3', title: 'Микроанимации', type: 'video', dur: '12 мин', videoUrl: 'https://www.youtube.com/watch?v=uDqjIdI4bF4',
+        content: '<p>Микроанимации — небольшие движения элементов при взаимодействии: hover-эффекты, переходы состояний, индикаторы загрузки.</p>',
+        practice: '<p class="mb-12"><strong>Эксперименты с easing:</strong></p><div data-task="easing-preview"></div>' },
+      { id: 'md4', title: 'Цвет в моушн-дизайне', type: 'video', dur: '11 мин', videoUrl: 'https://www.youtube.com/watch?v=uDqjIdI4bF4',
+        content: '<p>Цвет в анимации усиливает эмоциональный эффект. Переходы между гармоничными цветами выглядят профессионально.</p>',
+        practice: '<p class="mb-12"><strong>Создайте палитру для анимации:</strong></p><div data-task="color-harmony"></div>' }
+    ]}
+  ],
+
+  // ─── HTML/CSS с нуля ────────────────────────────────────────────
   'html-css': [
     { mod: 'Основы HTML', lessons: [
       { id: 'h1', title: 'Что такое HTML', type: 'video', dur: '10 мин', videoUrl: 'https://www.youtube.com/watch?v=B5RhnA-EUsU',
         content: '<p>HTML (HyperText Markup Language) — язык разметки веб-страниц. Каждый сайт в интернете использует HTML для структуры контента.</p>',
-        practice: '<p><strong>Задание:</strong> Создайте файл index.html с заголовком, абзацем и ссылкой. Откройте в браузере.</p>' },
+        practice: '<p class="mb-12"><strong>Проверьте знания HTML:</strong></p><div data-task="html-quiz"></div>' },
       { id: 'h2', title: 'Теги и атрибуты', type: 'video', dur: '12 мин', videoUrl: 'https://www.youtube.com/watch?v=EFVJoW2Anco',
         content: '<p>Теги — строительные блоки HTML. Атрибуты добавляют свойства тегам. Например: &lt;a href="url"&gt; — тег ссылки с атрибутом href.</p>',
-        practice: '<p><strong>Задание:</strong> Создайте страницу с 5 разными тегами: h1, p, a, img, ul/li.</p>' }
+        practice: '<p class="mb-12"><strong>Квиз по тегам:</strong></p><div data-task="html-quiz"></div>' }
+    ]},
+    { mod: 'CSS и стили', lessons: [
+      { id: 'h3', title: 'Основы CSS', type: 'video', dur: '14 мин', videoUrl: 'https://www.youtube.com/watch?v=1Rs2ND1ryYc',
+        content: '<p>CSS (Cascading Style Sheets) управляет внешним видом HTML-элементов: цвета, шрифты, отступы, размеры.</p>',
+        practice: '<p class="mb-12"><strong>Поиграйте с цветами и контрастом:</strong></p><div data-task="contrast-checker"></div>' },
+      { id: 'h4', title: 'Flexbox', type: 'video', dur: '18 мин', videoUrl: 'https://www.youtube.com/watch?v=JJSoEo8JSnc',
+        content: '<p>Flexbox — система одномерной раскладки CSS. Позволяет управлять направлением, выравниванием и распределением элементов.</p>',
+        practice: '<p class="mb-12"><strong>Flexbox-песочница — экспериментируйте:</strong></p><div data-task="flexbox-playground"></div>' },
+      { id: 'h5', title: 'CSS Grid', type: 'video', dur: '16 мин', videoUrl: 'https://www.youtube.com/watch?v=EiNiSFIPIQE',
+        content: '<p>CSS Grid — двумерная система раскладки. Позволяет создавать сложные страничные макеты с рядами и колонками.</p>',
+        practice: '<p class="mb-12"><strong>Повторите Flexbox через квиз:</strong></p><div data-task="html-quiz"></div>' }
+    ]}
+  ],
+
+  // ─── JavaScript для начинающих ──────────────────────────────────
+  'javascript-beginners': [
+    { mod: 'Основы JS', lessons: [
+      { id: 'js1', title: 'Переменные и типы данных', type: 'video', dur: '13 мин', videoUrl: 'https://www.youtube.com/watch?v=W6NZfCO5SIk',
+        content: '<p>Переменные хранят данные. Типы: string (строка), number (число), boolean (true/false), object (объект), null, undefined.</p>',
+        practice: '<p class="mb-12"><strong>Квиз по основам JS:</strong></p><div data-task="js-quiz"></div>' },
+      { id: 'js2', title: 'Функции', type: 'video', dur: '15 мин', videoUrl: 'https://www.youtube.com/watch?v=W6NZfCO5SIk',
+        content: '<p>Функция — блок кода, который можно вызвать по имени. Принимает параметры, возвращает результат через return.</p>',
+        practice: '<p class="mb-12"><strong>Проверьте знания JS:</strong></p><div data-task="js-quiz"></div>' }
+    ]},
+    { mod: 'DOM и события', lessons: [
+      { id: 'js3', title: 'Работа с DOM', type: 'video', dur: '17 мин', videoUrl: 'https://www.youtube.com/watch?v=0ik6X4DJKCc',
+        content: '<p>DOM (Document Object Model) — это дерево HTML-элементов в памяти браузера. JS может читать и изменять любой элемент страницы.</p>',
+        practice: '<p class="mb-12"><strong>Квиз по DOM и JS:</strong></p><div data-task="js-quiz"></div>' },
+      { id: 'js4', title: 'Обработка событий', type: 'video', dur: '14 мин', videoUrl: 'https://www.youtube.com/watch?v=0ik6X4DJKCc',
+        content: '<p>События — click, input, submit, keydown. addEventListener() привязывает функцию к событию элемента.</p>',
+        practice: '<p class="mb-12"><strong>Итоговый квиз по JavaScript:</strong></p><div data-task="js-quiz"></div>' }
+    ]}
+  ],
+
+  // ─── Git и командная работа ─────────────────────────────────────
+  'git-collaboration': [
+    { mod: 'Основы Git', lessons: [
+      { id: 'git1', title: 'Что такое система контроля версий', type: 'video', dur: '10 мин', videoUrl: 'https://www.youtube.com/watch?v=2sjqTHE0zok',
+        content: '<p>Git сохраняет историю изменений файлов. Вы можете вернуться к любой версии, работать параллельно и объединять изменения команды.</p>',
+        practice: '<p class="mb-12"><strong>Квиз по Git:</strong></p><div data-task="git-quiz"></div>' },
+      { id: 'git2', title: 'Первые команды: init, add, commit', type: 'video', dur: '14 мин', videoUrl: 'https://www.youtube.com/watch?v=2sjqTHE0zok',
+        content: '<p>git init → git add → git commit. Этот цикл — основа работы с Git. Каждый коммит — это снимок состояния проекта.</p>',
+        practice: '<p class="mb-12"><strong>Проверьте знания команд Git:</strong></p><div data-task="git-quiz"></div>' }
+    ]},
+    { mod: 'Ветки и GitHub', lessons: [
+      { id: 'git3', title: 'Ветвление и слияние', type: 'video', dur: '16 мин', videoUrl: 'https://www.youtube.com/watch?v=e2IbNHi4uCI',
+        content: '<p>Ветки позволяют работать над фичами изолированно. git branch, git checkout, git merge — основные команды работы с ветками.</p>',
+        practice: '<p class="mb-12"><strong>Итоговый квиз по Git:</strong></p><div data-task="git-quiz"></div>' }
+    ]}
+  ],
+
+  // ─── Основы Python ──────────────────────────────────────────────
+  'python-basics': [
+    { mod: 'Синтаксис Python', lessons: [
+      { id: 'py1', title: 'Введение в Python', type: 'video', dur: '12 мин', videoUrl: 'https://www.youtube.com/watch?v=_uQrJ0TkZlc',
+        content: '<p>Python — один из самых популярных языков программирования. Простой синтаксис, мощные библиотеки, применяется в веб, data science, автоматизации.</p>',
+        practice: '<p class="mb-12"><strong>Квиз по Python:</strong></p><div data-task="python-quiz"></div>' },
+      { id: 'py2', title: 'Переменные и типы', type: 'video', dur: '14 мин', videoUrl: 'https://www.youtube.com/watch?v=_uQrJ0TkZlc',
+        content: '<p>Python динамически типизирован: тип переменной определяется автоматически. int, float, str, bool, list, dict, tuple, set.</p>',
+        practice: '<p class="mb-12"><strong>Проверьте знания Python:</strong></p><div data-task="python-quiz"></div>' }
+    ]},
+    { mod: 'Структуры данных', lessons: [
+      { id: 'py3', title: 'Списки и словари', type: 'video', dur: '16 мин', videoUrl: 'https://www.youtube.com/watch?v=_uQrJ0TkZlc',
+        content: '<p>Список (list) — упорядоченная коллекция. Словарь (dict) — пары ключ:значение. Это два самых важных типа данных в Python.</p>',
+        practice: '<p class="mb-12"><strong>Итоговый квиз по Python:</strong></p><div data-task="python-quiz"></div>' }
+    ]}
+  ],
+
+  // ─── Основы фронтенд-разработки ────────────────────────────────
+  'frontend-development': [
+    { mod: 'Современный JavaScript', lessons: [
+      { id: 'fe1', title: 'ES6+ синтаксис', type: 'video', dur: '15 мин', videoUrl: 'https://www.youtube.com/watch?v=NCwa_xi0Uuc',
+        content: '<p>Современный JS: let/const, стрелочные функции, деструктуризация, spread/rest, template literals, классы, модули.</p>',
+        practice: '<p class="mb-12"><strong>Квиз по JavaScript:</strong></p><div data-task="js-quiz"></div>' }
+    ]},
+    { mod: 'Основы React', lessons: [
+      { id: 'fe2', title: 'Компоненты и JSX', type: 'video', dur: '18 мин', videoUrl: 'https://www.youtube.com/watch?v=w7ejDZ8SWv8',
+        content: '<p>Компонент React — это функция, которая возвращает JSX (похожий на HTML синтаксис). Строительный блок любого React-приложения.</p>',
+        practice: '<p class="mb-12"><strong>Flexbox в React-лейаутах:</strong></p><div data-task="flexbox-playground"></div>' }
+    ]}
+  ],
+
+  // ─── AI в дизайне: основы ───────────────────────────────────────
+  'ai-design-basics': [
+    { mod: 'Введение в AI для дизайна', lessons: [
+      { id: 'ai1', title: 'AI-инструменты для дизайнера', type: 'video', dur: '11 мин', videoUrl: 'https://www.youtube.com/watch?v=arRHYaMxnrk',
+        content: '<p>Midjourney, DALL-E, Adobe Firefly, Figma AI — инструменты, которые меняют дизайн-процесс. AI не заменяет дизайнера, но ускоряет рутину.</p>',
+        practice: '<p class="mb-12"><strong>Создайте цветовую палитру для AI-проекта:</strong></p><div data-task="color-harmony"></div>' },
+      { id: 'ai2', title: 'Промпт-инженеринг для визуала', type: 'video', dur: '13 мин', videoUrl: 'https://www.youtube.com/watch?v=arRHYaMxnrk',
+        content: '<p>Хороший промпт содержит: стиль, настроение, цветовую палитру, освещение, композицию. Чем точнее описание — тем лучше результат.</p>',
+        practice: '<p class="mb-12"><strong>Подберите палитру для AI-генерации:</strong></p><div data-task="color-harmony"></div>' }
+    ]},
+    { mod: 'Практические проекты', lessons: [
+      { id: 'ai3', title: 'AI и типографика', type: 'video', dur: '10 мин', videoUrl: 'https://www.youtube.com/watch?v=arRHYaMxnrk',
+        content: '<p>AI помогает подбирать шрифтовые пары, проверять читаемость и генерировать варианты типографики для брендинга.</p>',
+        practice: '<p class="mb-12"><strong>Подберите шрифтовую пару:</strong></p><div data-task="typography-preview"></div>' }
+    ]}
+  ],
+
+  // ─── Midjourney и генерация изображений ─────────────────────────
+  'midjourney-course': [
+    { mod: 'Основы Midjourney', lessons: [
+      { id: 'mj1', title: 'Первые шаги в Midjourney', type: 'video', dur: '12 мин', videoUrl: 'https://www.youtube.com/watch?v=arRHYaMxnrk',
+        content: '<p>Midjourney работает через Discord. Команда /imagine + промпт → генерация 4 вариантов изображения. U — upscale, V — variation.</p>',
+        practice: '<p class="mb-12"><strong>Подберите цветовую палитру для промпта:</strong></p><div data-task="color-harmony"></div>' },
+      { id: 'mj2', title: 'Стили и эстетика', type: 'video', dur: '14 мин', videoUrl: 'https://www.youtube.com/watch?v=arRHYaMxnrk',
+        content: '<p>Стили в промптах: cinematic, minimalist, brutalist, cyberpunk, watercolor. Сочетание стиля и цветовой схемы создаёт уникальную эстетику.</p>',
+        practice: '<p class="mb-12"><strong>Создайте палитру для вашего стиля:</strong></p><div data-task="color-harmony"></div>' }
     ]}
   ]
+
 };
