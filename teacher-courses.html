@@ -12,13 +12,13 @@
 </head>
 <body>
 
-    <!-- Обёртка кабинета -->
+    
     <div class="dash-wrap">
         <div id="dashTopbar"></div>
         <div id="dashSidebar"></div>
         <main class="dash-content">
 
-            <!-- Заголовок с кнопкой -->
+            
             <div class="page-header-row mb-28">
                 <div class="page-header page-header-no-mb">
                     <h1>Мои курсы</h1>
@@ -27,7 +27,7 @@
                 <button class="btn btn-primary">+ Новый курс</button>
             </div>
 
-            <!-- Список курсов -->
+            
             <div class="flex flex-col gap-16" id="tcList"></div>
 
         </main>
@@ -39,15 +39,15 @@
     <script src="js/main.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Проверяем роль
+        
         if (!LearnDot.auth.requireRole(['teacher'])) return;
 
-        // Рисуем шапку и меню
+        
         renderDashTopbar('dashTopbar', 'Кабинет преподавателя');
         renderDashSidebar('dashSidebar', 'teacher', 'courses');
 
         
-        // Рисуем карточки курсов
+        
         document.getElementById('tcList').innerHTML = getTeacherCourses().map(function (c) {
             return '' +
                 '<div class="card teacher-course-card">' +

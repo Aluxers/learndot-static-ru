@@ -12,7 +12,7 @@
 </head>
 <body>
 
-    <!-- Обёртка панели администратора -->
+    
     <div class="dash-wrap">
         <div id="dashTopbar"></div>
         <div id="dashSidebar"></div>
@@ -23,16 +23,16 @@
                 <p id="userCount"></p>
             </div>
 
-            <!-- Статистика -->
+            
             <div class="stats-grid mb-24" id="umStats"></div>
 
-            <!-- Поиск и фильтры -->
+            
             <div class="flex gap-12 flex-wrap mb-20">
                 <input class="input admin-search" id="umSearch" placeholder="Поиск по имени или email...">
                 <div class="flex gap-8" id="umFilters"></div>
             </div>
 
-            <!-- Таблица -->
+            
             <div class="table-wrap">
                 <table class="data-table">
                     <thead>
@@ -51,10 +51,10 @@
     <script src="js/main.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Проверяем роль администратора
+        
         if (!LearnDot.auth.requireRole(['admin'])) return;
 
-        // Рисуем шапку и боковое меню
+        
         renderDashTopbar('dashTopbar', 'Панель администратора');
         renderDashSidebar('dashSidebar', 'admin', 'users');
 
@@ -72,10 +72,10 @@
                 return matchQ && matchR;
             });
 
-            // Счётчик
+            
             document.getElementById('userCount').textContent = DATA.allUsers.length + ' пользователей';
 
-            // Подсчёт по ролям
+            
             var rc = {
                 all: DATA.allUsers.length,
                 student: (function(){var _c=0;for(var _i=0;_i<DATA.allUsers.length;_i++){if(DATA.allUsers[_i].role==='student'){_c++;}}return _c;})(),
@@ -83,7 +83,7 @@
                 admin: (function(){var _c=0;for(var _i=0;_i<DATA.allUsers.length;_i++){if(DATA.allUsers[_i].role==='admin'){_c++;}}return _c;})()
             };
 
-            // Статистика
+            
             var activeCount = (function(){var _c=0;for(var _i=0;_i<DATA.allUsers.length;_i++){if(DATA.allUsers[_i].status==='active'){_c++;}}return _c;})();
             document.getElementById('umStats').innerHTML = [
                 { v: rc.all, l: 'Всего' },
@@ -94,14 +94,14 @@
                 return '<div class="stat-card"><div class="stat-value">' + s.v + '</div><div class="stat-label">' + s.l + '</div></div>';
             }).join('');
 
-            // Фильтры
+            
             document.getElementById('umFilters').innerHTML = ['all', 'student', 'teacher', 'admin'].map(function (r) {
                 var cls = roleFilter === r ? 'btn-primary' : 'btn-secondary';
                 return '<button class="btn ' + cls + ' btn-sm" onclick="setRoleFilter(\'' + r + '\')">' +
                     roleLabels[r] + ' (' + rc[r] + ')</button>';
             }).join('');
 
-            // Таблица
+            
             document.getElementById('umTable').innerHTML = list.map(function (u) {
                 return '' +
                     '<tr>' +

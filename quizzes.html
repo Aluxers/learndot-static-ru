@@ -12,7 +12,7 @@
 </head>
 <body>
 
-    <!-- Обёртка кабинета -->
+    
     <div class="dash-wrap">
         <div id="dashTopbar"></div>
         <div id="dashSidebar"></div>
@@ -34,20 +34,41 @@
     <script src="js/main.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Проверяем роль
+        
         if (!LearnDot.auth.requireRole(['student'])) return;
 
-        // Рисуем мобильную шапку и боковое меню
+        
         renderDashTopbar('dashTopbar', 'Кабинет студента');
         renderDashSidebar('dashSidebar', 'student', 'quizzes');
 
         
-        // Список тестов
+        
         function renderQuizList() {
             document.getElementById('quizList').classList.remove('hidden');
             document.getElementById('quizArea').classList.add('hidden');
 
-            document.getElementById('quizList').innerHTML = DATA.quizzes.map(function (q) {
+            var enrollments = getUserEnrollments();
+            var courseIds = [];
+            for (var i = 0; i < enrollments.length; i++) {
+                courseIds.push(enrollments[i].courseId);
+            }
+
+            var quizzes = DATA.quizzes.filter(function (q) {
+                return courseIds.indexOf(q.courseId) !== -1;
+            });
+
+            if (quizzes.length === 0) {
+                document.getElementById('quizList').innerHTML =
+                    '<div class="empty-state">' +
+                        '<span class="empty-icon">✅</span>' +
+                        '<h3>Тестов пока нет</h3>' +
+                        '<p>Запишитесь на курс, чтобы открыть тесты.</p>' +
+                        '<a href="courses.html" class="btn btn-primary btn-sm mt-12">Смотреть курсы</a>' +
+                    '</div>';
+                return;
+            }
+
+            document.getElementById('quizList').innerHTML = quizzes.map(function (q) {
                 var statusBadge = q.status === 'passed' ? 'badge-success' : 'badge-warning';
                 var statusText = q.status === 'passed' ? 'Пройден' : 'Не начат';
                 var btnText = q.status === 'not-started' ? 'Начать тест' : 'Пересдать';
@@ -68,7 +89,7 @@
             }).join('');
         }
 
-        // Начать тест
+        
         window.startQuiz = function (qid) {
             var quiz = (function(){for(var _i=0;_i<DATA.quizzes.length;_i++){if(DATA.quizzes[_i].id===qid){return DATA.quizzes[_i];}}return null;})();
             if (!quiz) return;
@@ -80,15 +101,15 @@
             var answers = {};
             var submitted = false;
 
-            // Рисуем заголовок и вопросы
+            
             area.innerHTML =
-                '<button class="btn btn-secondary btn-sm mb-20" onclick="renderQuizList()">← Назад</button>' +
+                '<button class="btn btn-secondary btn-sm mb-20" id="backToQuizzes">← Назад</button>' +
                 '<h2 class="mb-4">' + quiz.title + '</h2>' +
                 '<p class="quiz-info mb-24">' + quiz.questions.length + ' вопросов · Проходной: ' + quiz.passingScore + '%</p>' +
                 '<div id="questions" class="flex flex-col gap-16"></div>' +
                 '<button class="btn btn-primary btn-lg mt-20" id="submitQuiz">Отправить ответы</button>';
 
-            // Рисуем вопросы
+            
             document.getElementById('questions').innerHTML = quiz.questions.map(function (q, qi) {
                 var optionsHtml = q.options.map(function (o, oi) {
                     return '<button class="quiz-option" data-qid="' + q.id + '" data-oi="' + oi + '">' +
@@ -102,7 +123,7 @@
                     '</div>';
             }).join('');
 
-            // Выбор ответа
+            
             area.querySelectorAll('.quiz-option').forEach(function (btn) {
                 btn.addEventListener('click', function () {
                     if (submitted) return;
@@ -114,7 +135,7 @@
                 });
             });
 
-            // Отправка ответов
+            
             document.getElementById('submitQuiz').addEventListener('click', function () {
                 if (Object.keys(answers).length < quiz.questions.length) {
                     alert('Ответьте на все вопросы');
@@ -122,14 +143,14 @@
                 }
                 submitted = true;
 
-                // Считаем результат
+                
                 var correct = quiz.questions.filter(function (q) {
                     return answers[q.id] === q.correct;
                 }).length;
                 var score = Math.round(correct / quiz.questions.length * 100);
                 var passed = score >= quiz.passingScore;
 
-                // Подсвечиваем правильные/неправильные
+                
                 area.querySelectorAll('.quiz-option').forEach(function (btn) {
                     var qid = btn.dataset.qid;
                     var oi = parseInt(btn.dataset.oi);
@@ -138,7 +159,7 @@
                     else if (answers[qid] === oi) btn.classList.add('wrong');
                 });
 
-                // Показываем результат
+                
                 var resultClass = passed ? 'quiz-result-pass' : 'quiz-result-fail';
                 var titleClass = passed ? 'quiz-result-title-pass' : 'quiz-result-title-fail';
                 var result =
@@ -150,9 +171,13 @@
                     '</div>';
                 document.getElementById('submitQuiz').outerHTML = result;
             });
+
+            document.getElementById('backToQuizzes').addEventListener('click', renderQuizList);
         };
 
+        window.renderQuizList = renderQuizList;
         renderQuizList();
+        syncUserEnrollments(renderQuizList);
 
     });
     </script>

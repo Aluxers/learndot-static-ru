@@ -14,7 +14,7 @@
 </head>
 <body>
 
-    <!-- Обёртка кабинета -->
+    
     <div class="dash-wrap">
         <div id="dashTopbar"></div>
         <div id="dashSidebar"></div>
@@ -31,23 +31,23 @@
     <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-        // ===== Проверяем роль =====
+        
         if (!LearnDot.auth.requireRole(['student'])) return;
 
-        // ===== Рисуем шапку и боковое меню =====
+        
         renderDashTopbar('dashTopbar', 'Кабинет студента');
         renderDashSidebar('dashSidebar', 'student', 'courses');
 
 
-        // ===== Получаем ID курса из URL =====
+        
         var params = new URLSearchParams(window.location.search);
         var courseId = params.get('course') || 'ux-ui-design';
 
 
-        // ===== Загружаем данные уроков для курса =====
+        
         var modules = DATA.lessonsByModule[courseId];
 
-        // Если для курса нет уроков — показываем заглушку
+        
         if (!modules || modules.length === 0) {
             document.getElementById('lessonContent').innerHTML =
                 '<div class="empty-state">' +
@@ -60,7 +60,7 @@
         }
 
 
-        // ===== Находим название курса =====
+        
         var courseName = courseId;
         for (var i = 0; i < DATA.courses.length; i++) {
             if (DATA.courses[i].id === courseId) {
@@ -70,7 +70,7 @@
         }
 
 
-        // ===== Собираем все уроки в плоский список =====
+        
         var allLessons = [];
         for (var mi = 0; mi < modules.length; mi++) {
             for (var li = 0; li < modules[mi].lessons.length; li++) {
@@ -79,7 +79,7 @@
         }
 
 
-        // ===== Пройденные уроки (localStorage) =====
+        
         var completedKey = 'learndot-completed-' + courseId;
         var completed = {};
         try {
@@ -88,17 +88,17 @@
         } catch (e) {}
 
 
-        // ===== Текущий активный урок =====
+        
         var activeId = params.get('lesson') || allLessons[0].id;
 
 
-        // ==========================================================
-        //   ГЛАВНАЯ ФУНКЦИЯ ОТРИСОВКИ
-        // ==========================================================
+        
+        
+        
 
         function renderLesson() {
 
-            // Находим текущий урок
+            
             var lesson = null;
             var lessonIndex = 0;
             for (var i = 0; i < allLessons.length; i++) {
@@ -113,7 +113,7 @@
                 lessonIndex = 0;
             }
 
-            // Прогресс
+            
             var completedCount = 0;
             for (var key in completed) {
                 if (completed[key]) completedCount++;
@@ -122,14 +122,15 @@
             var isDone = completed[activeId] === true;
 
 
-            // ==============================================
-            //   САЙДБАР — список модулей и уроков
-            // ==============================================
+            
+            
+            
 
             var sideHtml =
                 '<div class="lesson-sidebar-header">' +
                     '<h3 class="lesson-sidebar-title">' + courseName + '</h3>' +
                     renderProgressBar(progressPct) +
+                    '<button class="btn btn-secondary btn-sm lesson-sidebar-close" id="closeLessonList">Закрыть список</button>' +
                 '</div>' +
                 '<div class="lesson-modules-wrap">';
 
@@ -166,37 +167,62 @@
             sideHtml += '</div>';
 
 
-            // ==============================================
-            //   ВИДЕО-БЛОК (YouTube iframe или заглушка)
-            //
-            //   videoId — ID видео на YouTube.
-            //   Чтобы заменить видео:
-            //   1. Откройте js/data.js
-            //   2. Найдите нужный урок в DATA.lessonsByModule
-            //   3. Обновите поле videoId
-            //   Формат: часть ссылки после v= (например jbkSRLYSojo)
-            // ==============================================
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
 
-            function getYoutubeEmbedUrl(url) {
+            function getYoutubeVideoId(url) {
                 if (!url) {
                     return '';
                 }
 
-                if (url.indexOf('youtube.com/embed/') !== -1) {
+                url = String(url).trim();
+
+                if (url.length === 11 && url.indexOf('/') === -1 && url.indexOf('?') === -1) {
                     return url;
                 }
 
-                var videoId = '';
+                try {
+                    var parsed = new URL(url);
+                    var host = parsed.hostname.replace('www.', '');
+                    var parts = parsed.pathname.split('/');
 
-                if (url.indexOf('v=') !== -1) {
-                    videoId = url.split('v=')[1].split('&')[0];
-                } else if (url.indexOf('youtu.be/') !== -1) {
-                    videoId = url.split('youtu.be/')[1].split('?')[0];
-                } else {
-                    videoId = url;
+                    if (host === 'youtu.be') {
+                        return parts[1] || '';
+                    }
+
+                    if (host === 'youtube.com' || host === 'youtube-nocookie.com') {
+                        if (parsed.searchParams.get('v')) {
+                            return parsed.searchParams.get('v');
+                        }
+                        if (parts[1] === 'embed' || parts[1] === 'shorts') {
+                            return parts[2] || '';
+                        }
+                    }
+                } catch (e) {
+                    if (url.indexOf('v=') !== -1) {
+                        return url.split('v=')[1].split('&')[0];
+                    }
+                    if (url.indexOf('youtu.be/') !== -1) {
+                        return url.split('youtu.be/')[1].split('?')[0];
+                    }
                 }
 
-                var embedUrl = 'https://www.youtube.com/embed/' + videoId + '?rel=0';
+                return url;
+            }
+
+            function getYoutubeEmbedUrl(url) {
+                var videoId = getYoutubeVideoId(url);
+                if (!videoId) return '';
+
+                var embedUrl = 'https://www.youtube.com/embed/' + videoId + '?rel=0&modestbranding=1';
 
                 if (location.protocol.indexOf('http') === 0) {
                     embedUrl += '&origin=' + encodeURIComponent(location.origin);
@@ -213,7 +239,7 @@
                 videoHtml =
                     '<div class="video-container">' +
                         '<iframe src="' + embedUrl + '" ' +
-                            'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ' +
+                            'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" ' +
                             'referrerpolicy="strict-origin-when-cross-origin" ' +
                             'allowfullscreen></iframe>' +
                     '</div>';
@@ -225,15 +251,15 @@
             }
 
 
-            // ==============================================
-            //   ВКЛАДКИ: Видео / Текст / Практика
-            // ==============================================
+            
+            
+            
 
             var hasVideo = embedUrl ? true : false;
             var hasText = lesson.content ? true : false;
             var hasPractice = lesson.practice ? true : false;
 
-            // Определяем активную вкладку по умолчанию
+            
             var defaultTab = hasVideo ? 'video' : (hasText ? 'text' : 'practice');
 
             var tabsHtml =
@@ -252,7 +278,7 @@
             tabsHtml += '</div>';
 
 
-            // Содержимое вкладок
+            
             var tabContentHtml = '';
 
             if (hasVideo) {
@@ -266,9 +292,9 @@
             }
 
 
-            // ==============================================
-            //   КНОПКА «ОТМЕТИТЬ ПРОЙДЕННЫМ»
-            // ==============================================
+            
+            
+            
 
             var completeBtnClass = isDone ? 'btn-secondary' : 'btn-primary';
             var completeBtnText = isDone ? '✓ Урок пройден' : 'Отметить пройденным';
@@ -277,9 +303,9 @@
                 '<button class="btn ' + completeBtnClass + ' mb-24" id="completeBtn">' + completeBtnText + '</button>';
 
 
-            // ==============================================
-            //   НАВИГАЦИЯ ← →
-            // ==============================================
+            
+            
+            
 
             var prevBtn = '<span></span>';
             if (lessonIndex > 0) {
@@ -294,9 +320,9 @@
             }
 
 
-            // ==============================================
-            //   СОБИРАЕМ СТРАНИЦУ
-            // ==============================================
+            
+            
+            
 
             var mainHtml =
                 '<button class="lesson-mobile-toggle" id="toggleSidebarBtn">☰ Список уроков</button>' +
@@ -314,11 +340,11 @@
                 '</div>';
 
 
-            // ==============================================
-            //   ОБРАБОТЧИКИ СОБЫТИЙ
-            // ==============================================
+            
+            
+            
 
-            // Клик по уроку в сайдбаре
+            
             var lessonBtns = document.querySelectorAll('.lesson-item[data-lid]');
             for (var i = 0; i < lessonBtns.length; i++) {
                 lessonBtns[i].addEventListener('click', function () {
@@ -328,7 +354,7 @@
                 });
             }
 
-            // Навигация ← →
+            
             var navBtns = document.querySelectorAll('[data-lid]');
             for (var i = 0; i < navBtns.length; i++) {
                 if (!navBtns[i].classList.contains('lesson-item')) {
@@ -340,20 +366,20 @@
                 }
             }
 
-            // Вкладки (Видео / Текст / Практика)
+            
             var tabs = document.querySelectorAll('.lesson-tab');
             for (var i = 0; i < tabs.length; i++) {
                 tabs[i].addEventListener('click', function () {
                     var tabName = this.dataset.tab;
 
-                    // Убираем active со всех вкладок
+                    
                     var allTabs = document.querySelectorAll('.lesson-tab');
                     for (var j = 0; j < allTabs.length; j++) {
                         allTabs[j].classList.remove('active');
                     }
                     this.classList.add('active');
 
-                    // Показываем нужный контент
+                    
                     var allContents = document.querySelectorAll('.lesson-tab-content');
                     for (var j = 0; j < allContents.length; j++) {
                         allContents[j].classList.remove('active');
@@ -363,7 +389,7 @@
                 });
             }
 
-            // Кнопка «Отметить пройденным»
+            
             var completeBtn = document.getElementById('completeBtn');
             if (completeBtn) {
                 completeBtn.addEventListener('click', function () {
@@ -379,7 +405,7 @@
                 });
             }
 
-            // Мобильная кнопка списка уроков
+            
             var toggleBtn = document.getElementById('toggleSidebarBtn');
             if (toggleBtn) {
                 toggleBtn.addEventListener('click', function () {
@@ -388,14 +414,22 @@
                 });
             }
 
-            // Инициализируем интерактивные задания
+            var closeListBtn = document.getElementById('closeLessonList');
+            if (closeListBtn) {
+                closeListBtn.addEventListener('click', function () {
+                    var sb = document.getElementById('lSidebar');
+                    if (sb) sb.classList.remove('open');
+                });
+            }
+
+            
             if (typeof initTasks === 'function') {
                 initTasks();
             }
         }
 
 
-        // ===== Первая отрисовка =====
+        
         renderLesson();
 
     });

@@ -187,7 +187,7 @@
             </div>
         </section>
 
-        <!-- Призыв к действию -->
+        
         <div id="cta"></div>
 
     </main>
@@ -203,7 +203,7 @@
 
 
 
-    <!-- Скрипты -->
+    
     <script src="js/theme.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/data.js"></script>
@@ -211,25 +211,25 @@
     <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-        // ===== Популярные курсы =====
-        // Показываем курсы с наибольшим числом студентов (от 1500)
+        
+        
 
         var allCourses = DATA.courses;
         var popular = [];
 
-        // Отбираем популярные курсы
+        
         for (var i = 0; i < allCourses.length; i++) {
             if (allCourses[i].students >= 1500) {
                 popular.push(allCourses[i]);
             }
         }
 
-        // Берём только первые 6
+        
         if (popular.length > 6) {
             popular = popular.slice(0, 6);
         }
 
-        // Рисуем карточки курсов
+        
         var coursesHtml = '';
         for (var i = 0; i < popular.length; i++) {
             coursesHtml += renderCourseCard(popular[i]);
@@ -243,14 +243,14 @@
 
 
 
-        // ===== Преподаватели =====
-        // Карточки с аватаром, тегами и статистикой
+        
+        
 
         var teachersHtml = '';
         for (var i = 0; i < DATA.teachers.length; i++) {
             var t = DATA.teachers[i];
 
-            // Рисуем теги специализации
+            
             var specializations = t.specialization.split(', ');
             var tagsHtml = '';
             for (var j = 0; j < specializations.length; j++) {
@@ -281,7 +281,7 @@
 
 
 
-        // ===== Отзывы студентов (первые 3) =====
+        
 
         var reviewsHtml = '';
         var firstReviews = DATA.reviews.slice(0, 3);
@@ -309,7 +309,7 @@
 
 
 
-        // ===== Блок CTA =====
+        
         document.getElementById('cta').innerHTML = renderCTA();
     });
 

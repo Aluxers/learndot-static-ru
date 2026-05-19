@@ -12,31 +12,31 @@
 </head>
 <body>
 
-    <!-- Обёртка кабинета -->
+    
     <div class="dash-wrap">
         <div id="dashTopbar"></div>
         <div id="dashSidebar"></div>
         <main class="dash-content">
 
-            <!-- Приветствие -->
+            
             <div class="page-header" id="greeting"></div>
 
-            <!-- Статистика -->
+            
             <div class="stats-grid" id="stats"></div>
 
-            <!-- Активные курсы -->
+            
             <h3 class="dash-section-title" data-lang="activeCourses">Активные курсы</h3>
             <div class="grid grid-3 mb-32" id="activeCourses"></div>
 
-            <!-- Ближайшие задания -->
+            
             <h3 class="dash-section-title" data-lang="nearestAssignments">Ближайшие задания</h3>
             <div class="flex flex-col gap-8 mb-32" id="tasks"></div>
 
-            <!-- Уведомления -->
+            
             <h3 class="dash-section-title" data-lang="notifications">Уведомления</h3>
             <div class="flex flex-col gap-8 mb-32" id="notifs"></div>
 
-            <!-- Рекомендации -->
+            
             <h3 class="dash-section-title" data-lang="recommendedCourses">Рекомендуемые курсы</h3>
             <div class="grid grid-3" id="recommended"></div>
 
@@ -54,17 +54,18 @@
         renderDashTopbar('dashTopbar', t('studentDashboard'));
         renderDashSidebar('dashSidebar', 'student', 'dashboard');
 
-        // ===== Приветствие =====
+        function renderDashboard() {
+        
         var u = LearnDot.auth.getCurrentUser();
         var firstName = u ? u.name.split(' ')[0] : t('student');
         document.getElementById('greeting').innerHTML =
             '<h1>' + t('hello') + ', ' + firstName + '! 👋</h1>' +
             '<p>' + t('learningOverview') + '</p>';
 
-        // ===== Статистика =====
+        
         var enrollments = getUserEnrollments();
 
-        // Считаем завершённые курсы
+        
         var completedCount = 0;
         for (var i = 0; i < enrollments.length; i++) {
             if (enrollments[i].status === 'completed') {
@@ -72,7 +73,7 @@
             }
         }
 
-        // Считаем ожидающие задания
+        
         var pendingCount = 0;
         for (var i = 0; i < getUserAssignments().length; i++) {
             if (getUserAssignments()[i].status === 'pending') {
@@ -80,14 +81,14 @@
             }
         }
 
-        // Считаем средний прогресс
+        
         var totalProgress = 0;
         for (var i = 0; i < enrollments.length; i++) {
             totalProgress += enrollments[i].progress;
         }
-        var avgProgress = Math.round(totalProgress / enrollments.length);
+        var avgProgress = enrollments.length ? Math.round(totalProgress / enrollments.length) : 0;
 
-        // Рисуем карточки статистики
+        
         document.getElementById('stats').innerHTML = renderStatCards([
             { v: enrollments.length, l: t('enrolledCourses') },
             { v: completedCount, l: t('completed') },
@@ -96,13 +97,13 @@
         ]);
 
 
-        // ===== Активные курсы =====
+        
         var activeHtml = '';
         for (var i = 0; i < enrollments.length; i++) {
             var en = enrollments[i];
             if (en.status !== 'in-progress') continue;
 
-            // Ищем курс по ID
+            
             var course = null;
             for (var j = 0; j < DATA.courses.length; j++) {
                 if (DATA.courses[j].id === en.courseId) {
@@ -126,7 +127,7 @@
                     '</div>' +
                 '</div>';
         }
-        // Если нет активных курсов — показываем пустое состояние
+        
         if (!activeHtml) {
             activeHtml =
                 '<div class="empty-state">' +
@@ -139,7 +140,7 @@
         document.getElementById('activeCourses').innerHTML = activeHtml;
 
 
-        // ===== Ближайшие задания =====
+        
         var tasksHtml = '';
         var taskCount = 0;
         for (var i = 0; i < getUserAssignments().length; i++) {
@@ -148,7 +149,7 @@
             if (taskCount >= 3) break;
             taskCount++;
 
-            // Ищем название курса
+            
             var courseName = '';
             for (var j = 0; j < DATA.courses.length; j++) {
                 if (DATA.courses[j].id === a.courseId) {
@@ -166,11 +167,19 @@
                     '<span class="badge badge-warning">' + t('pending') + '</span>' +
                 '</div>';
         }
+        if (!tasksHtml) {
+            tasksHtml =
+                '<div class="empty-state">' +
+                    '<span class="empty-icon">📝</span>' +
+                    '<h3>Заданий пока нет</h3>' +
+                    '<p>Когда преподаватель добавит задания, они появятся здесь.</p>' +
+                '</div>';
+        }
         tasksHtml += '<a href="assignments.html" class="link-more">' + t('allAssignments') + '</a>';
         document.getElementById('tasks').innerHTML = tasksHtml;
 
 
-        // ===== Уведомления (3 последних) =====
+        
         var notifsHtml = '';
         var notifIcons = { course: '📚', assignment: '📝', payment: '💳', system: '🔔' };
         var showCount = Math.min(3, getUserNotifications().length);
@@ -193,7 +202,7 @@
         document.getElementById('notifs').innerHTML = notifsHtml;
 
 
-        // ===== Рекомендуемые курсы =====
+        
         var recIds = ['web-design-basics', 'frontend-development', 'motion-design'];
         var recHtml = '';
         for (var i = 0; i < DATA.courses.length; i++) {
@@ -202,6 +211,10 @@
             }
         }
         document.getElementById('recommended').innerHTML = recHtml;
+        }
+
+        renderDashboard();
+        syncUserEnrollments(renderDashboard);
 
     });
     </script>

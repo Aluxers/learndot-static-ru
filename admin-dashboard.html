@@ -12,7 +12,7 @@
 </head>
 <body>
 
-    <!-- Обёртка панели администратора -->
+    
     <div class="dash-wrap">
         <div id="dashTopbar"></div>
         <div id="dashSidebar"></div>
@@ -23,10 +23,10 @@
                 <p data-lang="platformOverview">Обзор платформы.</p>
             </div>
 
-            <!-- Статистика -->
+            
             <div class="stats-grid stats-grid-3" id="adStats"></div>
 
-            <!-- Топ курсов -->
+            
             <h3 class="dash-section-title" data-lang="topCourses">Топ курсов</h3>
             <div class="table-wrap mb-32">
                 <table class="data-table">
@@ -35,7 +35,7 @@
                 </table>
             </div>
 
-            <!-- Последние платежи -->
+            
             <h3 class="dash-section-title" data-lang="lastPayments">Последние платежи</h3>
             <div class="table-wrap">
                 <table class="data-table">
@@ -55,17 +55,17 @@
 
         document.addEventListener('DOMContentLoaded', function () {
 
-        // ===== Проверяем роль =====
+        
         if (!LearnDot.auth.requireRole(['admin'])) return;
 
-        // ===== Рисуем верхнюю панель и боковое меню =====
+        
         renderDashTopbar('dashTopbar', t('adminDashboard'));
         renderDashSidebar('dashSidebar', 'admin', 'dashboard');
         
-        // ===== Статистика платформы =====
+        
         var a = DATA.analytics;
 
-        // Считаем общий доход
+        
         var totalRevenue = 0;
         for (var i = 0; i < DATA.allPayments.length; i++) {
             if (DATA.allPayments[i].status === 'completed') {
@@ -73,7 +73,7 @@
             }
         }
 
-        // Считаем ожидающие модерации
+        
         var pendingReviews = 0;
         for (var i = 0; i < DATA.adminReviews.length; i++) {
             if (DATA.adminReviews[i].status === 'pending') pendingReviews++;
@@ -88,7 +88,7 @@
             { v: pendingReviews, l: t('waitModeration') }
         ]);
 
-        // ===== Топ курсов =====
+        
         var topHtml = '';
         for (var i = 0; i < a.topCourses.length; i++) {
             var c = a.topCourses[i];
@@ -104,7 +104,7 @@
         }
         document.getElementById('topTable').innerHTML = topHtml;
 
-        // ===== Последние платежи =====
+        
         var payHtml = '';
         var payCount = Math.min(5, DATA.allPayments.length);
         for (var i = 0; i < payCount; i++) {
@@ -115,7 +115,7 @@
                 '<tr>' +
                     '<td class="td-name">' + p.user + '</td>' +
                     '<td class="td-muted">' + p.course + '</td>' +
-                    '<td class="td-amount">$' + p.amount + '</td>' +
+                    '<td class="td-amount">' + p.amount.toLocaleString() + ' ₸</td>' +
                     '<td class="td-muted">' + formatDate(p.date) + '</td>' +
                     '<td><span class="badge ' + statusBadge + '">' + statusText + '</span></td>' +
                 '</tr>';

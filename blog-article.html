@@ -11,7 +11,7 @@
 </head>
 <body>
 
-    <!-- Шапка -->
+    
     <div id="header-root"></div>
 
     <main class="page-content">
@@ -21,7 +21,7 @@
         <div id="cta"></div>
     </main>
 
-    <!-- Подвал -->
+    
     <div id="footer-root"></div>
 
     <script src="js/theme.js"></script>
@@ -31,11 +31,11 @@
     <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-        // ===== Получаем ID статьи из URL =====
+        
         var params = new URLSearchParams(window.location.search);
         var id = params.get('id');
 
-        // ===== Ищем статью по ID =====
+        
         var article = null;
         for (var i = 0; i < DATA.blog.length; i++) {
             if (DATA.blog[i].id === id) {
@@ -44,7 +44,7 @@
             }
         }
 
-        // Если не найдена — ошибка
+        
         if (!article) {
             document.getElementById('articleContent').innerHTML =
                 '<div class="text-center">' +
@@ -55,10 +55,10 @@
             return;
         }
 
-        // Обновляем заголовок страницы
+        
         document.title = article.title + ' — LearnDot';
 
-        // Категория
+        
         var catIcon = '💻';
         var badgeClass = 'badge-success';
         if (article.category === 'Дизайн') {
@@ -66,12 +66,12 @@
             badgeClass = 'badge-primary';
         }
 
-        // ==========================================================
-        //   ОБЛОЖКА СТАТЬИ
-        //   Берётся из поля cover в DATA.blog (файл data.js).
-        //   Замените cover в data.js → images/blog/ваш-файл.jpg
-        //   Рекомендуемый размер: 900 × 400 пикселей
-        // ==========================================================
+        
+        
+        
+        
+        
+        
         var coverHtml = '';
         if (article.cover) {
             coverHtml = '<div class="article-cover has-image" style="background-image:url(\'' + article.cover + '\')"><span>' + catIcon + '</span></div>';
@@ -79,10 +79,10 @@
             coverHtml = '<div class="article-cover"><span>' + catIcon + '</span></div>';
         }
 
-        // Полный текст (или excerpt если fullText нет)
+        
         var bodyHtml = article.fullText || ('<p>' + article.excerpt + '</p>');
 
-        // Навигация ← →
+        
         var idx = 0;
         for (var i = 0; i < DATA.blog.length; i++) {
             if (DATA.blog[i].id === id) { idx = i; break; }
@@ -99,7 +99,7 @@
         }
         navHtml += '</div>';
 
-        // Собираем страницу
+        
         document.getElementById('articleContent').innerHTML =
             '<a href="blog.html" class="article-back">← Назад в блог</a>' +
             coverHtml +
@@ -118,7 +118,7 @@
             '<div class="article-body">' + bodyHtml + '</div>' +
             navHtml;
 
-        // CTA
+        
         document.getElementById('cta').innerHTML = renderCTA(
             t('articleCtaTitle'),
             t('articleCtaText')

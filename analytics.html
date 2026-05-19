@@ -12,7 +12,7 @@
 </head>
 <body>
 
-    <!-- Обёртка панели администратора -->
+    
     <div class="dash-wrap">
         <div id="dashTopbar"></div>
         <div id="dashSidebar"></div>
@@ -23,13 +23,13 @@
                 <p>Показатели и рост платформы.</p>
             </div>
 
-            <!-- Статистика -->
+            
             <div class="stats-grid" id="anStats"></div>
 
-            <!-- Графики -->
+            
             <div class="grid grid-2 mb-28" id="anCharts"></div>
 
-            <!-- Топ курсов -->
+            
             <h3 class="dash-section-title mt-28">Топ курсов</h3>
             <div class="table-wrap">
                 <table class="data-table">
@@ -47,17 +47,17 @@
     <script src="js/main.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Проверяем роль администратора
+        
         if (!LearnDot.auth.requireRole(['admin'])) return;
 
-        // Рисуем шапку и боковое меню
+        
         renderDashTopbar('dashTopbar', 'Панель администратора');
         renderDashSidebar('dashSidebar', 'admin', 'analytics');
 
         
         var d = DATA.analytics;
 
-        // Статистика с ростом
+        
         document.getElementById('anStats').innerHTML = [
             { v: d.revenue.total.toLocaleString() + ' ₸', l: 'Доход', s: '↑ ' + d.revenue.growth + '%' },
             { v: d.users.total, l: 'Пользователей', s: '+' + d.users.newThisMonth + ' в этом месяце' },
@@ -72,11 +72,11 @@
                 '</div>';
         }).join('');
 
-        // Графики — столбчатые диаграммы
+        
         var revMax = (function(){var _mx=0;for(var _i=0;_i<d.monthlyRevenue.length;_i++){if(d.monthlyRevenue[_i].amount>_mx)_mx=d.monthlyRevenue[_i].amount;}return _mx;})();
         var usrMax = (function(){var _mx=0;for(var _i=0;_i<d.monthlyUsers.length;_i++){if(d.monthlyUsers[_i].count>_mx)_mx=d.monthlyUsers[_i].count;}return _mx;})();
 
-        // Доход по месяцам
+        
         var revBarsHtml = d.monthlyRevenue.map(function (m) {
             var pct = Math.round(m.amount / revMax * 100);
             return '' +
@@ -84,12 +84,12 @@
                     '<div class="bar-track">' +
                         '<div class="bar-fill" style="height:' + pct + '%;background:var(--primary)"></div>' +
                     '</div>' +
-                    '<span class="bar-value">$' + m.amount + '</span>' +
+                    '<span class="bar-value">' + m.amount.toLocaleString() + ' ₸</span>' +
                     '<span class="bar-label">' + m.month + '</span>' +
                 '</div>';
         }).join('');
 
-        // Пользователи по месяцам
+        
         var usrBarsHtml = d.monthlyUsers.map(function (m) {
             var pct = Math.round(m.count / usrMax * 100);
             return '' +
@@ -106,7 +106,7 @@
             '<div class="card"><h3 class="chart-title">Доход по месяцам</h3><div class="bar-chart">' + revBarsHtml + '</div></div>' +
             '<div class="card"><h3 class="chart-title">Рост пользователей</h3><div class="bar-chart">' + usrBarsHtml + '</div></div>';
 
-        // Топ курсов
+        
         document.getElementById('anTable').innerHTML = d.topCourses.map(function (c, i) {
             return '' +
                 '<tr>' +

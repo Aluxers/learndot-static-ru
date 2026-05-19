@@ -12,7 +12,7 @@
 </head>
 <body>
 
-    <!-- Обёртка кабинета -->
+    
     <div class="dash-wrap">
         <div id="dashTopbar"></div>
         <div id="dashSidebar"></div>
@@ -34,40 +34,40 @@
     <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-        // ===== Проверяем роль пользователя =====
+        
         if (!LearnDot.auth.requireRole(['student'])) return;
 
-        // ===== Рисуем мобильную шапку и боковое меню =====
+        
         renderDashTopbar('dashTopbar', 'Кабинет студента');
         renderDashSidebar('dashSidebar', 'student', 'profile');
-        // ===== Данные пользователя =====
+        
         var u = LearnDot.auth.getCurrentUser();
         var enrollments = getUserEnrollments();
 
-        // Считаем завершённые
+        
         var completedCount = 0;
         for (var i = 0; i < enrollments.length; i++) {
             if (enrollments[i].status === 'completed') completedCount++;
         }
 
-        // Средний прогресс
+        
         var totalProg = 0;
         for (var i = 0; i < enrollments.length; i++) {
             totalProg += enrollments[i].progress;
         }
-        var avgProg = Math.round(totalProg / enrollments.length);
+        var avgProg = enrollments.length ? Math.round(totalProg / enrollments.length) : 0;
 
-        // ===== Левая колонка — аватар =====
+        
         var leftHtml =
             '<div class="card profile-card text-center">' +
-                '<div class="profile-avatar-lg"><img src="' + (u && u.avatar ? u.avatar : 'images/avatars/default.jpg') + '" alt=""></div>' +
+                '<div class="profile-avatar-lg"><img src="' + (u && u.avatar ? u.avatar : 'images/avatars/default.png') + '" alt=""></div>' +
                 '<h3 class="mb-4">' + (u ? u.name : 'Студент') + '</h3>' +
                 '<p class="profile-email">' + (u ? u.email : '') + '</p>' +
                 '<span class="badge badge-primary mb-16">Студент</span>' +
                 '<p class="profile-since">Участник с октября 2025</p>' +
             '</div>';
 
-        // ===== Правая колонка — статистика + информация =====
+        
         var statsHtml = renderStatCards([
             { v: enrollments.length, l: 'Записан' },
             { v: completedCount, l: 'Пройдено' },
@@ -75,7 +75,7 @@
             { v: avgProg + '%', l: 'Прогресс' }
         ]);
 
-        // Поля информации
+        
         var fields = [
             ['Полное имя', u ? u.name : '—'],
             ['Email', u ? u.email : '—'],

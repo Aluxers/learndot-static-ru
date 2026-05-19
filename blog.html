@@ -11,7 +11,7 @@
 </head>
 <body>
 
-    <!-- Шапка -->
+    
     <div id="header-root"></div>
 
     <main class="page-content">
@@ -22,7 +22,7 @@
                     <p data-lang="blogPageText">Актуальные статьи, практические рекомендации и вдохновение для тех, кто развивается в дизайне и IT.</p>
                 </div>
 
-                <!-- Фильтры по категории -->
+                
                 <div class="filter-chips mb-28">
                     <span class="filter-label" data-lang="categoryLabel">Категория:</span>
                     <button class="chip active" onclick="filterBlog('all', this)" data-lang="all">Все</button>
@@ -30,16 +30,16 @@
                     <button class="chip" onclick="filterBlog('IT', this)">IT</button>
                 </div>
 
-                <!-- Сетка статей -->
+                
                 <div class="grid grid-3" id="blogGrid"></div>
             </section>
         </div>
 
-        <!-- Призыв к действию -->
+        
         <div id="cta"></div>
     </main>
 
-    <!-- Подвал -->
+    
     <div id="footer-root"></div>
 
     <script src="js/theme.js"></script>
@@ -49,11 +49,11 @@
     <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-        // ===== Фильтрация блога по категории =====
-        // Вызывается при клике на чипсы «Все» / «Дизайн» / «IT»
+        
+        
         window.filterBlog = function (cat, btn) {
 
-            // Переключаем активный чип
+            
             if (btn) {
                 var chips = document.querySelectorAll('.filter-chips .chip');
                 for (var i = 0; i < chips.length; i++) {
@@ -62,7 +62,7 @@
                 btn.classList.add('active');
             }
 
-            // Фильтруем статьи по категории
+            
             var posts = [];
             if (cat === 'all') {
                 posts = DATA.blog;
@@ -75,13 +75,13 @@
             }
 
 
-            // ===== Рисуем карточки блога =====
-            // Каждая карточка: обложка, категория, время чтения, заголовок, превью
+            
+            
             var html = '';
             for (var i = 0; i < posts.length; i++) {
                 var p = posts[i];
 
-                // Определяем иконку и цвет бейджа
+                
                 var icon = '💻';
                 var badgeClass = 'badge-success';
                 if (p.category === 'Дизайн') {
@@ -89,10 +89,10 @@
                     badgeClass = 'badge-primary';
                 }
 
-                // Обложка статьи — если есть cover, показываем иконку
-                // Поле cover хранится в DATA.blog (файл data.js)
+                
+                
 
-                // Обложка статьи — картинка из поля cover или заглушка
+                
                 var coverHtml = '';
                 if (p.cover) {
                     coverHtml = '<div class="blog-cover has-image" style="background-image:url(\'' + p.cover + '\')">' + '<span>' + icon + '</span></div>';
@@ -121,11 +121,11 @@
         };
 
 
-        // ===== Загружаем все статьи при старте =====
+        
         var activeChip = document.querySelector('.filter-chips .chip.active');
         filterBlog('all', activeChip);
 
-        // ===== Блок CTA =====
+        
         document.getElementById('cta').innerHTML = renderCTA(
             t('blogCtaTitle'),
             t('blogCtaText')

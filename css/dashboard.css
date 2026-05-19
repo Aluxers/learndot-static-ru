@@ -1,16 +1,10 @@
-/* =========================
-   Стили личного кабинета
-   Боковое меню, карточки, графики
-   ========================= */
-/* ============================================
-   Dashboard Styles — Sidebar Layout + Widgets
-   Used by Student, Teacher, and Admin areas.
-   ============================================ */
 
-/* === Разметка личного кабинета === */
+
+
+
 .dash-wrap { display: flex; min-height: 100vh; }
 
-/* Боковое меню */
+
 .dash-sidebar {
   position: fixed; top: 0; left: 0; z-index: 80; width: 260px; height: 100vh;
   display: flex; flex-direction: column; background: var(--surface);
@@ -20,13 +14,14 @@
 .dash-sidebar-header { padding: 20px 20px 14px; }
 .dash-user-block { display: flex; align-items: center; gap: 10px; padding: 12px 18px 16px; margin: 0 12px; border-bottom: 1px solid var(--border); }
 
-/* Аватар в боковом меню кабинета (38×38) */
+
 .dash-user-avatar {
   width: 38px;
   height: 38px;
   border-radius: 50%;
   overflow: hidden;
   flex-shrink: 0;
+  background: var(--surface-3);
 }
 
 .dash-user-avatar img {
@@ -38,7 +33,7 @@
 .dash-user-name { font-size: 0.86rem; font-weight: 600; color: var(--text); }
 .dash-user-role { font-size: 0.72rem; color: var(--text-muted); }
 
-/* Sidebar nav */
+
 .dash-nav { flex: 1; display: flex; flex-direction: column; gap: 2px; padding: 12px; }
 .dash-nav-item {
   display: flex; align-items: center; gap: 10px; padding: 9px 12px;
@@ -53,10 +48,10 @@
 .dash-nav-item.logout { color: var(--danger); }
 .dash-nav-item.logout:hover { background: var(--danger-light); }
 
-/* Область контента */
+
 .dash-content { flex: 1; margin-left: 260px; padding: 28px 32px 48px; min-height: 100vh; background: var(--bg); }
 
-/* Мобильная шапка */
+
 .dash-topbar {
   display: none; align-items: center; justify-content: space-between; gap: 12px;
   position: fixed; top: 0; left: 0; right: 0; z-index: 70; height: 56px; padding: 0 16px;
@@ -65,27 +60,27 @@
 .dash-topbar-title { font-size: 0.9rem; font-weight: 600; color: var(--text); }
 .dash-menu-btn {
   display: flex; flex-direction: column; justify-content: center; gap: 4px;
-  width: 36px; height: 36px; padding: 8px; background: none;
+  width: 36px; height: 36px; padding: 8px; background: var(--surface-2);
   border: 1.5px solid var(--border); border-radius: var(--radius-sm); cursor: pointer;
 }
-.dash-menu-btn span { display: block; height: 2px; background: var(--text); border-radius: 2px; }
+.dash-menu-btn span { display: block; width: 100%; height: 2px; background: var(--text); border-radius: 2px; }
 .dash-overlay { display: none; position: fixed; inset: 0; z-index: 75; background: rgba(0,0,0,0.4); backdrop-filter: blur(2px); }
 .dash-overlay.show { display: block; }
 
-/* === Заголовок страницы === */
+
 .page-header { margin-bottom: 28px; }
 .page-header h1 { font-size: 1.55rem; margin-bottom: 4px; }
 .page-header p { font-size: 0.9rem; color: var(--text-muted); }
 .page-header-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
 
-/* Breadcrumbs */
+
 .breadcrumbs { display: flex; align-items: center; flex-wrap: wrap; gap: 0; margin-bottom: 12px; font-size: 0.82rem; }
 .breadcrumbs a { color: var(--text-muted); text-decoration: none; }
 .breadcrumbs a:hover { color: var(--primary); }
 .breadcrumbs .sep { margin: 0 8px; color: var(--border); font-size: 0.78rem; }
 .breadcrumbs .current { color: var(--text); font-weight: 500; }
 
-/* === Карточки статистики === */
+
 .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }
 .stat-card {
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
@@ -95,10 +90,10 @@
 .stat-value { font-size: 1.55rem; font-weight: 700; color: var(--primary); margin-bottom: 2px; letter-spacing: -0.02em; line-height: 1.2; }
 .stat-label { font-size: 0.78rem; color: var(--text-muted); font-weight: 500; }
 
-/* === SECTION TITLE (Dashboard) === */
+
 .dash-section-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 14px; color: var(--text); }
 
-/* === NOTIFICATION ITEM === */
+
 .notif-item {
   display: flex; align-items: flex-start; gap: 14px; padding: 16px 18px;
   transition: opacity 0.15s;
@@ -111,7 +106,7 @@
 .notif-msg { font-size: 0.86rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 4px; }
 .notif-date { font-size: 0.75rem; color: var(--text-muted); opacity: 0.7; }
 
-/* === CERTIFICATE CARD === */
+
 .cert-preview {
   padding: 40px 32px; background: var(--surface-2); text-align: center;
   border-bottom: 1px solid var(--border);
@@ -124,13 +119,14 @@
 .cert-course { font-size: 1.1rem; color: var(--primary); font-weight: 700; margin-bottom: 8px; }
 .cert-line { width: 40px; height: 2px; background: var(--primary); margin: 12px auto 0; }
 
-/* === LESSON PAGE === */
+
 .lesson-layout { display: flex; gap: 0; min-height: 100vh; margin: -28px -32px -48px; }
 .lesson-sidebar {
   width: 320px; flex-shrink: 0; background: var(--surface); border-right: 1px solid var(--border);
   overflow-y: auto; height: 100vh; position: sticky; top: 0;
 }
 .lesson-sidebar-header { padding: 20px 18px 16px; border-bottom: 1px solid var(--border); }
+.lesson-sidebar-close { display: none; }
 .lesson-sidebar-title { font-size: 0.95rem; font-weight: 600; margin-bottom: 12px; }
 .lesson-module-label { padding: 10px 12px 6px; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.03em; }
 .lesson-item {
@@ -158,7 +154,7 @@
   border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer;
 }
 
-/* === QUIZ === */
+
 .quiz-option {
   display: flex; align-items: center; gap: 10px; padding: 10px 14px; width: 100%;
   background: var(--surface-2); border: 1.5px solid var(--border); border-radius: var(--radius-sm);
@@ -178,7 +174,7 @@
 .quiz-option.correct .quiz-radio { background: var(--success); border-color: var(--success); color: #fff; }
 .quiz-option.wrong .quiz-radio { background: var(--danger); border-color: var(--danger); color: #fff; }
 
-/* === LESSON MANAGEMENT (2-pane) === */
+
 .mgmt-layout { display: grid; grid-template-columns: 1fr 380px; gap: 24px; align-items: start; }
 .mgmt-module { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 16px; }
 .mgmt-module-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; background: var(--surface-2); border-bottom: 1px solid var(--border); }
@@ -195,7 +191,7 @@
 .mgmt-lesson-meta { font-size: 0.75rem; color: var(--text-muted); text-transform: capitalize; }
 .mgmt-edit-pane { position: sticky; top: 24px; }
 
-/* === BAR CHART === */
+
 .bar-chart { display: flex; justify-content: space-around; align-items: flex-end; gap: 8px; height: 200px; padding-top: 8px; }
 .bar-group { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; }
 .bar-track { width: 100%; max-width: 44px; height: 160px; background: var(--surface-2); border-radius: var(--radius-sm); display: flex; align-items: flex-end; overflow: hidden; }
@@ -203,7 +199,7 @@
 .bar-value { font-size: 0.72rem; font-weight: 600; color: var(--text); white-space: nowrap; }
 .bar-label { font-size: 0.72rem; color: var(--text-muted); }
 
-/* === TOGGLE SWITCH === */
+
 .toggle-switch {
   width: 44px; height: 24px; border-radius: 12px; border: none; cursor: pointer;
   background: var(--border); position: relative; transition: background 0.2s; flex-shrink: 0;
@@ -215,7 +211,7 @@
 }
 .toggle-switch.on .toggle-knob { left: 22px; }
 
-/* === Адаптив === */
+
 @media (max-width: 1024px) {
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .mgmt-layout { grid-template-columns: 1fr; }
@@ -232,6 +228,7 @@
   .lesson-mobile-toggle { display: inline-flex; }
   .video-placeholder { height: 200px; }
   .lesson-layout { margin: -16px -16px -48px; }
+  .lesson-sidebar-close { display: inline-flex; margin-top: 12px; }
 }
 @media (max-width: 640px) {
   .stats-grid { grid-template-columns: 1fr; }
@@ -242,21 +239,21 @@
 }
 
 
-/* ===== Классы для карточек кабинета студента ===== */
 
-/* Карточка без внутренних отступов */
+
+
 .card-flush {
   padding: 0;
   overflow: hidden;
 }
 
-/* Компактные отступы внутри карточки */
+
 .card-compact {
   padding: 14px 18px;
 }
 
-/* Обложка курса на панели (маленькая) */
-/* Обложка курса в дашборде — блок как на главной, картинка в 1.5 раза меньше */
+
+
 .dash-course-cover {
   height: 160px;
   background-color: #fff;
@@ -277,7 +274,7 @@
 }
 
 
-/* Обложка курса на странице «Мои курсы» — блок как на главной, картинка в 1.5 раза меньше */
+
 .dash-course-cover-lg {
   height: 160px;
   background-color: #fff;
@@ -297,7 +294,7 @@
   display: none;
 }
 
-/* Бейдж «Пройден» на обложке */
+
 .course-done-badge {
   position: absolute;
   top: 10px;
@@ -310,7 +307,7 @@
   font-weight: 600;
 }
 
-/* Тело карточки курса */
+
 .dash-course-body {
   padding: 14px 18px;
 }
@@ -319,7 +316,7 @@
   padding: 16px 18px;
 }
 
-/* Заголовок карточки (маленький) */
+
 .card-title-sm {
   font-size: 0.95rem;
   margin-bottom: 8px;
@@ -330,7 +327,7 @@
   margin-bottom: 4px;
 }
 
-/* Мета-текст */
+
 .meta-text {
   font-size: 0.82rem;
   color: var(--text-muted);
@@ -341,39 +338,39 @@
   color: var(--text-muted);
 }
 
-/* Ссылка «Все ... →» */
+
 .link-more {
   font-size: 0.88rem;
   font-weight: 600;
 }
 
-/* Кнопка с flex: 1 */
+
 .btn-flex {
   flex: 1;
 }
 
-/* Скрытый элемент */
+
 .hidden {
   display: none;
 }
 
-/* Сетка статистики на 3 колонки */
+
 .stats-grid-3 {
   grid-template-columns: repeat(3, 1fr);
 }
 
-/* Обёртка настроек */
+
 .settings-wrap {
   max-width: 640px;
 }
 
-/* Шапка без нижнего отступа */
+
 .page-header-no-mb {
   margin-bottom: 0;
 }
 
 
-/* ===== Задания ===== */
+
 
 .assign-meta {
   font-size: 0.84rem;
@@ -406,7 +403,7 @@
 }
 
 
-/* ===== Сертификаты ===== */
+
 
 .cert-student {
   font-size: 0.88rem;
@@ -428,7 +425,7 @@
 }
 
 
-/* ===== Профиль ===== */
+
 
 .profile-layout {
   display: grid;
@@ -441,13 +438,14 @@
   padding: 32px 24px;
 }
 
-/* Большой аватар на странице профиля (88×88) */
+
 .profile-avatar-lg {
   width: 88px;
   height: 88px;
   border-radius: 50%;
   overflow: hidden;
   margin: 0 auto 16px;
+  background: var(--surface-3);
 }
 
 .profile-avatar-lg img {
@@ -490,7 +488,7 @@
 }
 
 
-/* ===== Тесты (квизы) ===== */
+
 
 .quiz-info {
   font-size: 0.84rem;
@@ -554,7 +552,7 @@
 }
 
 
-/* ===== Уроки — доп. классы ===== */
+
 
 .lesson-modules-wrap {
   padding: 8px 0;
@@ -617,7 +615,7 @@
 }
 
 
-/* ===== Уведомления — доп. классы ===== */
+
 
 .notif-badge-sm {
   font-size: 0.68rem;
@@ -632,7 +630,7 @@
 }
 
 
-/* ===== Настройки — доп. классы ===== */
+
 
 .setting-title {
   font-size: 0.92rem;
@@ -645,7 +643,7 @@
 }
 
 
-/* ===== Таблица платежей — доп. классы ===== */
+
 
 .td-name {
   font-weight: 500;
@@ -665,7 +663,7 @@
 }
 
 
-/* ===== Адаптив — профиль ===== */
+
 
 @media (max-width: 900px) {
   .profile-layout {
@@ -688,9 +686,9 @@
 }
 
 
-/* ===== Страницы преподавателя — доп. классы ===== */
 
-/* Мета курса преподавателя */
+
+
 .teacher-course-meta {
   font-size: 0.84rem;
   color: var(--text-muted);
@@ -700,7 +698,7 @@
   color: var(--text);
 }
 
-/* Горизонтальная карточка курса */
+
 .teacher-course-card {
   padding: 0;
   overflow: hidden;
@@ -731,34 +729,34 @@
   margin-bottom: 4px;
 }
 
-/* Лейбл выбора курса */
+
 .course-select-label {
   font-size: 0.88rem;
   font-weight: 600;
 }
 
-/* Выпадающий список курса */
+
 .course-select {
   max-width: 320px;
 }
 
-/* Счётчик модуля */
+
 .module-count {
   font-size: 0.78rem;
   color: var(--text-muted);
 }
 
-/* Иконка типа урока */
+
 .mgmt-type-icon {
   font-size: 0.9rem;
 }
 
-/* Бейдж маленький */
+
 .badge-sm {
   font-size: 0.68rem;
 }
 
-/* Статистика с цветом */
+
 .stat-value-warning {
   color: var(--warning);
 }
@@ -767,19 +765,19 @@
   color: var(--success);
 }
 
-/* Оценка в таблице проверки */
+
 .grade-text {
   font-weight: 700;
   color: var(--success);
 }
 
-/* Заголовок графика */
+
 .chart-title {
   font-size: 1rem;
   margin-bottom: 20px;
 }
 
-/* Полоса прогресса для статистики */
+
 .stat-bar {
   margin-bottom: 16px;
 }
@@ -812,7 +810,7 @@
   border-radius: 4px;
 }
 
-/* Метрика-строка */
+
 .metric-row {
   display: flex;
   justify-content: space-between;
@@ -828,7 +826,7 @@
   color: var(--text-muted);
 }
 
-/* Ячейки таблицы */
+
 .td-rank {
   font-weight: 600;
   color: var(--primary);
@@ -856,14 +854,14 @@
 }
 
 
-/* ===== Страницы администратора — доп. классы ===== */
 
-/* Поиск админки */
+
+
 .admin-search {
   max-width: 360px;
 }
 
-/* Контент-секция в управлении */
+
 .content-section-card {
   padding: 16px 20px;
 }
@@ -878,7 +876,7 @@
   color: var(--text-muted);
 }
 
-/* FAQ в управлении контентом */
+
 .content-faq-card {
   padding: 16px 20px;
 }
@@ -902,7 +900,7 @@
   flex-shrink: 0;
 }
 
-/* Таблица блога — заголовок */
+
 .td-title-truncate {
   font-weight: 500;
   max-width: 260px;
@@ -911,13 +909,13 @@
   white-space: nowrap;
 }
 
-/* Дата маленькая */
+
 .td-date-sm {
   color: var(--text-muted);
   font-size: 0.84rem;
 }
 
-/* Категория в управлении */
+
 .cat-card-title {
   font-size: 1.05rem;
   margin-bottom: 4px;
@@ -935,7 +933,7 @@
   line-height: 1.5;
 }
 
-/* Отзыв в модерации */
+
 .review-stars-text {
   color: #f0a530;
   font-weight: 600;
@@ -954,7 +952,7 @@
   color: var(--text-muted);
 }
 
-/* Аналитика — рост */
+
 .stat-growth {
   font-size: 0.78rem;
   font-weight: 600;
@@ -963,7 +961,7 @@
   display: block;
 }
 
-/* Обложка курса/блога — поле в админке */
+
 .cover-field {
   display: flex;
   align-items: center;
@@ -1011,10 +1009,20 @@
   border: 1px solid var(--border);
 }
 
+.cover-preview-img {
+  width: 84px;
+  height: 54px;
+  border-radius: var(--radius-sm);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 1px solid var(--border);
+}
 
-/* ===== Страница урока — YouTube видео ===== */
 
-/* Контейнер для YouTube iframe (16:9) */
+
+
+
 .video-container {
   position: relative;
   width: 100%;
@@ -1035,7 +1043,7 @@
   border: none;
 }
 
-/* Заглушка если нет видео */
+
 .video-placeholder-msg {
   position: absolute;
   top: 50%;
@@ -1046,7 +1054,7 @@
   text-align: center;
 }
 
-/* Текст урока */
+
 .lesson-text-block {
   font-size: 0.96rem;
   line-height: 1.75;
@@ -1058,7 +1066,7 @@
   margin-bottom: 14px;
 }
 
-/* Блок практики */
+
 .lesson-practice {
   padding: 20px 24px;
   background: var(--primary-light);
@@ -1073,7 +1081,7 @@
   line-height: 1.6;
 }
 
-/* Вкладки: Видео / Текст / Практика */
+
 .lesson-tabs {
   display: flex;
   gap: 4px;
@@ -1103,7 +1111,7 @@
   border-bottom-color: var(--primary);
 }
 
-/* Панель содержимого вкладки */
+
 .lesson-tab-content {
   display: none;
 }

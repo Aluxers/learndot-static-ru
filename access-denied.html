@@ -11,10 +11,10 @@
 </head>
 <body>
 
-    <!-- Шапка сайта -->
+    
     <div id="header-root"></div>
 
-    <!-- Страница «Доступ запрещён» -->
+    
     <main class="page-content">
         <div class="container">
             <div class="system-page">
@@ -30,7 +30,7 @@
         </div>
     </main>
 
-    <!-- Подвал -->
+    
     <div id="footer-root"></div>
 
     <script src="js/theme.js"></script>
@@ -40,15 +40,15 @@
     <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-        // Проверяем, авторизован ли пользователь
+        
         var user = LearnDot.auth.getCurrentUser();
 
         if (user) {
-            // Показываем роль пользователя в сообщении
+            
             var msg = document.getElementById('adMsg');
             msg.innerHTML += ' Ваша роль: <strong class="role-highlight">' + user.role + '</strong>.';
 
-            // Показываем кнопку «Мой кабинет»
+            
             var dashBtn = document.getElementById('adDash');
             dashBtn.href = LearnDot.auth.getDashboardUrl(user.role);
             dashBtn.classList.remove('ad-dash-hidden');

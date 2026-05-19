@@ -12,7 +12,7 @@
 </head>
 <body>
 
-    <!-- Обёртка кабинета -->
+    
     <div class="dash-wrap">
         <div id="dashTopbar"></div>
         <div id="dashSidebar"></div>
@@ -23,13 +23,13 @@
                 <p>Оценивайте задания студентов.</p>
             </div>
 
-            <!-- Статистика -->
+            
             <div class="stats-grid stats-grid-3 mb-24" id="arStats"></div>
 
-            <!-- Фильтры -->
+            
             <div class="flex gap-8 flex-wrap mb-20" id="arFilters"></div>
 
-            <!-- Список работ -->
+            
             <div class="flex flex-col gap-12" id="arList"></div>
 
         </main>
@@ -41,27 +41,27 @@
     <script src="js/main.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Проверяем роль
+        
         if (!LearnDot.auth.requireRole(['teacher'])) return;
 
-        // Рисуем шапку и меню
+        
         renderDashTopbar('dashTopbar', 'Кабинет преподавателя');
         renderDashSidebar('dashSidebar', 'teacher', 'reviews');
 
         
-        // Копируем работы
+        
         var subs = (function(){var _a=[];for(var _i=0;_i<getTeacherSubmissions().length;_i++){_a.push(Object.assign({},getTeacherSubmissions()[_i]));}return _a;})();
         var filter = 'all';
 
-        // Названия фильтров
+        
         var filterLabels = { all: 'Все', pending: 'Ожидают', reviewed: 'Проверено' };
 
-        // Отрисовка
+        
         function renderSubs() {
             var pendingC = (function(){var _c=0;for(var _i=0;_i<subs.length;_i++){if(subs[_i].status==='pending'){_c++;}}return _c;})();
             var reviewedC = (function(){var _c=0;for(var _i=0;_i<subs.length;_i++){if(subs[_i].status==='reviewed'){_c++;}}return _c;})();
 
-            // Статистика
+            
             document.getElementById('arStats').innerHTML = [
                 { v: subs.length, l: 'Всего', c: '' },
                 { v: pendingC, l: 'Ожидают', c: 'stat-value-warning' },
@@ -70,26 +70,26 @@
                 return '<div class="stat-card"><div class="stat-value ' + s.c + '">' + s.v + '</div><div class="stat-label">' + s.l + '</div></div>';
             }).join('');
 
-            // Фильтры
+            
             document.getElementById('arFilters').innerHTML = ['all', 'pending', 'reviewed'].map(function (f) {
                 var cls = filter === f ? 'btn-primary' : 'btn-secondary';
                 return '<button class="btn ' + cls + ' btn-sm" onclick="setFilter(\'' + f + '\')">' + filterLabels[f] + '</button>';
             }).join('');
 
-            // Список работ
+            
             var list = filter === 'all' ? subs : (function(){var _r=[];for(var _i=0;_i<subs.length;_i++){if(subs[_i].status===filter){_r.push(subs[_i]);}}return _r;})();
 
             document.getElementById('arList').innerHTML = list.map(function (s, i) {
-                // Оценка
+                
                 var gradeHtml = s.grade !== null
                     ? '<span class="grade-text">' + s.grade + '/100</span>'
                     : '';
 
-                // Статус
+                
                 var statusBadge = s.status === 'reviewed' ? 'badge-success' : 'badge-warning';
                 var statusText = s.status === 'reviewed' ? 'Проверено' : 'Ожидает';
 
-                // Обратная связь
+                
                 var feedbackHtml = '';
                 if (s.feedback) {
                     feedbackHtml =
@@ -119,13 +119,13 @@
             }).join('');
         }
 
-        // Переключение фильтра
+        
         window.setFilter = function (f) {
             filter = f;
             renderSubs();
         };
 
-        // Оценивание работы
+        
         window.reviewSub = function (i) {
             var grade = prompt('Введите оценку (0-100):');
             if (!grade) return;

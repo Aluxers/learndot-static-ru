@@ -12,13 +12,13 @@
 </head>
 <body>
 
-    <!-- Обёртка панели администратора -->
+    
     <div class="dash-wrap">
         <div id="dashTopbar"></div>
         <div id="dashSidebar"></div>
         <main class="dash-content">
 
-            <!-- Заголовок с кнопкой -->
+            
             <div class="page-header-row mb-28">
                 <div class="page-header page-header-no-mb">
                     <h1>Управление курсами</h1>
@@ -27,12 +27,12 @@
                 <button class="btn btn-primary" onclick="alert('Форма создания курса')">+ Добавить курс</button>
             </div>
 
-            <!-- Поиск -->
+            
             <div class="mb-20">
                 <input class="input admin-search" id="cmSearch" placeholder="Поиск курсов...">
             </div>
 
-            <!-- Таблица курсов -->
+            
             <div class="table-wrap">
                 <table class="data-table">
                     <thead>
@@ -60,15 +60,15 @@
     <script src="js/main.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Проверяем роль администратора
+        
         if (!LearnDot.auth.requireRole(['admin'])) return;
 
-        // Рисуем шапку и боковое меню
+        
         renderDashTopbar('dashTopbar', 'Панель администратора');
         renderDashSidebar('dashSidebar', 'admin', 'courses');
 
         
-        // Отрисовка таблицы курсов
+        
         function renderCM() {
             var q = document.getElementById('cmSearch').value.toLowerCase();
             var list = DATA.courses.filter(function (c) {
@@ -81,12 +81,9 @@
                 var badgeClass = c.category === 'Дизайн' ? 'badge-primary' : 'badge-success';
                 var priceText = c.price === 0 ? 'Бесплатно' : c.price.toLocaleString() + ' ₸';
 
-                // Обложка курса — здесь отображается путь к изображению
-                // Поле cover хранится в данных курса (DATA.courses)
-                // Чтобы изменить обложку, нужно изменить поле cover у курса в data.js
-                var coverHtml = '<div class="cover-preview">' +
-                    (c.cover ? '🖼️ ' + c.cover.split('/').pop() : '—') +
-                    '</div>';
+                var coverHtml = c.cover
+                    ? '<div class="cover-preview-img" style="background-image:url(\'' + c.cover + '\')"></div>'
+                    : '<div class="cover-preview-img">—</div>';
 
                 return '' +
                     '<tr>' +

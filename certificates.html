@@ -12,7 +12,7 @@
 </head>
 <body>
 
-    <!-- Обёртка кабинета -->
+    
     <div class="dash-wrap">
         <div id="dashTopbar"></div>
         <div id="dashSidebar"></div>
@@ -34,13 +34,13 @@
     <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-        // ===== Проверяем роль пользователя =====
+        
         if (!LearnDot.auth.requireRole(['student'])) return;
 
-        // ===== Рисуем мобильную шапку и боковое меню =====
+        
         renderDashTopbar('dashTopbar', 'Кабинет студента');
         renderDashSidebar('dashSidebar', 'student', 'certificates');
-        // ===== Проверяем, есть ли сертификаты =====
+        
         if (getUserCertificates().length === 0) {
             document.getElementById('certGrid').innerHTML =
                 '<div class="empty-state">' +
@@ -51,7 +51,7 @@
             return;
         }
 
-        // ===== Рисуем сертификаты =====
+        
         var html = '';
         for (var i = 0; i < getUserCertificates().length; i++) {
             var cert = getUserCertificates()[i];

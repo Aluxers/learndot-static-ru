@@ -11,7 +11,7 @@
 </head>
 <body>
 
-    <!-- Шапка -->
+    
     <div id="header-root"></div>
 
     <main class="page-content">
@@ -22,16 +22,16 @@
                     <p data-lang="teachersPageText">Профессионалы индустрии, создающие и ведущие курсы.</p>
                 </div>
 
-                <!-- Карточки преподавателей -->
+                
                 <div class="grid grid-2" id="teacherGrid"></div>
             </section>
         </div>
 
-        <!-- Призыв к действию -->
+        
         <div id="cta"></div>
     </main>
 
-    <!-- Подвал -->
+    
     <div id="footer-root"></div>
 
     <script src="js/theme.js"></script>
@@ -41,30 +41,30 @@
     <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-        // ===== Карточки преподавателей =====
+        
         var html = '';
 
         for (var i = 0; i < DATA.teachers.length; i++) {
             var teacher = DATA.teachers[i];
 
-            // Рисуем теги специализации
+            
             var specializations = teacher.specialization.split(', ');
             var tagsHtml = '';
             for (var j = 0; j < specializations.length; j++) {
                 tagsHtml += '<span class="badge badge-primary">' + specializations[j] + '</span>';
             }
 
-            // Рисуем ссылки на курсы преподавателя
+            
             var courseLinks = '';
             for (var j = 0; j < DATA.courses.length; j++) {
                 var c = DATA.courses[j];
-                // Проверяем, принадлежит ли курс этому преподавателю
+                
                 if (teacher.courses.indexOf(c.id) !== -1) {
                     courseLinks += '<a href="course-details.html?id=' + c.id + '" class="teacher-course-link">' + c.title + ' →</a><br>';
                 }
             }
 
-            // Имя преподавателя (только первое слово) для заголовка курсов
+            
             var firstName = teacher.name.split(' ')[0];
 
             html +=
@@ -85,7 +85,7 @@
 
         document.getElementById('teacherGrid').innerHTML = html;
 
-        // Блок CTA
+        
         document.getElementById('cta').innerHTML = renderCTA(
             t('teacherCtaTitle'),
             t('teacherCtaText')

@@ -11,7 +11,7 @@
 </head>
 <body>
 
-    <!-- Шапка -->
+    
     <div id="header-root"></div>
 
     <main class="page-content">
@@ -22,7 +22,7 @@
                     <p data-lang="coursesPageText">Все курсы по дизайну и IT в одном месте.</p>
                 </div>
 
-                <!-- Поиск и сортировка -->
+                
                 <div class="flex justify-between items-center flex-wrap gap-16 mb-20">
                     <div class="search-wrap">
                         <span class="search-icon" aria-hidden="true">
@@ -38,7 +38,7 @@
                     </select>
                 </div>
 
-                <!-- Фильтры -->
+                
                 <div class="flex gap-24 flex-wrap mb-24">
                     <div class="filter-chips">
                         <span class="filter-label" data-lang="categoryLabel">Категория:</span>
@@ -54,19 +54,19 @@
                     </div>
                 </div>
 
-                <!-- Счётчик результатов -->
+                
                 <p id="resultCount" class="result-count mb-20"></p>
 
-                <!-- Сетка курсов -->
+                
                 <div class="grid grid-3" id="courseGrid"></div>
             </section>
         </div>
 
-        <!-- Призыв к действию -->
+        
         <div id="cta"></div>
     </main>
 
-    <!-- Подвал -->
+    
     <div id="footer-root"></div>
 
     <script src="js/theme.js"></script>
@@ -76,23 +76,23 @@
     <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-        // ===== Состояние фильтров =====
-        // Эти переменные хранят текущие выбранные фильтры
-        var category = 'all';   // Категория: 'all', 'Дизайн', 'IT'
-        var level = 'all';      // Уровень: 'all', 'Начальный', 'Средний'
-        var sort = 'popular';   // Сортировка: 'popular', 'rating', 'price-asc', 'price-desc'
-        var search = '';        // Текст поиска
+        
+        
+        var category = 'all';   
+        var level = 'all';      
+        var sort = 'popular';   
+        var search = '';        
 
 
-        // ===== Главная функция отрисовки =====
-        // Вызывается каждый раз когда меняется фильтр, поиск или сортировка
+        
+        
         function render() {
 
-            // Начинаем с полного списка курсов
+            
             var list = DATA.courses.slice();
 
 
-            // --- Фильтр по поиску ---
+            
             if (search) {
                 var filtered = [];
                 for (var i = 0; i < list.length; i++) {
@@ -105,7 +105,7 @@
                 list = filtered;
             }
 
-            // --- Фильтр по категории ---
+            
             if (category !== 'all') {
                 var filtered = [];
                 for (var i = 0; i < list.length; i++) {
@@ -116,7 +116,7 @@
                 list = filtered;
             }
 
-            // --- Фильтр по уровню ---
+            
             if (level !== 'all') {
                 var filtered = [];
                 for (var i = 0; i < list.length; i++) {
@@ -127,7 +127,7 @@
                 list = filtered;
             }
 
-            // --- Сортировка ---
+            
             if (sort === 'popular') {
                 list.sort(function (a, b) { return b.students - a.students; });
             } else if (sort === 'rating') {
@@ -139,11 +139,11 @@
             }
 
 
-            // --- Обновляем счётчик результатов ---
+            
             document.getElementById('resultCount').textContent = t('found') + ' ' + list.length;
 
 
-            // --- Рисуем карточки курсов ---
+            
             if (list.length > 0) {
                 var html = '';
                 for (var i = 0; i < list.length; i++) {
@@ -151,7 +151,7 @@
                 }
                 document.getElementById('courseGrid').innerHTML = html;
             } else {
-                // Пустое состояние — ничего не найдено
+                
                 document.getElementById('courseGrid').innerHTML =
                     '<div class="empty-state empty-state-full">' +
                         '<span class="empty-icon">📭</span>' +
@@ -162,8 +162,8 @@
         }
 
 
-        // ===== Обработчики фильтров (чипсы) =====
-        // При клике на чип — обновляем фильтр и перерисовываем
+        
+        
 
         var allChips = document.querySelectorAll('.chip');
         for (var i = 0; i < allChips.length; i++) {
@@ -171,10 +171,10 @@
                 var btn = this;
                 var group = btn.dataset.filter;
 
-                // Переключаем активный чип в этой группе
+                
                 setActiveChip(btn.closest('.filter-chips'), btn);
 
-                // Обновляем соответствующий фильтр
+                
                 if (group === 'category') {
                     category = btn.dataset.value;
                 }
@@ -187,24 +187,24 @@
         }
 
 
-        // ===== Обработчик поиска =====
+        
         document.getElementById('searchInput').addEventListener('input', function () {
             search = this.value.toLowerCase();
             render();
         });
 
 
-        // ===== Обработчик сортировки =====
+        
         document.getElementById('sortSelect').addEventListener('change', function () {
             sort = this.value;
             render();
         });
 
 
-        // ===== Первая отрисовка при загрузке =====
+        
         render();
 
-        // ===== Блок CTA =====
+        
         document.getElementById('cta').innerHTML = renderCTA();
     });
 

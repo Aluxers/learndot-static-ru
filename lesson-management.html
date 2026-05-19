@@ -12,7 +12,7 @@
 </head>
 <body>
 
-    <!-- Обёртка кабинета -->
+    
     <div class="dash-wrap">
         <div id="dashTopbar"></div>
         <div id="dashSidebar"></div>
@@ -23,13 +23,13 @@
                 <p>Организация и редактирование уроков.</p>
             </div>
 
-            <!-- Выбор курса -->
+            
             <div class="flex gap-12 items-center flex-wrap mb-24">
                 <label class="course-select-label">Курс:</label>
                 <select class="input course-select" id="courseSelect"></select>
             </div>
 
-            <!-- Список модулей и уроков -->
+            
             <div id="lessonList"></div>
 
         </main>
@@ -41,20 +41,20 @@
     <script src="js/main.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Проверяем роль
+        
         if (!LearnDot.auth.requireRole(['teacher'])) return;
 
-        // Рисуем шапку и меню
+        
         renderDashTopbar('dashTopbar', 'Кабинет преподавателя');
         renderDashSidebar('dashSidebar', 'teacher', 'lessons');
 
         
-        // Заполняем выпадающий список курсов
+        
         document.getElementById('courseSelect').innerHTML = getTeacherCourses().map(function (c) {
             return '<option value="' + c.courseId + '">' + c.title + '</option>';
         }).join('');
 
-        // Данные уроков по курсам
+        
         var lessons = {
             'html-css': [
                 { mod: 'Основы HTML', items: ['Что такое HTML?|video|10 мин', 'Структура документа|video|12 мин', 'Заголовки и абзацы|video|8 мин', 'Ссылки и изображения|video|11 мин'] },
@@ -71,23 +71,23 @@
             ]
         };
 
-        // Иконки типов
+        
         var typeIcons = { video: '▶️', text: '📄', quiz: '✅', assignment: '📝' };
 
-        // Отрисовка модулей и уроков
+        
         function renderLessons() {
             var cid = document.getElementById('courseSelect').value;
             var mods = lessons[cid] || [];
 
             document.getElementById('lessonList').innerHTML = mods.map(function (m, mi) {
-                // Заголовок модуля
+                
                 var headerHtml =
                     '<div class="mgmt-module-header">' +
                         '<h4 class="mgmt-module-title">Модуль ' + (mi + 1) + ': ' + m.mod + '</h4>' +
                         '<span class="module-count">' + m.items.length + ' уроков</span>' +
                     '</div>';
 
-                // Строки уроков
+                
                 var rowsHtml = m.items.map(function (item) {
                     var parts = item.split('|');
                     var icon = typeIcons[parts[1]] || '📌';

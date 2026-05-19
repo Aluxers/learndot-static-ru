@@ -12,7 +12,7 @@
 </head>
 <body>
 
-    <!-- Обёртка кабинета -->
+    
     <div class="dash-wrap">
         <div id="dashTopbar"></div>
         <div id="dashSidebar"></div>
@@ -34,19 +34,21 @@
     <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-        // ===== Проверяем роль пользователя =====
+        
         if (!LearnDot.auth.requireRole(['student'])) return;
 
-        // ===== Рисуем мобильную шапку и боковое меню =====
+        
         renderDashTopbar('dashTopbar', 'Кабинет студента');
         renderDashSidebar('dashSidebar', 'student', 'courses');
-        // ===== Мои курсы =====
+        function renderCourses() {
+        
         var html = '';
+        var enrollments = getUserEnrollments();
 
-        for (var i = 0; i < getUserEnrollments().length; i++) {
-            var en = getUserEnrollments()[i];
+        for (var i = 0; i < enrollments.length; i++) {
+            var en = enrollments[i];
 
-            // Ищем данные курса
+            
             var course = null;
             for (var j = 0; j < DATA.courses.length; j++) {
                 if (DATA.courses[j].id === en.courseId) {
@@ -59,10 +61,10 @@
             var done = en.status === 'completed';
             var icon = course.category === 'Дизайн' ? '🎨' : '💻';
 
-            // Бейдж «Пройден»
+            
             var doneBadge = done ? '<span class="course-done-badge">Пройден</span>' : '';
 
-            // Кнопка зависит от статуса
+            
             var btnHtml = '';
             if (done) {
                 btnHtml = '<a href="certificates.html" class="btn btn-secondary btn-sm btn-flex">Сертификат</a>';
@@ -70,7 +72,7 @@
                 btnHtml = '<a href="lesson.html?course=' + course.id + '" class="btn btn-primary btn-sm btn-flex">Продолжить</a>';
             }
 
-            // Цвет прогресс-бара
+            
             var progressColor = done ? 'success' : '';
 
             html +=
@@ -87,7 +89,7 @@
                     '</div>' +
                 '</div>';
         }
-        // Если нет курсов — показываем пустое состояние
+        
         if (!html) {
             html =
                 '<div class="empty-state">' +
@@ -98,6 +100,10 @@
                 '</div>';
         }
         document.getElementById('courseGrid').innerHTML = html;
+        }
+
+        renderCourses();
+        syncUserEnrollments(renderCourses);
 
     });
     </script>

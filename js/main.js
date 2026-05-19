@@ -1,6 +1,6 @@
-// Получаем инициалы из имени
-// Например: "Анна Ким" → "АК"
-// Используется для аватаров (кружки с буквами)
+
+
+
 
 function getInitials(name) {
   var parts = name.split(' ');
@@ -12,11 +12,11 @@ function getInitials(name) {
 }
 
 
-// ==============================================================
-//   ПЕРЕВОД РОЛИ НА РУССКИЙ
-//   student → Студент, teacher → Преподаватель, admin → Администратор
-//   Используется в шапке, боковом меню и на страницах
-// ==============================================================
+
+
+
+
+
 
 function getRoleLabel(role) {
   if (role === 'student') return t('student');
@@ -26,15 +26,15 @@ function getRoleLabel(role) {
 }
 
 
-// ==============================================================
-//   ПРОВЕРКА: демо-пользователь или новый аккаунт
-//
-//   Демо-аккаунты: u1 (студент), u2 (преподаватель), u3 (админ)
-//   Новые аккаунты: ID начинается с 'u' + число (временная метка)
-//
-//   Для демо-пользователей показываем данные из DATA
-//   Для новых пользователей показываем пустые данные или localStorage
-// ==============================================================
+
+
+
+
+
+
+
+
+
 
 function isDemoUser() {
   var user = LearnDot.auth.getCurrentUser();
@@ -45,28 +45,35 @@ function isDemoUser() {
   return false;
 }
 
+function getEnrollmentsKey() {
+  var user = LearnDot.auth.getCurrentUser();
+  if (!user) return 'learndot-enrollments-guest';
+  return 'learndot-enrollments-' + user.email;
+}
 
-// ==============================================================
-//   ПОЛУЧЕНИЕ ДАННЫХ ПОЛЬЗОВАТЕЛЯ
-//
-//   Для демо → данные из DATA + localStorage
-//   Для нового → только localStorage (или пусто)
-// ==============================================================
 
-// Записи на курсы (для студента)
+
+
+
+
+
+
+
+
 function getUserEnrollments() {
   var all = [];
+  var user = LearnDot.auth.getCurrentUser();
 
-  // Для демо — берём из DATA
+  
   if (isDemoUser()) {
     for (var i = 0; i < DATA.enrollments.length; i++) {
       all.push(DATA.enrollments[i]);
     }
   }
 
-  // Добавляем записи из localStorage
+  
   try {
-    var saved = localStorage.getItem('learndot-enrollments');
+    var saved = localStorage.getItem(getEnrollmentsKey());
     if (saved) {
       var extra = JSON.parse(saved);
       for (var i = 0; i < extra.length; i++) {
@@ -78,7 +85,9 @@ function getUserEnrollments() {
           }
         }
         if (!exists) {
-          all.push(extra[i]);
+          if (!extra[i].email || !user || extra[i].email === user.email) {
+            all.push(extra[i]);
+          }
         }
       }
     }
@@ -87,19 +96,82 @@ function getUserEnrollments() {
   return all;
 }
 
-// Задания (для студента)
+function saveUserEnrollment(enrollment, callback) {
+  var user = LearnDot.auth.getCurrentUser();
+  if (!user) {
+    if (callback) callback(false);
+    return;
+  }
+
+  enrollment.userId = user.id;
+  enrollment.email = user.email;
+
+  var enrollments = [];
+  try {
+    var saved = localStorage.getItem(getEnrollmentsKey());
+    if (saved) enrollments = JSON.parse(saved);
+  } catch (e) {}
+
+  var alreadySaved = false;
+  for (var i = 0; i < enrollments.length; i++) {
+    if (enrollments[i].courseId === enrollment.courseId) {
+      enrollments[i] = enrollment;
+      alreadySaved = true;
+      break;
+    }
+  }
+  if (!alreadySaved) enrollments.push(enrollment);
+
+  try {
+    localStorage.setItem(getEnrollmentsKey(), JSON.stringify(enrollments));
+  } catch (e) {}
+
+  fetch('/api/enrollments', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(enrollment)
+  }).then(function () {
+    if (callback) callback(true);
+  }).catch(function () {
+    if (callback) callback(false);
+  });
+}
+
+function syncUserEnrollments(callback) {
+  var user = LearnDot.auth.getCurrentUser();
+  if (!user) {
+    if (callback) callback();
+    return;
+  }
+
+  fetch('/api/enrollments?email=' + encodeURIComponent(user.email))
+    .then(function (response) { return response.json(); })
+    .then(function (result) {
+      if (result.success && result.enrollments) {
+        try {
+          localStorage.setItem(getEnrollmentsKey(), JSON.stringify(result.enrollments));
+        } catch (e) {}
+      }
+      if (callback) callback();
+    })
+    .catch(function () {
+      if (callback) callback();
+    });
+}
+
+
 function getUserAssignments() {
   if (!isDemoUser()) return [];
   return DATA.assignments;
 }
 
-// Оплаты (для студента)
+
 function getUserPayments() {
   if (!isDemoUser()) return [];
   return DATA.payments;
 }
 
-// Уведомления (для студента)
+
 function getUserNotifications() {
   if (!isDemoUser()) {
     return [{
@@ -114,39 +186,39 @@ function getUserNotifications() {
   return DATA.notifications;
 }
 
-// Сертификаты (для студента)
+
 function getUserCertificates() {
   if (!isDemoUser()) return [];
   return DATA.certificates;
 }
 
-// Курсы преподавателя
+
 function getTeacherCourses() {
   if (!isDemoUser()) return [];
   return DATA.teacherCourses;
 }
 
-// Работы студентов (для преподавателя)
+
 function getTeacherSubmissions() {
   if (!isDemoUser()) return [];
   return DATA.submissions;
 }
 
 
-// ==============================================================
-//   ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКА (RU / KZ / EN)
-//
-//   Простая реализация:
-//   1. Текущий язык хранится в localStorage('learndot-lang')
-//   2. При переключении — перезагружаем страницу
-//   3. Тексты берутся из словаря LANG
-//   4. По умолчанию — RU
-//
-//   Ключ localStorage: 'learndot-lang'
-//   Значения: 'ru', 'kz', 'en'
-// ==============================================================
 
-// Получаем текущий язык
+
+
+
+
+
+
+
+
+
+
+
+
+
 function getCurrentLang() {
   try {
     var saved = localStorage.getItem('learndot-lang');
@@ -157,7 +229,7 @@ function getCurrentLang() {
   return 'ru';
 }
 
-// Устанавливаем язык
+
 function setLang(lang) {
   try {
     localStorage.setItem('learndot-lang', lang);
@@ -165,7 +237,7 @@ function setLang(lang) {
   window.location.reload();
 }
 
-// Словарь переводов для основных элементов интерфейса
+
 var LANG = {
   ru: {
     home: 'Главная',
@@ -736,17 +808,17 @@ var LANG = {
   }
 };
 
-// Получаем текст по ключу на текущем языке
+
 function t(key) {
   var lang = getCurrentLang();
   if (LANG[lang] && LANG[lang][key]) {
     return LANG[lang][key];
   }
-  // Если нет перевода — возвращаем русский
+  
   return LANG.ru[key] || key;
 }
 
-// Переводы данных курсов. DATA.courses оставляем как есть, а для вывода берем эти тексты.
+
 var COURSE_LANG = {
   kz: {
     'ux-ui-design': {
@@ -914,7 +986,7 @@ function getCourseText(course) {
   return copy;
 }
 
-// Простой перевод готовых фраз в кабинете. Нужен для страниц, где текст рисуется через innerHTML.
+
 var DASH_TEXT = {
   kz: {
     'Мои курсы': 'Менің курстарым',
@@ -1237,9 +1309,9 @@ function startDashboardTranslator() {
   obs.observe(document.body, { childList: true, subtree: true });
 }
 
-// Переводим простые статичные элементы на странице
-// Пример в HTML: <h1 data-i18n="homeHeroTitle">...</h1>
-// Если внутри нужен span или другой тег: data-i18n-html
+
+
+
 function applyPageTranslations() {
   document.documentElement.lang = getCurrentLang();
 
@@ -1274,44 +1346,44 @@ function applyPageTranslations() {
 
 
 
-/* ==============================================
-   Главный JS — общие функции для всего сайта
-
-   Этот файл подключается на КАЖДОЙ странице.
-   Он содержит:
-   - вспомогательные функции (инициалы, дата, звёзды)
-   - рисование шапки сайта
-   - рисование подвала сайта
-   - рисование бокового меню кабинета
-   - рисование карточек курсов
-   - рисование блока CTA
-   - рисование полосы прогресса
-   - рисование карточек статистики (общая функция)
-   - переключение активных фильтров (общая функция)
-   ============================================== */
-
-
-// ==============================================================
-//   ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
-//   Используются на многих страницах для работы с данными
-// ==============================================================
 
 
 
 
-// Форматируем дату на русский язык
-// format='long' → "15 января 2026"
-// без формата   → "15 янв 2026"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function formatDate(dateStr, format) {
   var d = new Date(dateStr);
 
-  // Короткие названия месяцев
+  
   var monthsShort = [
     'янв', 'фев', 'мар', 'апр', 'май', 'июн',
     'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'
   ];
 
-  // Полные названия месяцев (в родительном падеже)
+  
   var monthsFull = [
     'января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
     'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'
@@ -1321,30 +1393,30 @@ function formatDate(dateStr, format) {
   var month = d.getMonth();
   var year = d.getFullYear();
 
-  // Длинный формат: "15 января 2026"
+  
   if (format === 'long') {
     return day + ' ' + monthsFull[month] + ' ' + year;
   }
 
-  // Короткий формат: "15 янв 2026"
+  
   return day + ' ' + monthsShort[month] + ' ' + year;
 }
 
 
-// Рисуем звёздочки рейтинга
-// rating    — число от 1 до 5 (например 4.8)
-// sizeClass — CSS-класс для размера: 'stars-sm', 'stars-md', 'stars-course', 'stars-lg'
-//             Если не указан — размер по умолчанию (14px из CSS)
-//
-// Размеры звёзд задаются через CSS-классы (не через JS):
-//   .stars-sm     → 13px (для карточек курсов, преподавателей)
-//   .stars-md     → 15px (для отзывов)
-//   .stars-course → 16px (для страницы курса)
-//   .stars-lg     → 20px (для сводки отзывов)
+
+
+
+
+
+
+
+
+
+
 function renderStars(rating, sizeClass) {
 
-  // Если передали число вместо класса (для обратной совместимости)
-  // — конвертируем в класс
+  
+  
   if (typeof sizeClass === 'number') {
     if (sizeClass <= 13) sizeClass = 'stars-sm';
     else if (sizeClass <= 15) sizeClass = 'stars-md';
@@ -1352,16 +1424,16 @@ function renderStars(rating, sizeClass) {
     else sizeClass = 'stars-lg';
   }
 
-  // CSS-класс для обёртки
+  
   var wrapClass = 'stars';
   if (sizeClass) {
     wrapClass = 'stars ' + sizeClass;
   }
 
-  // Собираем HTML звёзд
+  
   var html = '<span class="' + wrapClass + '">';
 
-  // 5 звёзд — заполненные или пустые
+  
   var rounded = Math.round(rating);
   for (var i = 1; i <= 5; i++) {
     if (i <= rounded) {
@@ -1371,7 +1443,7 @@ function renderStars(rating, sizeClass) {
     }
   }
 
-  // Числовое значение рейтинга рядом со звёздами
+  
   html += '<span class="star-value">' + rating + '</span>';
   html += '</span>';
 
@@ -1379,8 +1451,8 @@ function renderStars(rating, sizeClass) {
 }
 
 
-// Текущая страница (имя файла из URL)
-// Например: "courses.html" или "index.html"
+
+
 function getCurrentPage() {
   var path = window.location.pathname;
   var parts = path.split('/');
@@ -1389,21 +1461,21 @@ function getCurrentPage() {
 }
 
 
-// ==============================================================
-//   ОБЩИЕ ФУНКЦИИ ДЛЯ МНОГИХ СТРАНИЦ
-//   Используются на страницах кабинетов для повторяющихся блоков
-// ==============================================================
 
 
-// Рисуем карточки статистики
-// Принимает массив объектов: [{ v: значение, l: подпись }, ...]
-// Возвращает HTML-строку с карточками stat-card
-//
-// Пример:
-//   renderStatCards([
-//     { v: 42, l: 'Студентов' },
-//     { v: '85%', l: 'Прогресс' }
-//   ])
+
+
+
+
+
+
+
+
+
+
+
+
+
 function renderStatCards(items) {
   var html = '';
   for (var i = 0; i < items.length; i++) {
@@ -1417,47 +1489,47 @@ function renderStatCards(items) {
 }
 
 
-// Переключаем активный фильтр (чипсы)
-// container — родительский элемент с чипсами
-// activeBtn — кнопка, которую нужно сделать активной
-//
-// Используется на страницах: каталог курсов, блог, FAQ,
-// модерация отзывов, управление пользователями
+
+
+
+
+
+
 function setActiveChip(container, activeBtn) {
 
-  // Убираем класс active со всех чипсов в контейнере
+  
   var chips = container.querySelectorAll('.chip');
   for (var i = 0; i < chips.length; i++) {
     chips[i].classList.remove('active');
   }
 
-  // Добавляем active на нажатую кнопку
+  
   activeBtn.classList.add('active');
 }
 
 
-// ==============================================================
-//   ШАПКА САЙТА
-//   Рисуется на всех публичных страницах
-// ==============================================================
+
+
+
+
 
 function renderHeader(containerId) {
 
-  // Находим контейнер
+  
   var el = document.getElementById(containerId);
   if (!el) return;
 
-  // Получаем текущего пользователя (или null)
+  
   var user = LearnDot.auth.getCurrentUser();
 
-  // Определяем текущую страницу для подсветки активной ссылки
+  
   var page = getCurrentPage();
 
 
-  // ----- Ссылки навигации -----
+  
 
-  // Основные ссылки (всегда видны)
-  // ===== Навигационные ссылки (с переводом) =====
+  
+  
   var navLinks = [
     { href: 'index.html',    label: t('home'),       match: ['index.html', ''] },
     { href: 'courses.html',  label: t('courses'),    match: ['courses.html', 'category-design.html', 'category-it.html', 'course-details.html'] },
@@ -1466,24 +1538,24 @@ function renderHeader(containerId) {
     { href: 'blog.html',     label: t('blog'),       match: ['blog.html'] }
   ];
 
-  // Дополнительные ссылки (видны в мобильном меню)
+  
   var extraLinks = [
     { href: 'reviews.html',  label: t('reviews') },
   ];
 
 
-  // ----- Рисуем HTML для навигационных ссылок -----
+  
 
   var navHtml = '';
   for (var i = 0; i < navLinks.length; i++) {
     var link = navLinks[i];
-    // Проверяем, активна ли эта ссылка
+    
     var isActive = link.match.indexOf(page) !== -1;
     var activeClass = isActive ? ' active' : '';
     navHtml += '<a href="' + link.href + '" class="nav-link' + activeClass + '">' + link.label + '</a>';
   }
 
-  // Дополнительные ссылки
+  
   var extraHtml = '';
   for (var j = 0; j < extraLinks.length; j++) {
     var extra = extraLinks[j];
@@ -1493,9 +1565,9 @@ function renderHeader(containerId) {
   }
 
 
-  // ----- Правая часть шапки (зависит от авторизации) -----
+  
 
-  // Переключатель языка (RU / KZ / EN)
+  
   var curLang = getCurrentLang().toUpperCase();
   var langSwitcherHtml =
     '<div class="lang-switcher">' +
@@ -1510,7 +1582,7 @@ function renderHeader(containerId) {
   var actionsHtml = '';
 
   if (user) {
-    // Пользователь авторизован — кабинет + аватар + выйти
+    
     var dashUrl = LearnDot.auth.getDashboardUrl(user.role);
 
     actionsHtml =
@@ -1526,7 +1598,7 @@ function renderHeader(containerId) {
       '</div>' +
       '<button class="btn btn-secondary btn-sm" onclick="LearnDot.auth.logout(); window.location.href=\'index.html\'">' + t('logout') + '</button>';
   } else {
-    // Не авторизован — войти + регистрация
+    
     actionsHtml =
       langSwitcherHtml +
       '<button class="theme-toggle" title="Сменить тему">🌙</button>' +
@@ -1535,7 +1607,7 @@ function renderHeader(containerId) {
   }
 
 
-  // ----- Мобильный аватар (маленький, рядом с бургером) -----
+  
 
   var mobileAvatarHtml = '';
   if (user) {
@@ -1543,25 +1615,25 @@ function renderHeader(containerId) {
   }
 
 
-  // ----- Собираем полный HTML шапки -----
+  
 
   el.innerHTML =
     '<header class="header">' +
       '<div class="container header-inner">' +
 
-        // Логотип
+        
         '<a href="index.html" class="logo">' +
           '<img src="images/logo/Logotype.png" class = "logo-icon">'+
         '</a>' +
 
-        // Навигация (скрывается на мобильных, открывается бургером)
+        
         '<nav class="nav" id="mainNav">' +
           navHtml +
           '<div class="mobile-extra">' + extraHtml + '</div>' +
           '<div class="nav-actions">' + actionsHtml + '</div>' +
         '</nav>' +
 
-        // Мобильные кнопки (бургер + тема + аватар)
+        
         '<div class="mobile-actions">' +
           mobileAvatarHtml +
           '<button class="theme-toggle" title="Сменить тему">🌙</button>' +
@@ -1571,25 +1643,25 @@ function renderHeader(containerId) {
       '</div>' +
     '</header>' +
 
-    // Затемнение фона при открытом мобильном меню
+    
     '<div class="nav-overlay" id="navOverlay"></div>';
 
 
-  // ----- Обработчик мобильного меню -----
+  
 
   var burger = document.getElementById('burgerBtn');
   var nav = document.getElementById('mainNav');
   var overlay = document.getElementById('navOverlay');
 
   if (burger) {
-    // Клик по бургеру — открыть/закрыть меню
+    
     burger.addEventListener('click', function () {
       burger.classList.toggle('open');
       nav.classList.toggle('open');
       overlay.classList.toggle('show');
     });
 
-    // Клик по затемнению — закрыть меню
+    
     overlay.addEventListener('click', function () {
       burger.classList.remove('open');
       nav.classList.remove('open');
@@ -1599,18 +1671,18 @@ function renderHeader(containerId) {
 }
 
 
-// ==============================================================
-//   ПОДВАЛ САЙТА
-//   Рисуется на всех публичных страницах
-// ==============================================================
+
+
+
+
 
 function renderFooter(containerId) {
 
-  // Находим контейнер
+  
   var el = document.getElementById(containerId);
   if (!el) return;
 
-  // Текущий год для копирайта
+  
   var year = new Date().getFullYear();
 
   el.innerHTML =
@@ -1618,7 +1690,7 @@ function renderFooter(containerId) {
       '<div class="container">' +
         '<div class="footer-grid">' +
 
-          // Логотип и описание
+          
           '<div class="footer-brand">' +
           '<a href="index.html" class="logo">' +
           '<img src="images/logo/Logotype.png" alt="Логотип LearnDot" class="logo-image">' +
@@ -1626,7 +1698,7 @@ function renderFooter(containerId) {
           '<p class="footer-tagline">' + t('footerTagline') + '</p>' +
         '</div>' +
 
-          // Колонка «Платформа»
+          
           '<div class="footer-col">' +
             '<h4 class="footer-col-title">' + t('platform') + '</h4>' +
             '<a href="courses.html" class="footer-link">' + t('courses') + '</a>' +
@@ -1636,7 +1708,7 @@ function renderFooter(containerId) {
             '<a href="pricing.html" class="footer-link">' + t('pricing') + '</a>' +
           '</div>' +
 
-          // Колонка «Ресурсы»
+          
           '<div class="footer-col">' +
             '<h4 class="footer-col-title">' + t('resources') + '</h4>' +
             '<a href="blog.html" class="footer-link">' + t('blog') + '</a>' +
@@ -1652,29 +1724,29 @@ function renderFooter(containerId) {
 }
 
 
-// ==============================================================
-//   БОКОВОЕ МЕНЮ ЛИЧНОГО КАБИНЕТА
-//   Рисуется на всех страницах кабинета (студент, препод, админ)
-// ==============================================================
+
+
+
+
 
 function renderDashSidebar(containerId, role, activeItem) {
 
-  // Находим контейнер
+  
   var el = document.getElementById(containerId);
   if (!el) return;
 
-  // Получаем имя пользователя для аватара
+  
   var user = LearnDot.auth.getCurrentUser();
   var name = user ? user.name : role;
 
-  // Названия ролей на русском
+  
   var roleLabel = t('user');
   if (role === 'student') roleLabel = t('student');
   if (role === 'teacher') roleLabel = t('teacher');
   if (role === 'admin') roleLabel = t('admin');
 
 
-  // ----- Пункты меню для каждой роли -----
+  
 
   var navItems = {
     student: [
@@ -1707,17 +1779,17 @@ function renderDashSidebar(containerId, role, activeItem) {
     ]
   };
 
-  // Берём пункты для текущей роли
+  
   var items = navItems[role] || [];
 
 
-  // ----- Рисуем HTML пунктов меню -----
+  
 
   var navHtml = '';
   for (var i = 0; i < items.length; i++) {
     var item = items[i];
 
-    // Подсвечиваем активный пункт
+    
     var activeClass = '';
     if (item.key === activeItem) {
       activeClass = ' active';
@@ -1731,19 +1803,19 @@ function renderDashSidebar(containerId, role, activeItem) {
   }
 
 
-  // ----- Собираем полный HTML сайдбара -----
+  
 
   el.innerHTML =
     '<aside class="dash-sidebar">' +
 
-      // Логотип
+      
       '<div class="dash-sidebar-header">' +
       '<a href="index.html" class="logo">' +
       '<img src="images/logo/Logotype.png" alt="" class="logo-image">' +
       '</a>' +
     '</div>' +
 
-      // Блок пользователя (аватар + имя + роль)
+      
       '<div class="dash-user-block">' +
         '<div class="dash-user-avatar"><img src="' + (user ? (user.avatar || 'images/avatars/default.png') : 'images/avatars/default.png') + '" alt=""></div>' +
         '<div>' +
@@ -1752,10 +1824,10 @@ function renderDashSidebar(containerId, role, activeItem) {
         '</div>' +
       '</div>' +
 
-      // Пункты меню
+      
       '<nav class="dash-nav">' + navHtml + '</nav>' +
 
-      // Нижняя часть (ссылка на сайт + кнопка выхода)
+      
       '<div class="dash-sidebar-footer">' +
         '<a href="index.html" class="dash-nav-item">' +
           '<span class="dash-nav-icon">🏠</span>' + t('toSite') +
@@ -1767,25 +1839,25 @@ function renderDashSidebar(containerId, role, activeItem) {
 
     '</aside>' +
 
-    // Затемнение фона (для мобильного сайдбара)
+    
     '<div class="dash-overlay" id="dashOverlay"></div>';
 
 
-  // ----- Обработчик мобильного сайдбара -----
+  
 
   var menuBtn = document.getElementById('dashMenuBtn');
-  // Находим сайдбар по CSS-классу внутри контейнера (не по ID — он дублируется)
+  
   var sidebar = el.querySelector('.dash-sidebar');
   var overlay = document.getElementById('dashOverlay');
 
   if (menuBtn && sidebar) {
-    // Клик по кнопке меню — открыть/закрыть сайдбар
+    
     menuBtn.addEventListener('click', function () {
       sidebar.classList.toggle('open');
       overlay.classList.toggle('show');
     });
 
-    // Клик по затемнению — закрыть сайдбар
+    
     overlay.addEventListener('click', function () {
       sidebar.classList.remove('open');
       overlay.classList.remove('show');
@@ -1794,8 +1866,8 @@ function renderDashSidebar(containerId, role, activeItem) {
 }
 
 
-// Рисуем мобильную верхнюю панель кабинета
-// (бургер-кнопка + название + переключатель темы)
+
+
 function renderDashTopbar(containerId, title) {
   var el = document.getElementById(containerId);
   if (!el) return;
@@ -1813,16 +1885,16 @@ function renderDashTopbar(containerId, title) {
 }
 
 
-// ==============================================================
-//   КАРТОЧКА КУРСА
-//   Используется на главной, в каталоге, в категориях,
-//   в рекомендациях на панели студента
-// ==============================================================
+
+
+
+
+
 
 function renderCourseCard(course) {
   var courseText = getCourseText(course);
 
-  // Определяем иконку и цвет бейджа по категории
+  
   var catIcon = '💻';
   var badgeClass = 'badge-success';
   if (course.category === 'Дизайн') {
@@ -1830,58 +1902,58 @@ function renderCourseCard(course) {
     badgeClass = 'badge-primary';
   }
 
-  // Определяем текст цены
+  
   var priceText = course.price.toLocaleString() + ' ₸';
   if (course.price === 0) {
     priceText = t('free');
   }
 
-  // ===== Обложка курса =====
-  // Если у курса есть поле cover — показываем картинку как фон.
-  // Если нет — показываем заглушку с иконкой категории.
-  //
-  // Чтобы заменить обложку:
-  // 1. Положите картинку в папку images/courses/
-  // 2. Обновите поле cover у курса в файле js/data.js
-  //    Например: cover: 'images/courses/my-course.jpg'
-  // Рекомендуемый размер: 600 × 340 пикселей.
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
   var coverHtml = '';
   if (course.cover) {
-    // Есть обложка — показываем картинку
+    
     coverHtml =
       '<div class="card-cover has-image" style="background-image:url(\'' + course.cover + '\')">' +
         '<span>' + catIcon + ' ' + courseText.category + '</span>' +
       '</div>';
   } else {
-    // Нет обложки — показываем заглушку
+    
     coverHtml =
       '<div class="card-cover">' +
         '<span>' + catIcon + ' ' + courseText.category + '</span>' +
       '</div>';
   }
 
-  // Собираем HTML карточки
+  
   return '' +
     '<a href="course-details.html?id=' + course.id + '" class="card card-hover course-card">' +
 
-      // Обложка курса (картинка или заглушка)
+      
       coverHtml +
 
-      // Тело карточки
+      
       '<div class="card-body">' +
 
-        // Уровень и длительность
+        
         '<div class="card-meta">' +
           '<span class="badge ' + badgeClass + '">' + courseText.level + '</span>' +
           '<span class="card-meta-text">' + courseText.duration + '</span>' +
         '</div>' +
 
-        // Название и описание
+        
         '<h4 class="card-title">' + courseText.title + '</h4>' +
         '<p class="card-desc">' + courseText.shortDesc + '</p>' +
 
-        // Рейтинг, студенты и цена
+        
         '<div class="card-footer">' +
           '<div>' +
             renderStars(course.rating, 'stars-sm') +
@@ -1895,14 +1967,14 @@ function renderCourseCard(course) {
 }
 
 
-// ==============================================================
-//   БЛОК ПРИЗЫВА К ДЕЙСТВИЮ (CTA)
-//   Используется внизу многих публичных страниц
-// ==============================================================
+
+
+
+
 
 function renderCTA(title, subtitle) {
 
-  // Значения по умолчанию (с переводом)
+  
   if (!title) {
     title = t('ctaTitle');
   }
@@ -1926,16 +1998,16 @@ function renderCTA(title, subtitle) {
 }
 
 
-// ==============================================================
-//   ПОЛОСА ПРОГРЕССА
-//   Используется на страницах курсов, уроков, статистики
-// ==============================================================
 
-// pct        — процент заполнения (0-100)
-// colorClass — доп. класс цвета (например 'success' для зелёного)
-//
-// Единственный inline-стиль в проекте — width полосы.
-// Это динамическое значение, CSS-классом не заменить.
+
+
+
+
+
+
+
+
+
 function renderProgressBar(pct, colorClass) {
   if (!colorClass) {
     colorClass = '';
@@ -1951,23 +2023,23 @@ function renderProgressBar(pct, colorClass) {
 }
 
 
-// ==============================================================
-//   АВТОЗАПУСК
-//   Рисуем шапку и подвал когда страница загрузилась
-// ==============================================================
+
+
+
+
 
 document.addEventListener('DOMContentLoaded', function () {
 
-  // Переводим статичный текст, если на странице есть data-i18n
+  
   applyPageTranslations();
   startDashboardTranslator();
 
-  // Рисуем шапку, если есть контейнер header-root
+  
   if (document.getElementById('header-root')) {
     renderHeader('header-root');
   }
 
-  // Рисуем подвал, если есть контейнер footer-root
+  
   if (document.getElementById('footer-root')) {
     renderFooter('footer-root');
   }

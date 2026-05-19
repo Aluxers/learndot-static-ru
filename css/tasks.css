@@ -1,10 +1,7 @@
-/* =============================================
-   Интерактивные задания — LearnDot
-   Стили для всех виджетов практики в уроках
-   ============================================= */
 
 
-/* ===== Общий контейнер виджета ===== */
+
+
 
 .task-widget {
   background: var(--surface);
@@ -51,7 +48,7 @@
 }
 
 
-/* ===== Палитра и свотчи (Color Harmony) ===== */
+
 
 .task-palette {
   display: flex;
@@ -99,8 +96,14 @@
   display: block;
 }
 
+.task-score-small {
+  margin-top: 14px;
+  padding: 14px 16px;
+  text-align: left;
+}
 
-/* ===== Таб-переключатели (универсальные) ===== */
+
+
 
 .task-tabs {
   display: flex;
@@ -134,7 +137,7 @@
 }
 
 
-/* ===== Строка с цветопикером ===== */
+
 
 .task-picker-row {
   display: flex;
@@ -172,7 +175,7 @@
 }
 
 
-/* ===== Contrast Checker ===== */
+
 
 .task-contrast-inputs {
   display: grid;
@@ -295,7 +298,7 @@
 }
 
 
-/* ===== Typography Preview ===== */
+
 
 .task-font-selects {
   display: grid;
@@ -356,7 +359,7 @@
 }
 
 
-/* ===== Квиз (универсальный) ===== */
+
 
 .task-quiz-question {
   font-size: 1rem;
@@ -515,7 +518,7 @@
 }
 
 
-/* ===== Flexbox Playground ===== */
+
 
 .task-flexbox-controls {
   display: grid;
@@ -584,7 +587,7 @@
 .task-css-semi { color: #b8bdd0; }
 
 
-/* ===== 60-30-10 Пропорции ===== */
+
 
 .task-proportion-sliders {
   display: flex;
@@ -668,7 +671,7 @@
 }
 
 
-/* ===== Easing Preview ===== */
+
 
 .task-easing-grid {
   display: grid;
@@ -728,7 +731,7 @@
 }
 
 
-/* ===== Адаптивность ===== */
+
 
 @media (max-width: 600px) {
   .task-contrast-inputs,

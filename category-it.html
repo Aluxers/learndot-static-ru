@@ -11,27 +11,27 @@
 </head>
 <body>
 
-    <!-- Шапка -->
+    
     <div id="header-root"></div>
 
     <main class="page-content">
         <div class="container">
             <section class="section category-page-section">
-                <!-- Иконка категории -->
+                
                 <div class="text-center category-page-image">
                     <img src="images/icons/it1.png" alt="IT" class="category-page-icon">
                 </div>
 
-                <!-- Курсы IT -->
+                
                 <div class="grid grid-3" id="courseGrid"></div>
             </section>
         </div>
 
-        <!-- Призыв к действию -->
+        
         <div id="cta"></div>
     </main>
 
-    <!-- Подвал -->
+    
     <div id="footer-root"></div>
 
     <script src="js/theme.js"></script>
@@ -41,7 +41,7 @@
     <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-        // ===== Курсы категории «IT» =====
+        
         var itCourses = [];
         for (var i = 0; i < DATA.courses.length; i++) {
             if (DATA.courses[i].category === 'IT') {
@@ -49,14 +49,14 @@
             }
         }
 
-        // Рисуем карточки
+        
         var html = '';
         for (var i = 0; i < itCourses.length; i++) {
             html += renderCourseCard(itCourses[i]);
         }
         document.getElementById('courseGrid').innerHTML = html;
 
-        // Блок CTA
+        
         document.getElementById('cta').innerHTML = renderCTA();
     });
 

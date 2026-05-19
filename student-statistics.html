@@ -12,7 +12,7 @@
 </head>
 <body>
 
-    <!-- Обёртка кабинета -->
+    
     <div class="dash-wrap">
         <div id="dashTopbar"></div>
         <div id="dashSidebar"></div>
@@ -23,13 +23,13 @@
                 <p>Анализ успеваемости по вашим курсам.</p>
             </div>
 
-            <!-- Статистика -->
+            
             <div class="stats-grid" id="ssStats"></div>
 
-            <!-- Графики -->
+            
             <div class="grid grid-2 mb-28" id="ssCharts"></div>
 
-            <!-- Таблица лучших студентов -->
+            
             <h3 class="dash-section-title mt-28">Лучшие студенты</h3>
             <div class="table-wrap" id="ssTable"></div>
 
@@ -42,15 +42,15 @@
     <script src="js/main.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Проверяем роль
+        
         if (!LearnDot.auth.requireRole(['teacher'])) return;
 
-        // Рисуем шапку и меню
+        
         renderDashTopbar('dashTopbar', 'Кабинет преподавателя');
         renderDashSidebar('dashSidebar', 'teacher', 'stats');
 
         
-        // Данные статистики
+        
         var s = {
             title: 'HTML/CSS',
             total: 3200,
@@ -65,7 +65,7 @@
             ]
         };
 
-        // Карточки статистики
+        
         document.getElementById('ssStats').innerHTML = [
             { v: s.total.toLocaleString(), l: 'Всего студентов' },
             { v: s.active, l: 'Активных в этом месяце' },
@@ -75,7 +75,7 @@
             return '<div class="stat-card"><div class="stat-value">' + x.v + '</div><div class="stat-label">' + x.l + '</div></div>';
         }).join('');
 
-        // Графики — полосы успеваемости + метрики
+        
         var barsData = [
             { label: 'Завершение', value: s.completion, color: 'var(--primary)' },
             { label: 'Тесты', value: s.quiz, color: 'var(--success)' },
@@ -104,7 +104,7 @@
             '<div class="card"><h3 class="chart-title">Успеваемость</h3>' + barsHtml + '</div>' +
             '<div class="card"><h3 class="chart-title">Метрики</h3>' + metricsHtml + '</div>';
 
-        // Таблица лучших студентов
+        
         var rowsHtml = s.top.map(function (t, i) {
             var scoreClass = t[2] >= 85 ? 'td-score-good' : 'td-score-normal';
             return '' +

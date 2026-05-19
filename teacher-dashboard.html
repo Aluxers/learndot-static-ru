@@ -12,23 +12,23 @@
 </head>
 <body>
 
-    <!-- Обёртка кабинета -->
+    
     <div class="dash-wrap">
         <div id="dashTopbar"></div>
         <div id="dashSidebar"></div>
         <main class="dash-content">
 
-            <!-- Приветствие -->
+            
             <div class="page-header" id="tGreet"></div>
 
-            <!-- Статистика -->
+            
             <div class="stats-grid" id="tStats"></div>
 
-            <!-- Курсы преподавателя -->
+            
             <h3 class="dash-section-title" data-lang="yourCourses">Ваши курсы</h3>
             <div class="grid grid-3 mb-32" id="tCourses"></div>
 
-            <!-- Ожидающие проверки -->
+            
             <h3 class="dash-section-title" data-lang="pendingChecks">Ожидающие проверки</h3>
             <div class="flex flex-col gap-8 mb-32" id="tPending"></div>
 
@@ -42,21 +42,21 @@
     <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-        // ===== Проверяем роль пользователя =====
+        
         if (!LearnDot.auth.requireRole(['teacher'])) return;
 
-        // ===== Рисуем мобильную шапку и боковое меню =====
+        
         renderDashTopbar('dashTopbar', t('teacherDashboard'));
         renderDashSidebar('dashSidebar', 'teacher', 'dashboard');
 
-// ===== Приветствие =====
+
         var u = LearnDot.auth.getCurrentUser();
         var name = u ? u.name.split(' ')[0] : t('teacher');
         document.getElementById('tGreet').innerHTML =
             '<h1>' + t('welcome') + ', ' + name + '! 👋</h1>' +
             '<p>' + t('teacherOverview') + '</p>';
 
-        // ===== Статистика =====
+        
         var tc = getTeacherCourses();
         var totalStudents = 0;
         var totalRating = 0;
@@ -78,7 +78,7 @@
             { v: avgRating, l: t('avgRating') }
         ]);
 
-        // ===== Карточки курсов =====
+        
         var coursesHtml = '';
         for (var i = 0; i < tc.length; i++) {
             var c = tc[i];
@@ -98,7 +98,7 @@
         }
         document.getElementById('tCourses').innerHTML = coursesHtml;
 
-        // ===== Ожидающие проверки =====
+        
         var pendingHtml = '';
         for (var i = 0; i < getTeacherSubmissions().length; i++) {
             var s = getTeacherSubmissions()[i];

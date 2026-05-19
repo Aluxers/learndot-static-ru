@@ -11,26 +11,26 @@
 </head>
 <body>
 
-    <!-- Шапка сайта -->
+    
     <div id="header-root"></div>
 
-    <!-- Форма регистрации -->
+    
     <main class="page-content">
         <div class="container">
             <section class="section">
                 <div class="auth-wrap">
                     <div class="card auth-card">
 
-                        <!-- Заголовок -->
+                        
                         <div class="auth-header">
                             <h2>Создайте аккаунт</h2>
                             <p>Начните изучать дизайн и IT уже сегодня.</p>
                         </div>
 
-                        <!-- Ошибка (скрыта по умолчанию) -->
+                        
                         <div id="regError" class="auth-error mb-12 auth-error-hidden"></div>
 
-                        <!-- Поля формы -->
+                        
                         <div class="auth-form">
                             <div class="form-group">
                                 <label class="form-label">Полное имя</label>
@@ -43,11 +43,17 @@
                             <div class="form-row">
                                 <div class="form-group">
                                     <label class="form-label">Пароль</label>
-                                    <input class="input" id="regPassword" placeholder="Мин. 6 символов" type="password">
+                                    <div class="password-field">
+                                        <input class="input" id="regPassword" placeholder="Мин. 6 символов" type="password">
+                                        <button class="password-toggle" type="button" data-target="regPassword">Показать</button>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Повторите</label>
-                                    <input class="input" id="regConfirm" placeholder="Ещё раз" type="password">
+                                    <div class="password-field">
+                                        <input class="input" id="regConfirm" placeholder="Ещё раз" type="password">
+                                        <button class="password-toggle" type="button" data-target="regConfirm">Показать</button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -61,7 +67,7 @@
                             <button class="btn btn-primary btn-block" id="regBtn">Создать аккаунт</button>
                         </div>
 
-                        <!-- Ссылка на вход -->
+                        
                         <p class="auth-switch">
                             Уже есть аккаунт? <a href="login.html">Войти</a>
                         </p>
@@ -72,7 +78,7 @@
         </div>
     </main>
 
-    <!-- Подвал -->
+    
     <div id="footer-root"></div>
 
     <script src="js/theme.js"></script>
@@ -82,44 +88,59 @@
     <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-        // ===== Находим элементы =====
+        
         var errorBox = document.getElementById('regError');
 
-        // Функция показа ошибки
+        
         function showError(message) {
             errorBox.textContent = message;
             errorBox.classList.remove('auth-error-hidden');
         }
 
-        // ===== Обработка кнопки «Создать аккаунт» =====
+        
+        var passToggles = document.querySelectorAll('.password-toggle');
+        for (var i = 0; i < passToggles.length; i++) {
+            passToggles[i].addEventListener('click', function () {
+                var input = document.getElementById(this.dataset.target);
+                if (!input) return;
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    this.textContent = 'Скрыть';
+                } else {
+                    input.type = 'password';
+                    this.textContent = 'Показать';
+                }
+            });
+        }
+
         document.getElementById('regBtn').addEventListener('click', function () {
 
-            // Читаем значения из полей
+            
             var name = document.getElementById('regName').value;
             var email = document.getElementById('regEmail').value;
             var password = document.getElementById('regPassword').value;
             var confirm = document.getElementById('regConfirm').value;
             var role = document.getElementById('regRole').value;
 
-            // Проверка: все поля заполнены
+            
             if (!name || !email || !password) {
                 showError('Заполните все поля.');
                 return;
             }
 
-            // Проверка: пароль минимум 6 символов
+            
             if (password.length < 6) {
                 showError('Пароль — минимум 6 символов.');
                 return;
             }
 
-            // Проверка: пароли совпадают
+            
             if (password !== confirm) {
                 showError('Пароли не совпадают.');
                 return;
             }
 
-            // Регистрируем через auth.js
+            
             LearnDot.auth.register(name, email, password, role).then(function (result) {
 
             if (!result.success) {
@@ -127,7 +148,7 @@
                 return;
             }
 
-            // Успех — в кабинет
+            
             window.location.href = LearnDot.auth.getDashboardUrl(role);
             });
         });

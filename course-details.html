@@ -11,7 +11,7 @@
 </head>
 <body>
 
-    <!-- Шапка -->
+    
     <div id="header-root"></div>
 
     <main class="page-content">
@@ -19,11 +19,11 @@
             <section class="section" id="courseContent"></section>
         </div>
 
-        <!-- Призыв к действию -->
+        
         <div id="cta"></div>
     </main>
 
-    <!-- Подвал -->
+    
     <div id="footer-root"></div>
 
     <script src="js/theme.js"></script>
@@ -33,11 +33,11 @@
     <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-        // ===== Получаем ID курса из URL =====
+        
         var params = new URLSearchParams(window.location.search);
         var id = params.get('id') || 'ux-ui-design';
 
-        // ===== Ищем курс по ID =====
+        
         var course = null;
         for (var i = 0; i < DATA.courses.length; i++) {
             if (DATA.courses[i].id === id) {
@@ -55,7 +55,7 @@
 
         var courseText = getCourseText(course);
 
-        // ===== Преподаватель =====
+        
         var teacher = null;
         for (var i = 0; i < DATA.teachers.length; i++) {
             if (DATA.teachers[i].id === course.teacherId) {
@@ -64,7 +64,7 @@
             }
         }
 
-        // ===== Отзывы =====
+        
         var reviews = [];
         for (var i = 0; i < DATA.reviews.length; i++) {
             if (DATA.reviews[i].courseId === id) {
@@ -72,20 +72,20 @@
             }
         }
 
-        // ===== Категория =====
+        
         var catSlug = course.category === 'Дизайн' ? 'category-design.html' : 'category-it.html';
         var catIcon = course.category === 'Дизайн' ? '🎨' : '💻';
         var priceText = course.price === 0 ? 'Бесплатно' : course.price.toLocaleString() + ' ₸';
 
 
-        // ==========================================================
-        //   ПРОВЕРКА ЗАПИСИ НА КУРС
-        //
-        //   getUserEnrollments() возвращает:
-        //   - для демо-аккаунта (u1) → DATA.enrollments + localStorage
-        //   - для нового аккаунта → только localStorage
-        //   Так новый пользователь не видит чужие записи.
-        // ==========================================================
+        
+        
+        
+        
+        
+        
+        
+        
 
         var userEnrollments = getUserEnrollments();
         var isEnrolled = false;
@@ -97,7 +97,7 @@
             }
         }
 
-        // ===== Кнопка записи =====
+        
         var enrollBtnHtml = '';
         if (isEnrolled) {
             enrollBtnHtml =
@@ -108,7 +108,7 @@
                 '<button class="btn btn-primary btn-lg btn-block mb-20" id="enrollBtn">' + t('enroll') + '</button>';
         }
 
-        // ===== Обложка курса =====
+        
         var coverHtml = '';
         if (course.cover) {
             coverHtml = '<div class="course-cover has-image" style="background-image:url(\'' + course.cover + '\')"><span>' + catIcon + '</span></div>';
@@ -116,7 +116,7 @@
             coverHtml = '<div class="course-cover"><span>' + catIcon + ' ' + courseText.title + '</span></div>';
         }
 
-        // ===== Модули =====
+        
         var modulesHtml = '';
         for (var i = 0; i < courseText.modules.length; i++) {
             var m = courseText.modules[i];
@@ -130,13 +130,13 @@
                 '</div>';
         }
 
-        // ===== Результаты =====
+        
         var outcomesHtml = '';
         for (var i = 0; i < courseText.outcomes.length; i++) {
             outcomesHtml += '<li class="flex gap-12 course-outcome"><span class="course-outcome__check">✓</span>' + courseText.outcomes[i] + '</li>';
         }
 
-        // ===== Отзывы =====
+        
         var reviewsHtml = '';
         for (var i = 0; i < reviews.length; i++) {
             var r = reviews[i];
@@ -151,14 +151,14 @@
                 '</div>';
         }
 
-        // ===== Детали сайдбара =====
+        
         var details = [[t('levelLabel'),courseText.level],[t('durationLabel'),courseText.duration],[t('lessons'),course.lessons],[t('categoryLabel'),courseText.category],[t('format'),t('online')],[t('certificate'),t('yes')]];
         var detailsHtml = '';
         for (var i = 0; i < details.length; i++) {
             detailsHtml += '<div class="course-sidebar__row"><span class="course-sidebar__row-label">' + details[i][0] + '</span><strong>' + details[i][1] + '</strong></div>';
         }
 
-        // ===== Преподаватель =====
+        
         var teacherHtml = '';
         if (teacher) {
             teacherHtml =
@@ -174,7 +174,7 @@
             reviewsSectionHtml = '<div class="course-section"><h3 class="mb-16">' + t('reviewsTitle') + '</h3><div class="flex flex-col gap-16">' + reviewsHtml + '</div></div>';
         }
 
-        // ===== Собираем страницу =====
+        
         document.getElementById('courseContent').innerHTML =
             '<div class="breadcrumbs">' +
                 '<a href="courses.html">' + t('courses') + '</a><span class="sep">/</span>' +
@@ -203,26 +203,26 @@
             '</div></aside></div>';
 
 
-        // ==========================================================
-        //   ОБРАБОТЧИК КНОПКИ «ЗАПИСАТЬСЯ»
-        //   1. Проверяем авторизацию
-        //   2. Сохраняем запись в localStorage
-        //   3. Меняем кнопку на «✓ Вы записаны»
-        //   4. Через 1 секунду → переходим в «Мои курсы»
-        // ==========================================================
+        
+        
+        
+        
+        
+        
+        
 
         var enrollBtn = document.getElementById('enrollBtn');
         if (enrollBtn && !isEnrolled) {
             enrollBtn.addEventListener('click', function () {
 
-                // Проверяем авторизацию
+                
                 var user = LearnDot.auth.getCurrentUser();
                 if (!user) {
                     window.location.href = 'login.html';
                     return;
                 }
 
-                // Создаём запись
+                
                 var newEnrollment = {
                     courseId: id,
                     enrolledDate: new Date().toISOString().split('T')[0],
@@ -230,35 +230,37 @@
                     status: 'in-progress'
                 };
 
-                // Читаем + сохраняем
-                var enrollments = [];
-                try {
-                    var saved = localStorage.getItem('learndot-enrollments');
-                    if (saved) enrollments = JSON.parse(saved);
-                } catch (e) {}
-
-                var alreadySaved = false;
-                for (var i = 0; i < enrollments.length; i++) {
-                    if (enrollments[i].courseId === id) { alreadySaved = true; break; }
-                }
-                if (!alreadySaved) {
-                    enrollments.push(newEnrollment);
-                    try { localStorage.setItem('learndot-enrollments', JSON.stringify(enrollments)); } catch (e) {}
-                }
-
-                // Обновляем кнопку
+                
                 enrollBtn.textContent = '✓ Вы записаны';
                 enrollBtn.className = 'btn btn-lg btn-block mb-12 btn-enrolled';
                 enrollBtn.disabled = true;
 
-                // Через 1 сек → Мои курсы
-                setTimeout(function () {
+                
+                saveUserEnrollment(newEnrollment, function () {
                     window.location.href = 'my-courses.html';
-                }, 1000);
+                });
             });
         }
 
-        // CTA
+        
+        syncUserEnrollments(function () {
+            if (isEnrolled) return;
+
+            var fresh = getUserEnrollments();
+            for (var i = 0; i < fresh.length; i++) {
+                if (fresh[i].courseId === id) {
+                    var btn = document.getElementById('enrollBtn');
+                    if (btn) {
+                        btn.outerHTML =
+                            '<button class="btn btn-lg btn-block mb-12 btn-enrolled" disabled>✓ ' + t('enrolled') + '</button>' +
+                            '<a href="my-courses.html" class="btn btn-outline btn-block mb-20">' + t('goLearning') + '</a>';
+                    }
+                    break;
+                }
+            }
+        });
+
+        
         document.getElementById('cta').innerHTML = renderCTA(t('courseCtaTitle'), t('courseCtaText'));
     });
     </script>

@@ -11,10 +11,10 @@
 </head>
 <body>
 
-    <!-- Шапка -->
+    
     <div id="header-root"></div>
 
-    <!-- Основной контент -->
+    
     <main class="page-content">
         <div class="container">
             <section class="section">
@@ -23,16 +23,16 @@
                     <p data-lang="pricingPageText">Выберите план под ваши цели. Отмена в любой момент.</p>
                 </div>
 
-                <!-- Карточки тарифов -->
+                
                 <div class="grid grid-3 plans-grid" id="plans"></div>
             </section>
         </div>
 
-        <!-- Призыв к действию -->
+        
         <div id="cta"></div>
     </main>
 
-    <!-- Подвал -->
+    
     <div id="footer-root"></div>
 
     <script src="js/theme.js"></script>
@@ -42,9 +42,9 @@
     <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-        // ===== Данные тарифов =====
-        // Каждый тариф: название, цена, описание, список возможностей
-        // Знак ~ перед возможностью означает «недоступно» (серый текст)
+        
+        
+        
         var plans = [
             {
                 name: 'Basic', price: 0, period: t('forever'),
@@ -88,37 +88,37 @@
         ];
 
 
-        // ===== Рисуем карточки тарифов =====
+        
         var html = '';
 
         for (var i = 0; i < plans.length; i++) {
             var p = plans[i];
 
-            // Класс для выделенного тарифа
+            
             var cardClass = '';
             if (p.highlight) {
                 cardClass = ' highlighted';
             }
 
-            // Бейдж «Популярный»
+            
             var badgeHtml = '';
             if (p.highlight) {
                 badgeHtml = '<span class="plan-popular">' + t('popular') + '</span>';
             }
 
-            // Текст цены
+            
             var priceText = t('free');
             if (p.price > 0) {
                 priceText = p.price.toLocaleString() + ' ₸';
             }
 
-            // Период оплаты
+            
             var periodHtml = '';
             if (p.price > 0) {
                 periodHtml = ' <span class="plan-period">' + p.period + '</span>';
             }
 
-            // Текст кнопки
+            
             var btnText = t('start');
             if (p.highlight) {
                 btnText = t('startPro');
@@ -126,18 +126,18 @@
                 btnText = t('contact');
             }
 
-            // Класс кнопки
+            
             var btnClass = 'btn-outline';
             if (p.highlight) {
                 btnClass = 'btn-primary';
             }
 
-            // Рисуем список возможностей
+            
             var featsHtml = '';
             for (var j = 0; j < p.features.length; j++) {
                 var feat = p.features[j];
 
-                // Проверяем, недоступна ли возможность (начинается с ~)
+                
                 var isDisabled = feat[0] === '~';
                 var text = isDisabled ? feat.slice(1) : feat;
                 var icon = isDisabled ? '<span class="cross">—</span>' : '<span class="check">✓</span>';
@@ -146,7 +146,7 @@
                 featsHtml += '<div class="plan-feature' + disClass + '">' + icon + text + '</div>';
             }
 
-            // Собираем карточку тарифа
+            
             html +=
                 '<div class="card plan-card' + cardClass + '">' +
                     badgeHtml +
@@ -163,7 +163,7 @@
 
         document.getElementById('plans').innerHTML = html;
 
-        // Блок CTA
+        
         document.getElementById('cta').innerHTML = renderCTA(
             t('notSureTitle'),
             t('notSureText')

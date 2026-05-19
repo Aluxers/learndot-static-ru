@@ -12,13 +12,13 @@
 </head>
 <body>
 
-    <!-- Обёртка кабинета -->
+    
     <div class="dash-wrap">
         <div id="dashTopbar"></div>
         <div id="dashSidebar"></div>
         <main class="dash-content">
 
-            <!-- Заголовок с кнопкой -->
+            
             <div class="page-header-row mb-28">
                 <div class="page-header page-header-no-mb">
                     <h1>Уведомления</h1>
@@ -27,7 +27,7 @@
                 <button class="btn btn-secondary btn-sm" id="markAllBtn">Прочитать все</button>
             </div>
 
-            <!-- Список уведомлений -->
+            
             <div class="flex flex-col gap-8" id="notifList"></div>
 
         </main>
@@ -40,36 +40,36 @@
     <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-        // ===== Проверяем роль пользователя =====
+        
         if (!LearnDot.auth.requireRole(['student'])) return;
 
-        // ===== Рисуем мобильную шапку и боковое меню =====
+        
         renderDashTopbar('dashTopbar', 'Кабинет студента');
         renderDashSidebar('dashSidebar', 'student', 'notifications');
-        // ===== Копируем уведомления (чтобы не менять оригинал) =====
+        
         var notifs = [];
         for (var i = 0; i < getUserNotifications().length; i++) {
             notifs.push(Object.assign({}, getUserNotifications()[i]));
         }
 
-        // Названия типов уведомлений
+        
         var typeNames = { course: 'Курс', assignment: 'Задание', payment: 'Оплата', system: 'Система' };
         var typeIcons = { course: '📚', assignment: '📝', payment: '💳', system: '🔔' };
 
-        // ===== Отрисовка списка =====
+        
         function renderNotifs() {
             var html = '';
             for (var i = 0; i < notifs.length; i++) {
                 var n = notifs[i];
                 var icon = typeIcons[n.type] || '🔔';
 
-                // Класс для прочитанных/непрочитанных
+                
                 var readClass = 'read notif-default';
                 if (!n.read) {
                     readClass = 'unread notif-clickable';
                 }
 
-                // Бейдж «Новое» для непрочитанных
+                
                 var newBadge = '';
                 if (!n.read) {
                     newBadge = '<span class="badge badge-primary notif-badge-sm">Новое</span>';
@@ -92,13 +92,13 @@
             document.getElementById('notifList').innerHTML = html;
         }
 
-        // ===== Отметить одно как прочитанное =====
+        
         window.markRead = function (index) {
             notifs[index].read = true;
             renderNotifs();
         };
 
-        // ===== Отметить все как прочитанные =====
+        
         document.getElementById('markAllBtn').addEventListener('click', function () {
             for (var i = 0; i < notifs.length; i++) {
                 notifs[i].read = true;
@@ -106,7 +106,7 @@
             renderNotifs();
         });
 
-        // ===== Первая отрисовка =====
+        
         renderNotifs();
 
     });

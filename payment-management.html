@@ -12,7 +12,7 @@
 </head>
 <body>
 
-    <!-- Обёртка панели администратора -->
+    
     <div class="dash-wrap">
         <div id="dashTopbar"></div>
         <div id="dashSidebar"></div>
@@ -23,15 +23,15 @@
                 <p>Все транзакции платформы.</p>
             </div>
 
-            <!-- Статистика -->
+            
             <div class="stats-grid stats-grid-3 mb-24" id="pmStats"></div>
 
-            <!-- Поиск -->
+            
             <div class="flex gap-12 flex-wrap mb-20">
                 <input class="input admin-search" id="pmSearch" placeholder="Поиск по имени или курсу...">
             </div>
 
-            <!-- Таблица -->
+            
             <div class="table-wrap">
                 <table class="data-table">
                     <thead>
@@ -50,15 +50,15 @@
     <script src="js/main.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Проверяем роль администратора
+        
         if (!LearnDot.auth.requireRole(['admin'])) return;
 
-        // Рисуем шапку и боковое меню
+        
         renderDashTopbar('dashTopbar', 'Панель администратора');
         renderDashSidebar('dashSidebar', 'admin', 'payments');
 
         
-        // Статистика платежей
+        
         var totalC = DATA.allPayments
             .filter(function (p) { return p.status === 'completed'; })
             .reduce(function (s, p) { return s + p.amount; }, 0);
@@ -73,7 +73,7 @@
             return '<div class="stat-card"><div class="stat-value">' + s.v + '</div><div class="stat-label">' + s.l + '</div></div>';
         }).join('');
 
-        // Таблица
+        
         function renderPM() {
             var q = document.getElementById('pmSearch').value.toLowerCase();
             var list = DATA.allPayments.filter(function (p) {
@@ -87,7 +87,7 @@
                     '<tr>' +
                         '<td class="td-name">' + p.user + '</td>' +
                         '<td class="td-muted">' + p.course + '</td>' +
-                        '<td class="td-amount">$' + p.amount + '</td>' +
+                        '<td class="td-amount">' + p.amount.toLocaleString() + ' ₸</td>' +
                         '<td class="td-muted">' + p.method + '</td>' +
                         '<td class="td-date-sm">' + formatDate(p.date) + '</td>' +
                         '<td><span class="badge ' + statusBadge + '">' + statusText + '</span></td>' +

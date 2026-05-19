@@ -12,7 +12,7 @@
 </head>
 <body>
 
-    <!-- Обёртка панели администратора -->
+    
     <div class="dash-wrap">
         <div id="dashTopbar"></div>
         <div id="dashSidebar"></div>
@@ -23,13 +23,13 @@
                 <p>Управление отзывами студентов.</p>
             </div>
 
-            <!-- Статистика -->
+            
             <div class="stats-grid stats-grid-3 mb-24" id="rmStats"></div>
 
-            <!-- Фильтры -->
+            
             <div class="flex gap-8 flex-wrap mb-20" id="rmFilters"></div>
 
-            <!-- Список отзывов -->
+            
             <div class="flex flex-col gap-12" id="rmList"></div>
 
         </main>
@@ -41,15 +41,15 @@
     <script src="js/main.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Проверяем роль администратора
+        
         if (!LearnDot.auth.requireRole(['admin'])) return;
 
-        // Рисуем шапку и боковое меню
+        
         renderDashTopbar('dashTopbar', 'Панель администратора');
         renderDashSidebar('dashSidebar', 'admin', 'reviews');
 
         
-        // Копируем отзывы
+        
         var revs = (function(){var _a=[];for(var _i=0;_i<DATA.adminReviews.length;_i++){_a.push(Object.assign({},DATA.adminReviews[_i]));}return _a;})();
         var filter = 'all';
 
@@ -57,7 +57,7 @@
         var filterLabels = { all: 'Все', pending: 'Ожидают', approved: 'Одобрено', hidden: 'Скрыто' };
 
         function renderRM() {
-            // Подсчёт
+            
             var counts = {
                 all: revs.length,
                 pending: (function(){var _c=0;for(var _i=0;_i<revs.length;_i++){if(revs[_i].status==='pending'){_c++;}}return _c;})(),
@@ -65,7 +65,7 @@
                 hidden: (function(){var _c=0;for(var _i=0;_i<revs.length;_i++){if(revs[_i].status==='hidden'){_c++;}}return _c;})()
             };
 
-            // Статистика
+            
             document.getElementById('rmStats').innerHTML = [
                 { v: counts.all, l: 'Всего', c: '' },
                 { v: counts.pending, l: 'Ожидают', c: 'stat-value-warning' },
@@ -74,20 +74,20 @@
                 return '<div class="stat-card"><div class="stat-value ' + s.c + '">' + s.v + '</div><div class="stat-label">' + s.l + '</div></div>';
             }).join('');
 
-            // Фильтры
+            
             document.getElementById('rmFilters').innerHTML = ['all', 'pending', 'approved', 'hidden'].map(function (f) {
                 var cls = filter === f ? 'btn-primary' : 'btn-secondary';
                 return '<button class="btn ' + cls + ' btn-sm" onclick="setRmFilter(\'' + f + '\')">' +
                     filterLabels[f] + ' (' + (counts[f] || 0) + ')</button>';
             }).join('');
 
-            // Список
+            
             var list = filter === 'all' ? revs : (function(){var _r=[];for(var _i=0;_i<revs.length;_i++){if(revs[_i].status===filter){_r.push(revs[_i]);}}return _r;})();
 
             document.getElementById('rmList').innerHTML = list.map(function (r, i) {
                 var statusBadge = r.status === 'approved' ? 'badge-success' : r.status === 'hidden' ? 'badge-danger' : 'badge-warning';
 
-                // Кнопки модерации
+                
                 var btns = '';
                 if (r.status !== 'approved') btns += '<button class="btn btn-primary btn-sm" onclick="setRevStatus(' + i + ',\'approved\')">Одобрить</button>';
                 if (r.status !== 'hidden') btns += '<button class="btn btn-danger-outline btn-sm" onclick="setRevStatus(' + i + ',\'hidden\')">Скрыть</button>';

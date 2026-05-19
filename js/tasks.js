@@ -1,12 +1,12 @@
-// ==============================================================
-//   Интерактивные задания LearnDot
-//   Каждый <div data-task="имя"></div> превращается в виджет
-//
-//   Вызовите initTasks() после рендера урока
-// ==============================================================
 
 
-// Вызывается после renderLesson() — инициализирует все виджеты на странице
+
+
+
+
+
+
+
 function initTasks() {
   var widgets = document.querySelectorAll('[data-task]');
   for (var i = 0; i < widgets.length; i++) {
@@ -19,11 +19,11 @@ function initTasks() {
 }
 
 
-// ==============================================================
-//   Вспомогательные функции для работы с цветом
-// ==============================================================
 
-// HEX → { r, g, b }
+
+
+
+
 function hexToRgb(hex) {
   hex = hex.replace('#', '');
   if (hex.length === 3) {
@@ -36,7 +36,7 @@ function hexToRgb(hex) {
   };
 }
 
-// { r, g, b } → HEX
+
 function rgbToHex(r, g, b) {
   return '#' + toHex2(r) + toHex2(g) + toHex2(b);
 }
@@ -46,7 +46,7 @@ function toHex2(n) {
   return h.length === 1 ? '0' + h : h;
 }
 
-// { r, g, b } → { h, s, l } (h: 0-360, s/l: 0-100)
+
 function rgbToHsl(r, g, b) {
   r /= 255; g /= 255; b /= 255;
   var max = Math.max(r, g, b);
@@ -65,7 +65,7 @@ function rgbToHsl(r, g, b) {
   return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
 }
 
-// { h, s, l } → HEX
+
 function hslToHex(h, s, l) {
   h = ((h % 360) + 360) % 360;
   s /= 100; l /= 100;
@@ -92,14 +92,14 @@ function hslToHex(h, s, l) {
   return rgbToHex(r, g, b);
 }
 
-// Яркость цвета для выбора цвета текста на свотче
+
 function getTextColor(hex) {
   var rgb = hexToRgb(hex);
   var yiq = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
   return yiq >= 128 ? '#1a1a2e' : '#ffffff';
 }
 
-// Относительная яркость (WCAG)
+
 function getLuminance(r, g, b) {
   var vals = [r, g, b];
   for (var i = 0; i < 3; i++) {
@@ -109,7 +109,7 @@ function getLuminance(r, g, b) {
   return vals[0] * 0.2126 + vals[1] * 0.7152 + vals[2] * 0.0722;
 }
 
-// Коэффициент контраста между двумя HEX-цветами
+
 function getContrastRatio(hex1, hex2) {
   var rgb1 = hexToRgb(hex1);
   var rgb2 = hexToRgb(hex2);
@@ -120,7 +120,7 @@ function getContrastRatio(hex1, hex2) {
   return ((lighter + 0.05) / (darker + 0.05)).toFixed(2);
 }
 
-// Генерация HTML свотча
+
 function makeSwatch(hex, label) {
   return '<div class="task-swatch">' +
     '<div class="task-swatch-color" style="background:' + hex + ';"></div>' +
@@ -131,7 +131,7 @@ function makeSwatch(hex, label) {
   '</div>';
 }
 
-// Загрузка Google Font на лету (добавляем <link> если ещё не загружен)
+
 var loadedFonts = {};
 function loadGoogleFont(fontName) {
   if (loadedFonts[fontName]) return;
@@ -143,10 +143,10 @@ function loadGoogleFont(fontName) {
 }
 
 
-// ==============================================================
-//   Универсальный движок квиза
-//   Принимает массив вопросов и контейнер — рисует квиз
-// ==============================================================
+
+
+
+
 
 function renderQuiz(el, questions) {
   var current = 0;
@@ -192,7 +192,7 @@ function renderQuiz(el, questions) {
         var feedback  = el.querySelector('#tqFeedback');
         var nextBtn   = el.querySelector('#tqNext');
 
-        // Красим все варианты
+        
         var allOpts = el.querySelectorAll('.task-option');
         for (var j = 0; j < allOpts.length; j++) {
           allOpts[j].disabled = true;
@@ -249,16 +249,16 @@ function renderQuiz(el, questions) {
 }
 
 
-// ==============================================================
-//   ОБЪЕКТ ВСЕХ ЗАДАНИЙ
-// ==============================================================
+
+
+
 
 var TASKS = {};
 
 
-// ─────────────────────────────────────────────
-//  1. Генератор цветовой гармонии
-// ─────────────────────────────────────────────
+
+
+
 
 TASKS['color-harmony'] = {
   render: function(el) {
@@ -286,7 +286,6 @@ TASKS['color-harmony'] = {
     el.innerHTML =
       '<div class="task-widget">' +
         '<div class="task-widget-header">' +
-          '<span class="task-badge">🎨 Практика</span>' +
           '<h4>Генератор цветовой гармонии</h4>' +
           '<p>Выберите основной цвет и изучите гармоничные сочетания по типам</p>' +
         '</div>' +
@@ -371,9 +370,9 @@ TASKS['color-harmony'] = {
 };
 
 
-// ─────────────────────────────────────────────
-//  2. Проверка контраста WCAG
-// ─────────────────────────────────────────────
+
+
+
 
 TASKS['contrast-checker'] = {
   render: function(el) {
@@ -381,7 +380,6 @@ TASKS['contrast-checker'] = {
     el.innerHTML =
       '<div class="task-widget">' +
         '<div class="task-widget-header">' +
-          '<span class="task-badge">♿ Практика</span>' +
           '<h4>Проверка контраста (WCAG)</h4>' +
           '<p>Выберите цвет текста и фона — проверьте доступность по стандарту WCAG 2.1</p>' +
         '</div>' +
@@ -475,9 +473,9 @@ TASKS['contrast-checker'] = {
 };
 
 
-// ─────────────────────────────────────────────
-//  3. Предпросмотр типографики (подбор шрифтов)
-// ─────────────────────────────────────────────
+
+
+
 
 TASKS['typography-preview'] = {
   render: function(el) {
@@ -510,7 +508,6 @@ TASKS['typography-preview'] = {
     el.innerHTML =
       '<div class="task-widget">' +
         '<div class="task-widget-header">' +
-          '<span class="task-badge">✏️ Практика</span>' +
           '<h4>Подбор шрифтовой пары</h4>' +
           '<p>Выберите шрифт для заголовка и основного текста — увидите живой предпросмотр</p>' +
         '</div>' +
@@ -530,6 +527,7 @@ TASKS['typography-preview'] = {
             '<div class="task-typo-body" id="ttyBodyPreview">Хорошо подобранная пара шрифтов создаёт читаемость, настроение и характер интерфейса. Заголовок привлекает внимание, тело передаёт смысл.</div>' +
           '</div>' +
           '<div class="task-font-chips" id="ttyChips"></div>' +
+          '<div class="task-score-board task-score-small" id="ttyScore"></div>' +
         '</div>' +
       '</div>';
 
@@ -538,6 +536,7 @@ TASKS['typography-preview'] = {
     var headPrev    = el.querySelector('#ttyHeadPreview');
     var bodyPrev    = el.querySelector('#ttyBodyPreview');
     var chips       = el.querySelector('#ttyChips');
+    var scoreBox    = el.querySelector('#ttyScore');
 
     function update() {
       var hf = headingFonts[parseInt(headSel.value)];
@@ -552,6 +551,28 @@ TASKS['typography-preview'] = {
       chips.innerHTML =
         '<div class="task-font-chip">Заголовок: <strong>' + hf.name + '</strong> · ' + hf.type + '</div>' +
         '<div class="task-font-chip">Текст: <strong>' + bf.name + '</strong> · ' + bf.type + '</div>';
+
+      var score = 60;
+      var msg = 'Пара рабочая, но можно сильнее развести роли шрифтов.';
+
+      if (hf.type !== bf.type) {
+        score += 25;
+        msg = 'Хорошая пара: заголовок и текст отличаются по характеру.';
+      }
+
+      if (hf.name === bf.name) {
+        score = 55;
+        msg = 'Слишком одинаково. Лучше выбрать разные шрифты для иерархии.';
+      }
+
+      if (hf.type === 'display' && bf.type === 'serif') {
+        score = 95;
+        msg = 'Отлично: выразительный заголовок и спокойный читаемый текст.';
+      }
+
+      scoreBox.innerHTML =
+        '<div class="task-score-title">Оценка практики: ' + score + '/100</div>' +
+        '<div class="task-score-text">' + msg + '</div>';
     }
 
     headSel.addEventListener('change', update);
@@ -561,9 +582,9 @@ TASKS['typography-preview'] = {
 };
 
 
-// ─────────────────────────────────────────────
-//  4. Правило 60-30-10 (цветовые пропорции)
-// ─────────────────────────────────────────────
+
+
+
 
 TASKS['color-proportion'] = {
   render: function(el) {
@@ -571,7 +592,6 @@ TASKS['color-proportion'] = {
     el.innerHTML =
       '<div class="task-widget">' +
         '<div class="task-widget-header">' +
-          '<span class="task-badge">🎨 Практика</span>' +
           '<h4>Правило 60-30-10</h4>' +
           '<p>Классическое правило дизайна: 60% — основной, 30% — дополнительный, 10% — акцент. Попробуйте разные сочетания!</p>' +
         '</div>' +
@@ -654,9 +674,9 @@ TASKS['color-proportion'] = {
 };
 
 
-// ─────────────────────────────────────────────
-//  5. Предпросмотр easing (плавность анимации)
-// ─────────────────────────────────────────────
+
+
+
 
 TASKS['easing-preview'] = {
   render: function(el) {
@@ -681,7 +701,6 @@ TASKS['easing-preview'] = {
     el.innerHTML =
       '<div class="task-widget">' +
         '<div class="task-widget-header">' +
-          '<span class="task-badge">✨ Практика</span>' +
           '<h4>Плавность анимации (Easing)</h4>' +
           '<p>Выберите тип плавности — нажмите кнопку, чтобы увидеть разницу в движении</p>' +
         '</div>' +
@@ -744,9 +763,9 @@ TASKS['easing-preview'] = {
 };
 
 
-// ─────────────────────────────────────────────
-//  6. Flexbox-песочница
-// ─────────────────────────────────────────────
+
+
+
 
 TASKS['flexbox-playground'] = {
   render: function(el) {
@@ -767,7 +786,6 @@ TASKS['flexbox-playground'] = {
     el.innerHTML =
       '<div class="task-widget">' +
         '<div class="task-widget-header">' +
-          '<span class="task-badge">💻 Практика</span>' +
           '<h4>Flexbox-песочница</h4>' +
           '<p>Меняйте свойства Flexbox и смотрите результат в реальном времени</p>' +
         '</div>' +
@@ -827,16 +845,15 @@ TASKS['flexbox-playground'] = {
 };
 
 
-// ─────────────────────────────────────────────
-//  7. Квиз: Теория цвета
-// ─────────────────────────────────────────────
+
+
+
 
 TASKS['color-quiz'] = {
   render: function(el) {
     el.innerHTML =
       '<div class="task-widget">' +
         '<div class="task-widget-header">' +
-          '<span class="task-badge">🎨 Квиз</span>' +
           '<h4>Теория цвета: проверь знания</h4>' +
           '<p>5 вопросов по основам цветовой теории</p>' +
         '</div>' +
@@ -866,16 +883,15 @@ TASKS['color-quiz'] = {
 };
 
 
-// ─────────────────────────────────────────────
-//  8. Квиз: UX/UI концепции
-// ─────────────────────────────────────────────
+
+
+
 
 TASKS['ux-quiz'] = {
   render: function(el) {
     el.innerHTML =
       '<div class="task-widget">' +
         '<div class="task-widget-header">' +
-          '<span class="task-badge">💡 Квиз</span>' +
           '<h4>UX/UI: проверь знания</h4>' +
           '<p>Основные концепции UX и UI дизайна</p>' +
         '</div>' +
@@ -905,16 +921,15 @@ TASKS['ux-quiz'] = {
 };
 
 
-// ─────────────────────────────────────────────
-//  9. Квиз: Типографика и шрифты
-// ─────────────────────────────────────────────
+
+
+
 
 TASKS['font-quiz'] = {
   render: function(el) {
     el.innerHTML =
       '<div class="task-widget">' +
         '<div class="task-widget-header">' +
-          '<span class="task-badge">✏️ Квиз</span>' +
           '<h4>Типографика: проверь знания</h4>' +
           '<p>Шрифты, засечки и принципы читаемости</p>' +
         '</div>' +
@@ -944,16 +959,15 @@ TASKS['font-quiz'] = {
 };
 
 
-// ─────────────────────────────────────────────
-//  10. Квиз: HTML-теги
-// ─────────────────────────────────────────────
+
+
+
 
 TASKS['html-quiz'] = {
   render: function(el) {
     el.innerHTML =
       '<div class="task-widget">' +
         '<div class="task-widget-header">' +
-          '<span class="task-badge">💻 Квиз</span>' +
           '<h4>HTML: проверь знания</h4>' +
           '<p>Основные теги и структура HTML-документа</p>' +
         '</div>' +
@@ -983,16 +997,15 @@ TASKS['html-quiz'] = {
 };
 
 
-// ─────────────────────────────────────────────
-//  11. Квиз: JavaScript
-// ─────────────────────────────────────────────
+
+
+
 
 TASKS['js-quiz'] = {
   render: function(el) {
     el.innerHTML =
       '<div class="task-widget">' +
         '<div class="task-widget-header">' +
-          '<span class="task-badge">⚡ Квиз</span>' +
           '<h4>JavaScript: проверь знания</h4>' +
           '<p>Основы языка, переменные и функции</p>' +
         '</div>' +
@@ -1022,16 +1035,15 @@ TASKS['js-quiz'] = {
 };
 
 
-// ─────────────────────────────────────────────
-//  12. Квиз: Git
-// ─────────────────────────────────────────────
+
+
+
 
 TASKS['git-quiz'] = {
   render: function(el) {
     el.innerHTML =
       '<div class="task-widget">' +
         '<div class="task-widget-header">' +
-          '<span class="task-badge">🔧 Квиз</span>' +
           '<h4>Git: проверь знания</h4>' +
           '<p>Основные команды и концепции Git</p>' +
         '</div>' +
@@ -1061,16 +1073,15 @@ TASKS['git-quiz'] = {
 };
 
 
-// ─────────────────────────────────────────────
-//  13. Квиз: Python
-// ─────────────────────────────────────────────
+
+
+
 
 TASKS['python-quiz'] = {
   render: function(el) {
     el.innerHTML =
       '<div class="task-widget">' +
         '<div class="task-widget-header">' +
-          '<span class="task-badge">🐍 Квиз</span>' +
           '<h4>Python: проверь знания</h4>' +
           '<p>Основы синтаксиса и структур данных Python</p>' +
         '</div>' +
@@ -1100,16 +1111,15 @@ TASKS['python-quiz'] = {
 };
 
 
-// ─────────────────────────────────────────────
-//  14. Квиз: Дизайн-мышление
-// ─────────────────────────────────────────────
+
+
+
 
 TASKS['design-thinking-quiz'] = {
   render: function(el) {
     el.innerHTML =
       '<div class="task-widget">' +
         '<div class="task-widget-header">' +
-          '<span class="task-badge">💡 Квиз</span>' +
           '<h4>Дизайн-мышление: проверь знания</h4>' +
           '<p>5 этапов дизайн-мышления и их применение</p>' +
         '</div>' +
@@ -1139,16 +1149,15 @@ TASKS['design-thinking-quiz'] = {
 };
 
 
-// ─────────────────────────────────────────────
-//  15. Квиз: Основы Figma
-// ─────────────────────────────────────────────
+
+
+
 
 TASKS['figma-quiz'] = {
   render: function(el) {
     el.innerHTML =
       '<div class="task-widget">' +
         '<div class="task-widget-header">' +
-          '<span class="task-badge">🖥️ Квиз</span>' +
           '<h4>Figma: проверь знания</h4>' +
           '<p>Основные инструменты и концепции Figma</p>' +
         '</div>' +
@@ -1178,16 +1187,15 @@ TASKS['figma-quiz'] = {
 };
 
 
-// ─────────────────────────────────────────────
-//  16. Квиз: Графический дизайн
-// ─────────────────────────────────────────────
+
+
+
 
 TASKS['graphic-design-quiz'] = {
   render: function(el) {
     el.innerHTML =
       '<div class="task-widget">' +
         '<div class="task-widget-header">' +
-          '<span class="task-badge">🖌️ Квиз</span>' +
           '<h4>Основы графического дизайна</h4>' +
           '<p>Композиция, иерархия и принципы визуального дизайна</p>' +
         '</div>' +

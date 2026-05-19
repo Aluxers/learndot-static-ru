@@ -1,13 +1,9 @@
-/* ==============================================
-   Главные стили — LearnDot
-   Все общие стили сайта в одном файле.
-   Никаких inline-стилей — всё через классы.
-   ============================================== */
+
 
 @import url('./variables.css');
 
 
-/* ===== Сброс стандартных стилей ===== */
+
 
 *,
 *::before,
@@ -53,7 +49,7 @@ ol {
 }
 
 
-/* ===== Заголовки и текст ===== */
+
 
 h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
@@ -86,7 +82,7 @@ p {
 }
 
 
-/* ===== Кнопки ===== */
+
 
 .btn {
   display: inline-flex;
@@ -185,7 +181,7 @@ p {
 }
 
 
-/* ===== Поля ввода ===== */
+
 
 .input {
   width: 100%;
@@ -247,8 +243,36 @@ textarea.input {
   gap: 12px;
 }
 
+.password-field {
+  position: relative;
+}
 
-/* ===== Карточки ===== */
+.password-field .input {
+  padding-right: 88px;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  padding: 5px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.password-toggle:hover {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+
+
 
 .card {
   background: var(--surface);
@@ -266,7 +290,7 @@ textarea.input {
 }
 
 
-/* ===== Бейджи ===== */
+
 
 .badge {
   display: inline-flex;
@@ -303,7 +327,7 @@ textarea.input {
 }
 
 
-/* ===== Контейнер и сетка ===== */
+
 
 .container {
   width: 100%;
@@ -409,7 +433,7 @@ textarea.input {
 .mt-32 { margin-top: 32px; }
 
 
-/* ===== Шапка сайта ===== */
+
 
 .header {
   position: sticky;
@@ -433,7 +457,7 @@ textarea.input {
   height: 100%;
 }
 
-/* Логотип */
+
 .logo {
   display: flex;
   align-items: center;
@@ -462,7 +486,7 @@ textarea.input {
   font-size: 0.82rem;
 }
 
-/* Навигация */
+
 .nav {
   display: flex;
   align-items: center;
@@ -499,7 +523,7 @@ textarea.input {
   border-left: 1px solid var(--border);
 }
 
-/* Пользователь в шапке */
+
 .nav-user {
   display: flex;
   align-items: center;
@@ -510,7 +534,7 @@ textarea.input {
   border-radius: 24px;
 }
 
-/* Аватар пользователя в шапке (30×30) */
+
 
 .nav-user-avatar {
   width: 30px;
@@ -520,20 +544,21 @@ textarea.input {
   flex-shrink: 0;
 }
 
-/* Картинка внутри аватара */
+
 .nav-user-avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-/* Мобильный аватар в шапке (32×32) */
+
 .nav-user-avatar-sm {
   width: 32px;
   height: 32px;
   border-radius: 50%;
   overflow: hidden;
   flex-shrink: 0;
+  background: var(--surface-3);
 }
 
 .nav-user-avatar-sm img {
@@ -554,7 +579,7 @@ textarea.input {
   text-transform: capitalize;
 }
 
-/* Переключатель темы */
+
 .theme-toggle {
   display: flex;
   align-items: center;
@@ -577,7 +602,7 @@ textarea.input {
   transform: rotate(15deg);
 }
 
-/* Мобильное меню */
+
 .mobile-actions {
   display: none;
   align-items: center;
@@ -592,7 +617,7 @@ textarea.input {
   width: 38px;
   height: 38px;
   padding: 8px;
-  background: none;
+  background: var(--surface-2);
   border: 1.5px solid var(--border);
   border-radius: var(--radius-sm);
   cursor: pointer;
@@ -601,6 +626,7 @@ textarea.input {
 .burger span {
   display: block;
   height: 2px;
+  width: 100%;
   background: var(--text);
   border-radius: 2px;
   transition: transform 0.25s, opacity 0.2s;
@@ -636,53 +662,43 @@ textarea.input {
 }
 
 
-/* ===== Главный экран (hero) =====
 
-   Чистое место под PNG-картинку.
-   Никаких затемнений, оверлеев, фильтров и эффектов.
-   Картинка отображается как есть — ровно так, как вы её подготовили.
 
-   Чтобы заменить фон:
-   1. Положите PNG-картинку в папку images/
-   2. Замените путь в background-image ниже
-   Файл по умолчанию: images/hero-bg.png
-   Рекомендуемый размер: 1920 × 700 пикселей */
 
-/* По умолчанию стоит светлая картинка.
-   Тёмная картинка подключается ниже через data-theme. */
 .hero {
   width: 100%;
-  min-height: 700px;
+  min-height: min(700px, calc(100vh - var(--header-height)));
   position: relative;
-  background-size: cover;
+  background-size: min(1920px, 100%) auto;
   background-position: center top;
   background-repeat: no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
+  overflow: hidden;
 }
 
-/* Фон hero для светлой темы */
+
 [data-theme='light'] .hero {
   background-image: url('../images/hero-bg.png');
 }
 
-/* Фон hero для тёмной темы */
+
 [data-theme='dark'] .hero {
   background-image: url('../images/hero-bg-dark.png');
 }
 
-/* Контент поверх картинки (заголовок, описание, кнопки) */
+
 .hero__inner {
   max-width: 680px;
   margin: 0 auto;
-  padding: 60px 20px;
+  padding: clamp(36px, 7vw, 60px) 20px;
   position: relative;
   z-index: 1;
 }
 
-/* Заголовок */
+
 .hero__title {
   font-size: 2.8rem;
   line-height: 1.12;
@@ -691,7 +707,7 @@ textarea.input {
   color: var(--text);
 }
 
-/* Подзаголовок */
+
 .hero__subtitle {
   font-size: 1.08rem;
   color: var(--text-muted);
@@ -700,18 +716,18 @@ textarea.input {
   line-height: 1.65;
 }
 
-/* Кнопки */
+
 .hero__actions {
   margin-bottom: 0;
 }
 
-/* Акцентный цвет в заголовке */
+
 .hero .text-primary {
   color: var(--primary);
 }
 
 
-/* ===== Карточки направлений ===== */
+
 
 .category-card {
   text-align: center;
@@ -720,10 +736,8 @@ textarea.input {
   color: inherit;
 }
 
-/* Иконка направления — поддержка PNG картинок.
-   Замените src в index.html на свою картинку (images/icons/design.png) */
-/* Иконка направления — поддержка PNG/SVG картинок.
-   Замените src в index.html → images/icons/design.png */
+
+
 .category-card__icon {
   width: 500px;
   height: 160px;
@@ -749,15 +763,14 @@ textarea.input {
 }
 
 
-/* ===== Карточки преимуществ ===== */
+
 
 .benefit-card {
   text-align: center;
   padding: 32px 24px;
 }
 
-/* Иконка преимущества — поддержка PNG/SVG картинок.
-   Замените путь в поле icon в index.html → images/icons/structured.png */
+
 .benefit-card__icon {
   width: 52px;
   height: 52px;
@@ -777,7 +790,7 @@ textarea.input {
 }
 
 
-/* ===== Заголовок секции ===== */
+
 
 .section-title {
   text-align: center;
@@ -804,7 +817,7 @@ textarea.input {
 }
 
 
-/* ===== Карточка курса ===== */
+
 
 .course-card {
   display: flex;
@@ -821,12 +834,7 @@ textarea.input {
   box-shadow: var(--shadow-md);
 }
 
-/* Обложка карточки курса
-   Если у курса есть поле cover — показываем картинку.
-   Если нет — показываем заглушку с иконкой категории.
-   Чтобы заменить обложку курса — обновите поле cover
-   в файле js/data.js и положите картинку в images/courses/.
-   Рекомендуемый размер: 600×340 пикселей. */
+
 
 .course-card .card-cover {
   height: 160px;
@@ -841,7 +849,7 @@ textarea.input {
   overflow: hidden;
 }
 
-/* Лёгкий градиент поверх картинки */
+
 .course-card .card-cover::after {
   content: '';
   position: absolute;
@@ -849,7 +857,7 @@ textarea.input {
   background: linear-gradient(135deg, rgba(0, 0, 0, 0.08), transparent 60%);
 }
 
-/* Текст-заглушка (категория + иконка) — виден если нет картинки */
+
 .course-card .card-cover span {
   font-size: 1rem;
   font-weight: 600;
@@ -857,7 +865,7 @@ textarea.input {
   z-index: 1;
 }
 
-/* Когда у карточки есть обложка — скрываем текст-заглушку */
+
 .course-card .card-cover.has-image span {
   display: none;
 }
@@ -913,7 +921,7 @@ textarea.input {
   color: var(--primary);
 }
 
-/* Звёзды рейтинга */
+
 .stars {
   display: inline-flex;
   align-items: center;
@@ -941,14 +949,14 @@ textarea.input {
 }
 
 
-/* ===== Карточка преподавателя ===== */
+
 
 .teacher-card {
   text-align: center;
   padding: 32px 24px;
 }
 
-/* Аватар преподавателя (80×80) */
+
 .teacher-avatar {
   width: 80px;
   height: 80px;
@@ -1016,7 +1024,7 @@ textarea.input {
 }
 
 
-/* ===== Карточка отзыва ===== */
+
 
 .review-card {
   display: flex;
@@ -1030,7 +1038,7 @@ textarea.input {
   gap: 12px;
 }
 
-/* Аватар автора отзыва (44×44) */
+
 .review-avatar {
   width: 44px;
   height: 44px;
@@ -1068,7 +1076,7 @@ textarea.input {
 }
 
 
-/* ===== Карточка блога ===== */
+
 
 .blog-card {
   padding: 0;
@@ -1077,10 +1085,7 @@ textarea.input {
   flex-direction: column;
 }
 
-/* Обложка статьи блога — поддержка PNG/JPG картинок.
-   Если у статьи есть cover — показываем картинку.
-   Если нет — иконку категории.
-   Замените cover в data.js → images/blog/ваш-файл.jpg */
+
 .blog-cover {
   height: 180px;
   background-color: var(--surface-2);
@@ -1140,7 +1145,7 @@ textarea.input {
 }
 
 
-/* ===== Блок призыва к действию (CTA) ===== */
+
 
 .cta-section {
   padding: 72px 0;
@@ -1187,7 +1192,7 @@ textarea.input {
 }
 
 
-/* ===== Аккордеон ===== */
+
 
 .accordion {
   display: flex;
@@ -1262,7 +1267,7 @@ textarea.input {
 }
 
 
-/* ===== Фильтры ===== */
+
 
 .filter-chips {
   display: flex;
@@ -1304,7 +1309,7 @@ textarea.input {
 }
 
 
-/* ===== Поиск ===== */
+
 
 .search-wrap {
   position: relative;
@@ -1335,7 +1340,7 @@ textarea.input {
 }
 
 
-/* ===== Полоса прогресса ===== */
+
 
 .progress-bar {
   display: flex;
@@ -1370,7 +1375,7 @@ textarea.input {
 }
 
 
-/* ===== Пустое состояние ===== */
+
 
 .empty-state {
   padding: 56px 24px;
@@ -1378,6 +1383,10 @@ textarea.input {
   background: var(--surface);
   border: 1.5px dashed var(--border);
   border-radius: var(--radius);
+}
+
+.grid .empty-state {
+  grid-column: 1 / -1;
 }
 
 .empty-state .empty-icon {
@@ -1398,7 +1407,7 @@ textarea.input {
 }
 
 
-/* ===== Системные страницы ===== */
+
 
 .system-page {
   display: flex;
@@ -1470,7 +1479,7 @@ textarea.input {
 }
 
 
-/* ===== Авторизация ===== */
+
 
 .auth-wrap {
   display: flex;
@@ -1608,7 +1617,7 @@ textarea.input {
 
 
 
-/* ===== Тарифы ===== */
+
 
 .plan-card {
   position: relative;
@@ -1695,7 +1704,7 @@ textarea.input {
 
 
 
-/* ===== Таблицы ===== */
+
 
 .table-wrap {
   background: var(--surface);
@@ -1752,7 +1761,7 @@ textarea.input {
 
 
 
-/* ===== ФУТЕР ===== */
+
 
 .footer {
   background: var(--surface);
@@ -1818,7 +1827,7 @@ textarea.input {
 
 
 
-/* ===== Полоса прокрутки ===== */
+
 
 ::-webkit-scrollbar {
   width: 7px;
@@ -1851,7 +1860,7 @@ select:focus-visible {
 
 
 
-/* ===== Адаптив (планшеты) ===== */
+
 
 @media (max-width: 1024px) {
   .grid-4 {
@@ -1869,7 +1878,7 @@ select:focus-visible {
 
 
 
-/* Адаптив (мобильное меню) */
+
 @media (max-width: 768px) {
   .mobile-actions {
     display: flex;
@@ -1943,9 +1952,10 @@ select:focus-visible {
 
 
 
-  /* Hero адаптируется пропорционально на планшетах */
+  
   .hero {
     min-height: 500px;
+    background-size: auto 100%;
   }
 }
 
@@ -1956,7 +1966,7 @@ select:focus-visible {
 
 
 
-/* Адаптив (телефоны) */
+
 @media (max-width: 640px) {
   html {
     font-size: 15px;
@@ -2029,6 +2039,13 @@ select:focus-visible {
 
   .hero {
     min-height: 360px;
+    background-size: cover;
+    background-position: center top;
+  }
+
+  [data-theme='light'] .hero,
+  [data-theme='dark'] .hero {
+    background-image: url('../images/hero-bg-mobile.png');
   }
 
   .hero__title {
@@ -2048,7 +2065,7 @@ select:focus-visible {
 
 
 
-/* ===== Страница «О платформе» ===== */
+
 
 .about-hero {
   padding: 72px 0;
@@ -2112,7 +2129,7 @@ select:focus-visible {
 }
 
 
-/* ===== Страница тарифов ===== */
+
 
 .plans-grid {
   align-items: start;
@@ -2125,7 +2142,7 @@ select:focus-visible {
 }
 
 
-/* ===== Страница отзывов — сводка ===== */
+
 
 .review-summary {
   display: flex;
@@ -2195,7 +2212,7 @@ select:focus-visible {
 }
 
 
-/* ===== Страница FAQ ===== */
+
 
 .faq-list {
   max-width: 720px;
@@ -2208,7 +2225,7 @@ select:focus-visible {
 }
 
 
-/* ===== Блог — время чтения ===== */
+
 
 .blog-read-time {
   font-size: 0.8rem;
@@ -2216,7 +2233,7 @@ select:focus-visible {
 }
 
 
-/* ===== Страница контактов ===== */
+
 
 .contact-layout {
   display: grid;
@@ -2251,7 +2268,7 @@ select:focus-visible {
 }
 
 
-/* ===== Страница преподавателей ===== */
+
 
 .teacher-full-card {
   padding: 0;
@@ -2295,7 +2312,7 @@ select:focus-visible {
 }
 
 
-/* ===== Адаптив — страницы ===== */
+
 
 @media (max-width: 768px) {
   .contact-layout {
@@ -2311,19 +2328,19 @@ select:focus-visible {
   }
 }
 
-/* Успешная отправка формы */
+
 .form-success {
   padding: 40px;
 }
 
-/* Теги по центру на странице преподавателя */
+
 .tags-centered {
   justify-content: center;
   margin-bottom: 14px;
 }
 
 
-/* ===== Страница каталога курсов ===== */
+
 
 .sort-select {
   max-width: 200px;
@@ -2355,7 +2372,47 @@ select:focus-visible {
 }
 
 
-/* ===== Страница курса (детали) ===== */
+
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+  font-size: 0.84rem;
+}
+
+.breadcrumbs a,
+.breadcrumbs .current {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  text-decoration: none;
+}
+
+.breadcrumbs a {
+  color: var(--text-muted);
+}
+
+.breadcrumbs a:hover {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.breadcrumbs .sep {
+  color: var(--text-muted);
+}
+
+.breadcrumbs .current {
+  color: var(--text);
+  font-weight: 600;
+  max-width: 100%;
+}
 
 .course-layout {
   display: grid;
@@ -2364,9 +2421,7 @@ select:focus-visible {
   align-items: start;
 }
 
-/* Обложка курса на странице деталей.
-   Если есть cover — показываем картинку.
-   Замените cover в data.js → images/courses/ваш-файл.png */
+
 .course-cover {
   height: 280px;
   background-color: var(--surface-2);
@@ -2419,6 +2474,7 @@ select:focus-visible {
   justify-content: space-between;
   align-items: center;
   padding: 14px 18px;
+  gap: 14px;
 }
 
 .course-module__title {
@@ -2490,7 +2546,7 @@ select:focus-visible {
   flex-wrap: wrap;
 }
 
-/* Аватар преподавателя на странице курса (56×56) */
+
 .course-teacher-avatar {
   width: 56px;
   height: 56px;
@@ -2518,7 +2574,7 @@ select:focus-visible {
 }
 
 
-/* Адаптив — страница курса */
+
 
 @media (max-width: 900px) {
   .course-layout {
@@ -2536,10 +2592,44 @@ select:focus-visible {
   .course-page-title {
     font-size: 1.35rem;
   }
+
+  .course-module {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .breadcrumbs {
+    gap: 6px;
+  }
+
+  .breadcrumbs a,
+  .breadcrumbs .current {
+    padding: 5px 8px;
+    min-height: 28px;
+  }
+
+  .course-module {
+    display: block;
+  }
+
+  .course-module .badge {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .course-module__title {
+    margin-top: 8px;
+  }
+
+  .course-module__count {
+    display: block;
+    margin-top: 8px;
+  }
 }
 
 
-/* ===== Авторизация — дополнительные классы ===== */
+
 
 .auth-error-hidden {
   display: none;
@@ -2555,7 +2645,7 @@ select:focus-visible {
   font-size: 2.5rem;
 }
 
-/* Доступ запрещён */
+
 .ad-dash-hidden {
   display: none;
 }
@@ -2564,7 +2654,7 @@ select:focus-visible {
   color: var(--primary);
 }
 
-/* Системные страницы — цветные заголовки */
+
 .system-title-success {
   color: var(--success);
 }
@@ -2574,7 +2664,7 @@ select:focus-visible {
 }
 
 
-/* ===== Утилиты для авторизации ===== */
+
 
 .hidden {
   display: none;
@@ -2591,7 +2681,7 @@ select:focus-visible {
 }
 
 
-/* ===== Размеры звёзд рейтинга (через CSS, не через JS) ===== */
+
 
 .stars-sm .star {
   font-size: 13px;
@@ -2610,9 +2700,9 @@ select:focus-visible {
 }
 
 
-/* ===== Страница статьи блога ===== */
 
-/* Обложка статьи на странице (большая) */
+
+
 .article-cover {
   height: 340px;
   background-color: var(--surface-2);
@@ -2714,9 +2804,9 @@ select:focus-visible {
 }
 
 
-/* ===== Переключатель языка (RU / KZ / EN) ===== */
 
-/* Кнопка текущего языка */
+
+
 .lang-switcher {
   position: relative;
 }
@@ -2738,7 +2828,7 @@ select:focus-visible {
   color: var(--primary);
 }
 
-/* Выпадающий список языков */
+
 .lang-dropdown {
   display: none;
   position: absolute;
@@ -2753,14 +2843,14 @@ select:focus-visible {
   overflow: hidden;
 }
 
-/* Показываем при наведении на контейнер */
+
 .lang-switcher:hover .lang-dropdown,
 .lang-switcher:focus-within .lang-dropdown {
   display: flex;
   flex-direction: column;
 }
 
-/* Кнопка выбора языка */
+
 .lang-option {
   background: none;
   border: none;
@@ -2777,14 +2867,14 @@ select:focus-visible {
   color: var(--primary);
 }
 
-/* Активный язык — подсветка */
+
 .lang-option.active {
   color: var(--primary);
   font-weight: 700;
 }
 
 
-/* Кнопка «Записаться» — состояние «Уже записан» (зелёная, неактивная) */
+
 .btn-enrolled {
   background: var(--success);
   border-color: var(--success);

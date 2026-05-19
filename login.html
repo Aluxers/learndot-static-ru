@@ -11,26 +11,26 @@
 </head>
 <body>
 
-    <!-- Шапка сайта -->
+    
     <div id="header-root"></div>
 
-    <!-- Форма входа -->
+    
     <main class="page-content">
         <div class="container">
             <section class="section">
                 <div class="auth-wrap">
                     <div class="card auth-card">
 
-                        <!-- Заголовок -->
+                        
                         <div class="auth-header">
                             <h2>С возвращением</h2>
                             <p>Войдите, чтобы продолжить обучение.</p>
                         </div>
 
-                        <!-- Ошибка (скрыта по умолчанию) -->
+                        
                         <div id="loginError" class="auth-error mb-12 auth-error-hidden"></div>
 
-                        <!-- Поля формы -->
+                        
                         <div class="auth-form">
                             <div class="form-group">
                                 <label class="form-label">Email</label>
@@ -46,7 +46,7 @@
                             <button class="btn btn-primary btn-block" id="loginBtn">Войти</button>
                         </div>
 
-                        <!-- Ссылка на регистрацию -->
+                        
                         <p class="auth-switch">
                             Нет аккаунта? <a href="register.html">Зарегистрироваться</a>
                         </p>
@@ -57,7 +57,7 @@
         </div>
     </main>
 
-    <!-- Подвал -->
+    
     <div id="footer-root"></div>
 
     <script src="js/theme.js"></script>
@@ -67,21 +67,21 @@
     <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-        // ===== Проверяем, авторизован ли пользователь =====
-        // Если да — сразу перенаправляем в его кабинет
+        
+        
         if (LearnDot.auth.isAuthenticated()) {
             var user = LearnDot.auth.getCurrentUser();
             window.location.href = LearnDot.auth.getDashboardUrl(user.role);
             return;
         }
 
-        // ===== Находим элементы формы =====
+        
         var emailInput = document.getElementById('loginEmail');
         var passwordInput = document.getElementById('loginPassword');
         var errorBox = document.getElementById('loginError');
         var loginBtn = document.getElementById('loginBtn');
 
-        // ===== Функция показа ошибки =====
+        
         function showError(message) {
             errorBox.textContent = message;
             errorBox.classList.remove('auth-error-hidden');
@@ -92,30 +92,30 @@
             errorBox.classList.add('auth-error-hidden');
         }
 
-        // ===== Обработка кнопки «Войти» =====
+        
         loginBtn.addEventListener('click', function () {
             var email = emailInput.value;
             var password = passwordInput.value;
             hideError();
 
-            // Проверяем заполненность полей
+            
             if (!email || !password) {
                 showError('Заполните все поля.');
                 return;
             }
 
-            // Пытаемся войти через auth.js
+            
             loginBtn.disabled = true;
             LearnDot.auth.login(email, password).then(function (result) {
             loginBtn.disabled = false;
 
-            // Если ошибка — показываем
+            
             if (!result.success) {
                 showError(result.error);
                 return;
             }
 
-            // Успешный вход — переходим в кабинет
+            
             window.location.href = LearnDot.auth.getDashboardUrl(result.user.role);
             });
         });

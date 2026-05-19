@@ -11,7 +11,7 @@
 </head>
 <body>
 
-    <!-- Шапка -->
+    
     <div id="header-root"></div>
 
     <main class="page-content">
@@ -22,19 +22,19 @@
                     <p data-lang="reviewsPageText">Реальные отзывы от тех, кто учился с нами.</p>
                 </div>
 
-                <!-- Сводка рейтинга -->
+                
                 <div class="card review-summary mb-32" id="reviewSummary"></div>
 
-                <!-- Список отзывов -->
+                
                 <div class="grid grid-2" id="reviewGrid"></div>
             </section>
         </div>
 
-        <!-- Призыв к действию -->
+        
         <div id="cta"></div>
     </main>
 
-    <!-- Подвал -->
+    
     <div id="footer-root"></div>
 
     <script src="js/theme.js"></script>
@@ -47,7 +47,7 @@
         var reviews = DATA.reviews;
 
 
-        // ===== Считаем средний рейтинг =====
+        
         var totalRating = 0;
         for (var i = 0; i < reviews.length; i++) {
             totalRating += reviews[i].rating;
@@ -55,14 +55,14 @@
         var avg = (totalRating / reviews.length).toFixed(1);
 
 
-        // ===== Считаем количество по каждой звезде (1-5) =====
+        
         var counts = [0, 0, 0, 0, 0];
         for (var i = 0; i < reviews.length; i++) {
             counts[reviews[i].rating - 1]++;
         }
 
 
-        // ===== Рисуем полоски рейтинга (5 → 1) =====
+        
         var barsHtml = '';
         for (var star = 5; star >= 1; star--) {
             var count = counts[star - 1];
@@ -79,7 +79,7 @@
         }
 
 
-        // ===== Рисуем сводку рейтинга =====
+        
         document.getElementById('reviewSummary').innerHTML =
             '<div class="review-summary__score">' +
                 '<div class="review-summary__score-value">' + avg + '</div>' +
@@ -89,7 +89,7 @@
             '<div class="review-summary__bars">' + barsHtml + '</div>';
 
 
-        // ===== Рисуем список всех отзывов =====
+        
         var reviewsHtml = '';
         for (var i = 0; i < reviews.length; i++) {
             var r = reviews[i];
@@ -110,7 +110,7 @@
         document.getElementById('reviewGrid').innerHTML = reviewsHtml;
 
 
-        // ===== Блок CTA =====
+        
         document.getElementById('cta').innerHTML = renderCTA(
             t('joinTitle'),
             t('joinText')

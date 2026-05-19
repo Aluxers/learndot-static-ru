@@ -12,7 +12,7 @@
 </head>
 <body>
 
-    <!-- Обёртка панели администратора -->
+    
     <div class="dash-wrap">
         <div id="dashTopbar"></div>
         <div id="dashSidebar"></div>
@@ -23,14 +23,14 @@
                 <p>Секции сайта, FAQ, блог.</p>
             </div>
 
-            <!-- Табы -->
+            
             <div class="flex gap-8 flex-wrap mb-24">
-                <button class="btn btn-primary btn-sm" onclick="showTab('sections')">Секции</button>
-                <button class="btn btn-secondary btn-sm" onclick="showTab('faq')">FAQ</button>
-                <button class="btn btn-secondary btn-sm" onclick="showTab('blog')">Блог</button>
+                <button class="btn btn-primary btn-sm content-tab-btn" data-tab="sections" onclick="showTab('sections')">Секции</button>
+                <button class="btn btn-secondary btn-sm content-tab-btn" data-tab="faq" onclick="showTab('faq')">FAQ</button>
+                <button class="btn btn-secondary btn-sm content-tab-btn" data-tab="blog" onclick="showTab('blog')">Блог</button>
             </div>
 
-            <!-- Область контента -->
+            
             <div id="contentArea"></div>
 
         </main>
@@ -42,19 +42,29 @@
     <script src="js/main.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Проверяем роль администратора
+        
         if (!LearnDot.auth.requireRole(['admin'])) return;
 
-        // Рисуем шапку и боковое меню
+        
         renderDashTopbar('dashTopbar', 'Панель администратора');
         renderDashSidebar('dashSidebar', 'admin', 'content');
 
         
-        // Переключение табов
+        
         window.showTab = function (tab) {
             var area = document.getElementById('contentArea');
+            var tabBtns = document.querySelectorAll('.content-tab-btn');
+            for (var i = 0; i < tabBtns.length; i++) {
+                if (tabBtns[i].dataset.tab === tab) {
+                    tabBtns[i].classList.remove('btn-secondary');
+                    tabBtns[i].classList.add('btn-primary');
+                } else {
+                    tabBtns[i].classList.remove('btn-primary');
+                    tabBtns[i].classList.add('btn-secondary');
+                }
+            }
 
-            // ─── Вкладка «Секции сайта» ───
+            
             if (tab === 'sections') {
                 var sections = [
                     ['Баннер главной', 'Главная', 'активен', '2026-03-20'],
@@ -77,7 +87,7 @@
                         '</div>';
                 }).join('');
 
-            // ─── Вкладка «FAQ» ───
+            
             } else if (tab === 'faq') {
                 area.innerHTML =
                     '<div class="flex justify-end mb-16"><button class="btn btn-primary btn-sm">+ Добавить</button></div>' +
@@ -100,10 +110,10 @@
                             '</div>';
                     }).join('');
 
-            // ─── Вкладка «Блог» ───
-            // Здесь показано поле обложки (cover) для каждой статьи блога.
-            // Обложка хранится в поле cover каждого поста в DATA.blog (файл data.js).
-            // Чтобы изменить обложку статьи, нужно обновить поле cover в data.js.
+            
+            
+            
+            
             } else {
                 area.innerHTML =
                     '<div class="flex justify-end mb-16"><button class="btn btn-primary btn-sm">+ Новая статья</button></div>' +
@@ -114,7 +124,7 @@
                             DATA.blog.map(function (b) {
                                 var badgeClass = b.category === 'Дизайн' ? 'badge-primary' : 'badge-success';
 
-                                // Обложка статьи блога — путь к файлу изображения
+                                
                                 var coverHtml = '<div class="cover-preview">' +
                                     (b.cover ? '🖼️ ' + b.cover.split('/').pop() : '—') +
                                     '</div>';
@@ -140,7 +150,7 @@
             }
         };
 
-        // Показываем первую вкладку при загрузке
+        
         showTab('sections');
 
     });

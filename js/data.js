@@ -1,8 +1,8 @@
-/* =========================
-   Моковые данные платформы
-   Все курсы, преподаватели, отзывы,
-   FAQ, блог, данные кабинетов.
-   ========================= */
+
+
+
+
+
 
 window.DATA = {};
 
@@ -16,7 +16,7 @@ window.DATA = {};
 
 
 
-/* ===== Курсы ===== */
+
 
 DATA.courses = [
 
@@ -300,7 +300,7 @@ DATA.courses = [
       {title:'Командные процессы',lessons:3}] 
     },
 
-  /* ===== AI-курсы по дизайну ===== */
+  
 
   { 
     id:'ai-design-basics', 
@@ -388,7 +388,7 @@ DATA.courses = [
 
 
 
-/* ===== Преподаватели ===== */
+
 
 DATA.teachers = [
 
@@ -462,7 +462,7 @@ DATA.teachers = [
 
 
 
-/* ===== Отзывы студентов ===== */
+
 
 DATA.reviews = [
 
@@ -545,8 +545,8 @@ DATA.reviews = [
   { id:12, avatar: 'images/avatars/oleg.png',name:'Олег Петров', course:'UX/UI Дизайн с нуля', courseId:'ux-ui-design', rating:5, text:'Комплексный и хорошо поданный. Проект портфолио помог найти клиентов.', date:'2025-06-20' }
 ];
 
-/* ===== FAQ ===== */
-// Частые вопросы (FAQ)
+
+
 DATA.faq = [
   { id:1, category:'Общие', question:'Что такое LearnDot?', answer:'LearnDot — онлайн-платформа для обучения дизайну и IT с курсами от профессионалов индустрии.' },
   { id:2, category:'Общие', question:'Для кого предназначены курсы?', answer:'Для начинающих, которые хотят войти в IT или дизайн, а также для тех, кто хочет повысить квалификацию.' },
@@ -555,7 +555,7 @@ DATA.faq = [
   { id:5, category:'Курсы', question:'Сколько длится доступ?', answer:'После покупки — бессрочный доступ ко всем материалам, включая обновления.' },
   { id:6, category:'Доступ', question:'Можно учиться с телефона?', answer:'Да, платформа полностью адаптивна и работает на всех устройствах.' },
   { id:7, category:'Доступ', question:'Нужно специальное ПО?', answer:'Для большинства курсов хватит браузера. Особые требования указаны в описании.' },
-  { id:8, category:'Оплата', question:'Какие способы оплаты?', answer:'Visa, Mastercard, American Express, PayPal и банковский перевод.' },
+  { id:8, category:'Оплата', question:'Какие способы оплаты?', answer:'Kaspi Pay, Halyk Bank, ForteBank, Jusan Bank и банковский перевод по Казахстану.' },
   { id:9, category:'Оплата', question:'Есть возврат средств?', answer:'Да, гарантия возврата в течение 14 дней, если пройдено менее 30% курса.' },
   { id:10, category:'Оплата', question:'Есть командные скидки?', answer:'Да! Тариф Pro Team для групп от 5 человек. Свяжитесь для расчёта.' },
   { id:11, category:'Сертификаты', question:'Выдаётся сертификат?', answer:'Да, после прохождения всех уроков и заданий вы получаете цифровой сертификат.' },
@@ -567,9 +567,9 @@ DATA.faq = [
 
 
 
-/* ===== Блог ===== */
-// Статьи блога
-// Поле cover — путь к файлу обложки статьи (для карточек)
+
+
+
 DATA.blog = [
   { id:'getting-started-ux', cover:'images/blog/ux-roadmap.jpg', title:'Как войти в UX-дизайн: полный план на 2026 год', category:'Дизайн', excerpt:'Войти в UX может быть непросто. Этот план покрывает все навыки и шаги.', date:'2026-03-28', readTime:'8 мин', author:'Анна Ким', fullText:'<p>UX-дизайн — одна из самых востребованных профессий в IT. Если вы хотите войти в эту сферу, вам понадобится чёткий план обучения.</p><p><strong>Шаг 1: Изучите основы.</strong> Начните с понимания пользовательского опыта. Пройдите вводный курс по UX.</p><p><strong>Шаг 2: Освойте инструменты.</strong> Figma — основной инструмент UI-дизайнера. Научитесь создавать макеты и прототипы.</p><p><strong>Шаг 3: Практикуйтесь.</strong> Создайте 2-3 учебных проекта для портфолио.</p><p><strong>Шаг 4: Постройте портфолио.</strong> Оформите кейсы: проблема → исследование → решение → результат.</p><p>Путь в UX требует времени, но каждый шаг приближает к цели. Начните сегодня!</p>' },
   { id:'css-grid-guide', cover:'images/blog/css-grid.jpg', title:'CSS Grid на практике: макеты, которые работают', category:'IT', excerpt:'Выйдите за рамки базовых уроков. Реальные паттерны для рабочих сайтов.', date:'2026-03-22', readTime:'6 мин', author:'Марк Джонсон', fullText:'<p>CSS Grid изменил подход к созданию макетов. Больше не нужны хаки с float.</p><p><strong>Базовая сетка.</strong> Начните с <code>display: grid</code> и <code>grid-template-columns</code>.</p><p><strong>Именованные области.</strong> С помощью <code>grid-template-areas</code> создавайте читаемые макеты.</p><p><strong>Вложенные гриды.</strong> Grid внутри grid — это нормально. Используйте subgrid.</p><p>CSS Grid — мощный инструмент. Освойте его, и любой макет станет простым.</p>' },
@@ -586,8 +586,8 @@ DATA.blog = [
 
 
 
-/* ===== Данные студента ===== */
-// Записи студента на курсы
+
+
 DATA.enrollments = [
   { courseId:'ux-ui-design', enrolledDate:'2025-10-01', progress:72, status:'in-progress' },
   { courseId:'figma-beginners', enrolledDate:'2025-11-15', progress:100, status:'completed' },
@@ -601,7 +601,7 @@ DATA.enrollments = [
 
 
 
-// Задания студента
+
 DATA.assignments = [
   { id:'a1', courseId:'ux-ui-design', title:'Создать персону пользователя', module:'Исследования', dueDate:'2026-03-15', status:'graded', grade:92, teacherComment:'Отличная персона с подробными болями пользователя.', submittedDate:'2026-03-13' },
   { id:'a2', courseId:'ux-ui-design', title:'Вайрфрейм мобильного экрана', module:'Прототипирование', dueDate:'2026-04-01', status:'submitted', grade:null, teacherComment:null, submittedDate:'2026-03-30' },
@@ -615,7 +615,7 @@ DATA.assignments = [
 
 
 
-// Уведомления студента
+
 DATA.notifications = [
   { id:'n1', type:'course', title:'Новый урок доступен', message:'Модуль 6: «Создание компонентов» добавлен в курс UX/UI Дизайн.', date:'2026-04-02', read:false },
   { id:'n2', type:'assignment', title:'Задание оценено', message:'Ваше задание «Создать персону» получило 92/100.', date:'2026-04-01', read:false },
@@ -631,19 +631,19 @@ DATA.notifications = [
 
 
 
-// История оплат студента
+
 DATA.payments = [
-  { id:'p1', courseId:'ux-ui-design', courseName:'UX/UI Дизайн с нуля', date:'2025-10-01', amount:40000, method:'Visa •••• 4242', status:'completed' },
-  { id:'p2', courseId:'figma-beginners', courseName:'Figma для начинающих', date:'2025-11-15', amount:15000, method:'Visa •••• 4242', status:'completed' },
+  { id:'p1', courseId:'ux-ui-design', courseName:'UX/UI Дизайн с нуля', date:'2025-10-01', amount:40000, method:'Kaspi Pay', status:'completed' },
+  { id:'p2', courseId:'figma-beginners', courseName:'Figma для начинающих', date:'2025-11-15', amount:15000, method:'Halyk Bank', status:'completed' },
   { id:'p3', courseId:'html-css', courseName:'HTML/CSS с нуля', date:'2026-01-10', amount:0, method:'Бесплатно', status:'completed' },
-  { id:'p4', courseId:'javascript-beginners', courseName:'JavaScript для начинающих', date:'2026-02-20', amount:25000, method:'PayPal', status:'completed' }
+  { id:'p4', courseId:'javascript-beginners', courseName:'JavaScript для начинающих', date:'2026-02-20', amount:25000, method:'ForteBank', status:'completed' }
 ];
 
 
 
 
 
-// Сертификаты студента
+
 DATA.certificates = [
   { id:'cert-1', courseId:'figma-beginners', courseName:'Figma для начинающих', issueDate:'2026-03-20', studentName:'Анна Студент', instructor:'Анна Ким', certificateNumber:'LH-2026-FIG-00142' }
 ];
@@ -653,7 +653,7 @@ DATA.certificates = [
 
 
 
-// Тесты (квизы)
+
 DATA.quizzes = [
   { id:'quiz-1', courseId:'ux-ui-design', title:'Модуль 1: Введение в UX/UI', totalQuestions:5, passingScore:60, status:'passed', score:80,
     questions:[
@@ -680,8 +680,8 @@ DATA.quizzes = [
 
 
 
-/* ===== Данные преподавателя ===== */
-// Курсы преподавателя
+
+
 DATA.teacherCourses = [
   { courseId:'html-css', title:'HTML/CSS с нуля', students:3200, activeStudents:420, avgProgress:58, lessonsCount:32, modulesCount:6, rating:4.8, status:'published', lastUpdated:'2026-03-15' },
   { courseId:'javascript-beginners', title:'JavaScript для начинающих', students:2800, activeStudents:390, avgProgress:42, lessonsCount:40, modulesCount:7, rating:4.7, status:'published', lastUpdated:'2026-03-22' },
@@ -694,7 +694,7 @@ DATA.teacherCourses = [
 
 
 
-// Работы студентов на проверку
+
 DATA.submissions = [
   { id:'s1', studentName:'Анна Студент', courseName:'HTML/CSS с нуля', assignmentTitle:'Адаптивная лендинг-страница', submittedDate:'2026-04-02', status:'pending', feedback:'', grade:null },
   { id:'s2', studentName:'София Мартинес', courseName:'HTML/CSS с нуля', assignmentTitle:'Задание по сетке', submittedDate:'2026-04-01', status:'pending', feedback:'', grade:null },
@@ -706,8 +706,8 @@ DATA.submissions = [
 
 
 
-/* ===== Данные админа ===== */
-// Все пользователи платформы (для админки)
+
+
 DATA.allUsers = [
   { id:'u1', avatar: 'images/avatars/anna.png', name:'Анна Студент', email:'student@demo.com', role:'student', status:'active', joinDate:'2025-10-01', courses:4 },
   { id:'u2', avatar: 'images/avatars/mark.png', name:'Марк Преподаватель', email:'teacher@demo.com', role:'teacher', status:'active', joinDate:'2025-06-15', courses:3 },
@@ -726,19 +726,19 @@ DATA.allUsers = [
   { id:'u15', avatar: 'images/avatars/pria.png', name:'Прия Шарма', email:'priya@example.com', role:'student', status:'active', joinDate:'2026-02-14', courses:1 }
 ];
 
-// Все платежи платформы (для админки)
+
 DATA.allPayments = [
-  { id:'ap1', user:'Анна Студент', course:'UX/UI Дизайн с нуля', amount:40000, date:'2025-10-01', status:'completed', method:'Visa' },
-  { id:'ap2', user:'София Мартинес', course:'UX/UI Дизайн с нуля', amount:40000, date:'2025-11-20', status:'completed', method:'PayPal' },
-  { id:'ap3', user:'Джеймс Ли', course:'JavaScript для начинающих', amount:25000, date:'2025-12-01', status:'completed', method:'Visa' },
-  { id:'ap4', user:'Том Бейкер', course:'Основы Python', amount:20000, date:'2025-10-15', status:'completed', method:'Mastercard' },
-  { id:'ap5', user:'Аиша Патель', course:'Figma для начинающих', amount:15000, date:'2026-01-05', status:'completed', method:'PayPal' },
-  { id:'ap6', user:'Мария Сантос', course:'Основы фронтенд-разработки', amount:80000, date:'2026-01-20', status:'completed', method:'Visa' },
-  { id:'ap7', user:'Алекс Тёрнер', course:'Основы моушн-дизайна', amount:30000, date:'2025-12-28', status:'refunded', method:'Visa' },
-  { id:'ap8', user:'Райан Купер', course:'Введение в бэкенд', amount:40000, date:'2025-11-10', status:'completed', method:'Visa' }
+  { id:'ap1', user:'Анна Студент', course:'UX/UI Дизайн с нуля', amount:40000, date:'2025-10-01', status:'completed', method:'Kaspi Pay' },
+  { id:'ap2', user:'София Мартинес', course:'UX/UI Дизайн с нуля', amount:40000, date:'2025-11-20', status:'completed', method:'Halyk Bank' },
+  { id:'ap3', user:'Джеймс Ли', course:'JavaScript для начинающих', amount:25000, date:'2025-12-01', status:'completed', method:'Kaspi Pay' },
+  { id:'ap4', user:'Том Бейкер', course:'Основы Python', amount:20000, date:'2025-10-15', status:'completed', method:'ForteBank' },
+  { id:'ap5', user:'Аиша Патель', course:'Figma для начинающих', amount:15000, date:'2026-01-05', status:'completed', method:'Jusan Bank' },
+  { id:'ap6', user:'Мария Сантос', course:'Основы фронтенд-разработки', amount:80000, date:'2026-01-20', status:'completed', method:'Halyk Bank' },
+  { id:'ap7', user:'Алекс Тёрнер', course:'Основы моушн-дизайна', amount:30000, date:'2025-12-28', status:'refunded', method:'Kaspi Pay' },
+  { id:'ap8', user:'Райан Купер', course:'Введение в бэкенд', amount:40000, date:'2025-11-10', status:'completed', method:'ForteBank' }
 ];
 
-// Отзывы для модерации (админка)
+
 DATA.adminReviews = [
   { id:'r1', student:'София Мартинес', course:'UX/UI Дизайн с нуля', rating:5, text:'Этот курс полностью изменил мою карьеру.', date:'2025-12-15', status:'approved' },
   { id:'r2', student:'Джеймс Ли', course:'JavaScript для начинающих', rating:5, text:'Лучший курс по JavaScript.', date:'2025-11-28', status:'approved' },
@@ -747,39 +747,39 @@ DATA.adminReviews = [
   { id:'r5', student:'Эмма Уотсон', course:'Основы моушн-дизайна', rating:5, text:'Принципы анимации объяснены красиво.', date:'2025-07-02', status:'pending' }
 ];
 
-// Аналитика платформы
+
 DATA.analytics = {
-  revenue: { total:14320, thisMonth:2180, growth:11.8 },
+  revenue: { total:14320000, thisMonth:2180000, growth:11.8 },
   users: { total:15, students:10, teachers:4, admins:1, newThisMonth:3 },
   courses: { total:11, avgRating:4.74 },
   enrollments: { total:19610, thisMonth:1420, growth:20.3 },
   topCourses: [
     { title:'Git и командная работа', students:4100, revenue:0, rating:4.7 },
     { title:'HTML/CSS с нуля', students:3200, revenue:0, rating:4.8 },
-    { title:'JavaScript для начинающих', students:2800, revenue:5320, rating:4.7 },
-    { title:'Figma для начинающих', students:2100, revenue:3890, rating:4.9 },
-    { title:'Основы Python', students:1900, revenue:2940, rating:4.8 }
+    { title:'JavaScript для начинающих', students:2800, revenue:5320000, rating:4.7 },
+    { title:'Figma для начинающих', students:2100, revenue:3890000, rating:4.9 },
+    { title:'Основы Python', students:1900, revenue:2940000, rating:4.8 }
   ],
-  monthlyRevenue: [{month:'Окт',amount:1240},{month:'Ноя',amount:1580},{month:'Дек',amount:1720},{month:'Янв',amount:1890},{month:'Фев',amount:1950},{month:'Мар',amount:2180}],
+  monthlyRevenue: [{month:'Окт',amount:1240000},{month:'Ноя',amount:1580000},{month:'Дек',amount:1720000},{month:'Янв',amount:1890000},{month:'Фев',amount:1950000},{month:'Мар',amount:2180000}],
   monthlyUsers: [{month:'Окт',count:42},{month:'Ноя',count:58},{month:'Дек',count:71},{month:'Янв',count:89},{month:'Фев',count:104},{month:'Мар',count:128}]
 };
 
 
-// ==========================================================
-//   ДАННЫЕ УРОКОВ ДЛЯ СТРАНИЦЫ ПРОСМОТРА
-//
-//   videoId — ID видео на YouTube (часть ссылки после v=)
-//   Чтобы заменить видео — обновите videoId
-//   Если videoId пустой — показывается заглушка
-//
-//   type: 'video' / 'text' / 'practice'
-//   content — HTML-текст урока
-//   practice — задание для практики (HTML)
-// ==========================================================
+
+
+
+
+
+
+
+
+
+
+
 
 DATA.lessonsByModule = {
 
-  // ─── UX/UI Дизайн с нуля ───────────────────────────────────────
+  
   'ux-ui-design': [
     { mod: 'Введение в UX/UI', lessons: [
       { id: 'l1', title: 'Что такое UX?', type: 'video', dur: '12 мин', videoUrl: 'https://www.youtube.com/watch?v=L9CLXSm2v7M',
@@ -819,7 +819,7 @@ DATA.lessonsByModule = {
     ]}
   ],
 
-  // ─── Figma для начинающих ───────────────────────────────────────
+  
   'figma-beginners': [
     { mod: 'Основы Figma', lessons: [
       { id: 'fig1', title: 'Интерфейс Figma', type: 'video', dur: '12 мин', videoUrl: 'https://www.youtube.com/watch?v=FTFaQWZBqQ8',
@@ -848,7 +848,7 @@ DATA.lessonsByModule = {
     ]}
   ],
 
-  // ─── Основы веб-дизайна ─────────────────────────────────────────
+  
   'web-design-basics': [
     { mod: 'Принципы дизайна', lessons: [
       { id: 'wd1', title: 'Визуальная иерархия', type: 'video', dur: '13 мин', videoUrl: 'https://www.youtube.com/watch?v=CCDn9GIBOgA',
@@ -876,7 +876,7 @@ DATA.lessonsByModule = {
     ]}
   ],
 
-  // ─── Основы графического дизайна ───────────────────────────────
+  
   'graphic-design': [
     { mod: 'Основы визуального дизайна', lessons: [
       { id: 'gd1', title: 'Элементы дизайна', type: 'video', dur: '14 мин', videoUrl: 'https://www.youtube.com/watch?v=YqQx75OPRa0',
@@ -904,7 +904,7 @@ DATA.lessonsByModule = {
     ]}
   ],
 
-  // ─── Основы моушн-дизайна ───────────────────────────────────────
+  
   'motion-design': [
     { mod: 'Принципы анимации', lessons: [
       { id: 'md1', title: '12 принципов анимации', type: 'video', dur: '16 мин', videoUrl: 'https://www.youtube.com/watch?v=uDqjIdI4bF4',
@@ -924,7 +924,7 @@ DATA.lessonsByModule = {
     ]}
   ],
 
-  // ─── HTML/CSS с нуля ────────────────────────────────────────────
+  
   'html-css': [
     { mod: 'Основы HTML', lessons: [
       { id: 'h1', title: 'Что такое HTML', type: 'video', dur: '10 мин', videoUrl: 'https://www.youtube.com/watch?v=B5RhnA-EUsU',
@@ -947,7 +947,7 @@ DATA.lessonsByModule = {
     ]}
   ],
 
-  // ─── JavaScript для начинающих ──────────────────────────────────
+  
   'javascript-beginners': [
     { mod: 'Основы JS', lessons: [
       { id: 'js1', title: 'Переменные и типы данных', type: 'video', dur: '13 мин', videoUrl: 'https://www.youtube.com/watch?v=W6NZfCO5SIk',
@@ -967,7 +967,7 @@ DATA.lessonsByModule = {
     ]}
   ],
 
-  // ─── Git и командная работа ─────────────────────────────────────
+  
   'git-collaboration': [
     { mod: 'Основы Git', lessons: [
       { id: 'git1', title: 'Что такое система контроля версий', type: 'video', dur: '10 мин', videoUrl: 'https://www.youtube.com/watch?v=2sjqTHE0zok',
@@ -984,7 +984,7 @@ DATA.lessonsByModule = {
     ]}
   ],
 
-  // ─── Основы Python ──────────────────────────────────────────────
+  
   'python-basics': [
     { mod: 'Синтаксис Python', lessons: [
       { id: 'py1', title: 'Введение в Python', type: 'video', dur: '12 мин', videoUrl: 'https://www.youtube.com/watch?v=_uQrJ0TkZlc',
@@ -1001,7 +1001,7 @@ DATA.lessonsByModule = {
     ]}
   ],
 
-  // ─── Основы фронтенд-разработки ────────────────────────────────
+  
   'frontend-development': [
     { mod: 'Современный JavaScript', lessons: [
       { id: 'fe1', title: 'ES6+ синтаксис', type: 'video', dur: '15 мин', videoUrl: 'https://www.youtube.com/watch?v=NCwa_xi0Uuc',
@@ -1015,7 +1015,7 @@ DATA.lessonsByModule = {
     ]}
   ],
 
-  // ─── AI в дизайне: основы ───────────────────────────────────────
+  
   'ai-design-basics': [
     { mod: 'Введение в AI для дизайна', lessons: [
       { id: 'ai1', title: 'AI-инструменты для дизайнера', type: 'video', dur: '11 мин', videoUrl: 'https://www.youtube.com/watch?v=arRHYaMxnrk',
@@ -1032,7 +1032,7 @@ DATA.lessonsByModule = {
     ]}
   ],
 
-  // ─── Midjourney и генерация изображений ─────────────────────────
+  
   'midjourney-course': [
     { mod: 'Основы Midjourney', lessons: [
       { id: 'mj1', title: 'Первые шаги в Midjourney', type: 'video', dur: '12 мин', videoUrl: 'https://www.youtube.com/watch?v=arRHYaMxnrk',

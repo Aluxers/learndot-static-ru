@@ -12,7 +12,7 @@
 </head>
 <body>
 
-    <!-- Обёртка кабинета -->
+    
     <div class="dash-wrap">
         <div id="dashTopbar"></div>
         <div id="dashSidebar"></div>
@@ -48,13 +48,13 @@
     <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-        // ===== Проверяем роль пользователя =====
+        
         if (!LearnDot.auth.requireRole(['student'])) return;
 
-        // ===== Рисуем мобильную шапку и боковое меню =====
+        
         renderDashTopbar('dashTopbar', 'Кабинет студента');
         renderDashSidebar('dashSidebar', 'student', 'payments');
-        // ===== Статистика оплат =====
+        
         var totalSpent = 0;
         var freeCount = 0;
         for (var i = 0; i < getUserPayments().length; i++) {
@@ -70,12 +70,12 @@
             { v: freeCount, l: 'Бесплатных' }
         ]);
 
-        // ===== Таблица платежей =====
+        
         var html = '';
         for (var i = 0; i < getUserPayments().length; i++) {
             var p = getUserPayments()[i];
 
-            // Определяем класс и текст суммы
+            
             var amountClass = 'td-amount';
             var amountText = p.amount.toLocaleString() + ' ₸';
             if (p.amount === 0) {
